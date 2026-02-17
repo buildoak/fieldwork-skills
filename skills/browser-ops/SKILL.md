@@ -31,9 +31,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
 # For Codex CLI:
-# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
-# Option A: Copy the SKILL.md content into your project's codex.md
-# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
+# Codex CLI reads instructions from AGENTS.md at your project root.
+# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
+# See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -49,9 +49,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
 # For Codex CLI:
-# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
-# Option A: Copy the SKILL.md content into your project's codex.md
-# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
+# Codex CLI reads instructions from AGENTS.md at your project root.
+# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
+# See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
 ```
 
 ---

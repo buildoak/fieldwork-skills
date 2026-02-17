@@ -7,28 +7,65 @@ description: Google Workspace CLI automation via gogcli. Gmail, Calendar, Drive,
 
 Automates Google Workspace work using the `gog` CLI with machine-parseable JSON output, from email and calendar operations to Drive/docs/sheets workflows. Use it when you need repeatable workspace automation, but avoid it for non-Google services or ad hoc UI workflows.
 
-## Setup
-### Install gogcli
-brew tap steipete/tap
-brew install gogcli
-
-### Set up Google OAuth
-See references/auth-setup.md for step-by-step guide.
-
-### Verify installation
-gog status
-
 ## How to install this skill
-### Claude Code
+
+### Option 1: Point your agent at it (easiest)
+Just paste this into your Claude Code or Codex CLI chat:
+
+> Install the google-workspace-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops
+
+Your agent will read the skill and know how to use it.
+
+### Option 2: Clone into your project
 ```bash
-cp -r path/to/fieldwork/skills/google-workspace-ops .claude/skills/google-workspace-ops
+# Clone the fieldwork repo (if you haven't already)
+git clone https://github.com/nikitadubovikov/fieldwork.git
+
+# Copy the skill into your project's skills folder
+# For Claude Code:
+cp -r fieldwork/skills/google-workspace-ops your-project/.claude/skills/google-workspace-ops
+
+# For Codex CLI:
+cp -r fieldwork/skills/google-workspace-ops your-project/.codex/skills/google-workspace-ops
 ```
-### Codex CLI
+
+### Option 3: Download just this skill
+Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/google-workspace-ops` folder into your project's skills directory.
+
+---
+
+## Setup: Install dependencies
+
+Installing the skill (above) just copies the instruction files. You also need the `gog` CLI tool installed on your machine so the skill can use it.
+
+### What you'll need
+
+- **macOS with Homebrew** -- Homebrew is a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+
+### Install gogcli
+
 ```bash
-cp -r path/to/fieldwork/skills/google-workspace-ops .codex/skills/google-workspace-ops
+# Add the tool repository to Homebrew
+brew tap steipete/tap
+
+# Install the Google Workspace CLI tool
+brew install gogcli
 ```
-### Or just point your agent to it
-Give your AI agent this URL: https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops
+
+### Verify it's working
+
+```bash
+# You should see version info (e.g., "gog version 0.x.x")
+gog version
+```
+
+If you see `command not found`, Homebrew may not be on your PATH. Restart your terminal and try again, or run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
+
+### Connect your Google account (one-time setup)
+
+Before using this skill, you need to connect it to your Google account. This is a one-time OAuth setup where you'll create a Google Cloud project, enable the APIs you need (Gmail, Calendar, Drive, etc.), download a credentials file, and authorize `gog` to access your account. The process takes about 10-15 minutes and is fully documented with screenshots.
+
+See [references/auth-setup.md](references/auth-setup.md) for the step-by-step guide.
 
 ## Decision Tree: When to Use gog
 

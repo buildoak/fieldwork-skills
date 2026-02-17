@@ -8,12 +8,12 @@ Known failures, anti-bot findings, and operational gotchas. Read this before pla
 
 ### What happened
 
-**Task:** Scout UAE websites for Mac Mini M4 Pro 64GB pricing. Three parallel browser workers were spawned.
+**Task:** Scrape product pricing across retailer websites. Three parallel browser workers were spawned.
 
 **Results:**
-- Worker 1 (Apple Store UAE + Google Shopping): FAILED (exit 1)
-- Worker 2 (Amazon.ae + Noon.com): FAILED (exit 1)
-- Worker 3 (UAE retailers): COMPLETED (exit 0)
+- Worker 1 (retailer site 1 + Google Shopping): FAILED (exit 1)
+- Worker 2 (retailer site 2 + retailer site 3): FAILED (exit 1)
+- Worker 3 (additional online retailers): COMPLETED (exit 0)
 - Task terminated before writing consolidated report -- zero usable output
 
 **Cost:** significant token budget wasted.
@@ -22,7 +22,7 @@ Known failures, anti-bot findings, and operational gotchas. Read this before pla
 
 **1. Session collision (primary cause)**
 
-Three parallel workers shared a single agent-browser daemon. No per-worker session isolation. Worker A navigates to Apple Store, Worker B navigates to Amazon.ae, Worker A's page disappears. State collisions cascade into failures on every subsequent step.
+Three parallel workers shared a single agent-browser daemon. No per-worker session isolation. Worker A navigates to site 1, Worker B navigates to site 2, Worker A's page disappears. State collisions cascade into failures on every subsequent step.
 
 **Fix:** Run browser workers SEQUENTIALLY. Per-worker session isolation (`AGENT_BROWSER_SESSION`) is architecturally possible but not yet implemented.
 
@@ -34,9 +34,9 @@ Three parallel workers shared a single agent-browser daemon. No per-worker sessi
 
 **3. Wrong tool for the job**
 
-Price lookup from product pages is static content extraction. Exa `web_search` or `WebFetch` handles this at ~1/100th the token cost. Browser agents are for interactive tasks (auth flows, form filling, session state). This was a misapplication of the browser stack.
+Product pricing from retailer pages is static content extraction. `WebSearch` or `WebFetch` handles this at ~1/100th the token cost. Browser agents are for interactive tasks (auth flows, form filling, session state). This was a misapplication of the browser stack.
 
-**Fix:** Always check the decision tree in SKILL.md before reaching for `--browser`. If the data is publicly accessible without interaction, use Exa/WebFetch.
+**Fix:** Always check the decision tree in SKILL.md before reaching for `--browser`. If the data is publicly accessible without interaction, use WebSearch/WebFetch.
 
 ### Lessons codified
 
@@ -45,7 +45,7 @@ Price lookup from product pages is static content extraction. Exa `web_search` o
 | Session collision kills parallel workers | Browser workers run SEQUENTIALLY only |
 | Tool schema costs add up fast | Only use `--browser` for interactive tasks |
 | Failed Codex workers bill fully | Budget-conscious tasks should run sequentially with early-exit |
-| Static content doesn't need a browser | Exa/WebFetch first, browser as last resort |
+| Static content doesn't need a browser | WebSearch/WebFetch first, browser as last resort |
 
 ---
 
@@ -54,7 +54,7 @@ Price lookup from product pages is static content extraction. Exa `web_search` o
 ### OZON (Russian e-commerce) -- BLOCKED
 
 - 20+ bypass attempts failed
-- Blocks at IP level -- German IPs are blacklisted regardless of browser fingerprint
+- Blocks at IP level -- non-Russian IPs are blacklisted regardless of browser fingerprint
 - Playwright stealth, user-agent rotation, cookie manipulation all ineffective
 - **Root cause:** IP-level geo-blocking, not browser fingerprinting
 - **Required:** Residential Russian proxy. No other workaround exists.

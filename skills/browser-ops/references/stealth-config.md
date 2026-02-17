@@ -66,7 +66,7 @@ When local stealth isn't enough, route through a cloud browser with built-in ste
 ```bash
 export AGENT_BROWSER_PROVIDER=kernel
 export KERNEL_API_KEY=your_key_here
-export KERNEL_PROFILE_NAME=gsd-default
+export KERNEL_PROFILE_NAME=default-profile
 # KERNEL_STEALTH defaults to true -- stealth mode enabled automatically
 ```
 

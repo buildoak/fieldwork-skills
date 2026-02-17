@@ -7,33 +7,76 @@ description: Browser automation skill for AI coding agents. 25 Playwright-based 
 
 Browser automation via [agent-browser](https://github.com/anthropics/agent-browser). 25 tools wrapping Playwright for navigation, interaction, observation, and session management. Validated on two benchmark suites: 12/15 pass on a 15-task suite (100% excluding external blockers), 9/10 on a 10-task progressive suite. Standout: Notion end-to-end signup with AgentMail OTP verification.
 
-## Setup
+## How to install this skill
 
-### Prerequisites
-- Node.js 18+
-- An AI coding agent (Claude Code, Codex CLI, or similar)
+### Option 1: Point your agent at it (easiest)
+Just paste this into your Claude Code or Codex CLI chat:
+
+> Install the browser-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops
+
+Your agent will read the skill and know how to use it.
+
+### Option 2: Clone into your project
+```bash
+# Clone the fieldwork repo (if you haven't already)
+git clone https://github.com/nikitadubovikov/fieldwork.git
+
+# Copy the skill into your project's skills folder
+# For Claude Code:
+cp -r fieldwork/skills/browser-ops your-project/.claude/skills/browser-ops
+
+# For Codex CLI:
+cp -r fieldwork/skills/browser-ops your-project/.codex/skills/browser-ops
+```
+
+### Option 3: Download just this skill
+Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/browser-ops` folder into your project's skills directory.
+
+---
+
+## Setup: Install dependencies
+
+Installing the skill (above) just copies the instruction files. You also need the actual tools installed on your machine so the skill can use them.
+
+### What you'll need
+
+- **Node.js 18+** -- JavaScript runtime, needed to run the browser automation server. Download from https://nodejs.org if you don't have it.
+- **npm** -- package manager for Node.js, comes bundled with Node.js.
 
 ### Install agent-browser
+
 ```bash
+# Install the browser automation server globally
 npm install -g @anthropic-ai/agent-browser
 ```
 
-### Start the daemon (required before use)
+**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug.
+
+### Start the daemon (must be running before your agent can use browsers)
+
 ```bash
+# Start the browser daemon in the background
 agent-browser start
 ```
 
-**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug -- `page.goto()` with `waitUntil: 'load'` never resolves.
+### Verify it's working
 
-### Optional: AgentMail for email verification flows
 ```bash
-pip install agentmail
-# Get API key at https://agentmail.to
+# You should see "agent-browser daemon running on port ..."
+agent-browser status
 ```
 
-### Verify installation
+If you see `command not found`, Node.js or npm is not installed or not on your PATH. Install Node.js from https://nodejs.org and try again.
+
+### Optional: AgentMail for email verification flows
+
+If you need your agent to sign up for services that require email verification (OTP codes, confirmation links):
+
 ```bash
-./scripts/browser-check.sh quick
+# Install the AgentMail Python package
+pip install agentmail
+
+# Get your API key at https://agentmail.to -- free tier available
 ```
 
 ## Quick Start
@@ -46,23 +89,6 @@ browser_snapshot(mode="interactive")
 browser_screenshot(path="/tmp/example.png")
 browser_close()
 ```
-
-## How to install this skill
-
-### Claude Code
-```bash
-# From your project root:
-cp -r path/to/fieldwork/skills/browser-ops .claude/skills/browser-ops
-```
-
-### Codex CLI
-```bash
-cp -r path/to/fieldwork/skills/browser-ops .codex/skills/browser-ops
-```
-
-### Or just point your agent to it
-Give your AI agent this URL and ask it to learn the skill:
-`https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops`
 
 ---
 

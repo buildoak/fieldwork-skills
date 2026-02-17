@@ -9,46 +9,78 @@ Extract clean text and media transcripts from URLs, files, and streams so your A
 
 Use this skill when you need deterministic extraction for YouTube, podcast feeds, PDFs, scanned images, or local media files.
 
-## Setup
+## How to install this skill
 
-### Install summarize CLI
+### Option 1: Point your agent at it (easiest)
+Just paste this into your Claude Code or Codex CLI chat:
+
+> Install the summarize skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize
+
+Your agent will read the skill and know how to use it.
+
+### Option 2: Clone into your project
+```bash
+# Clone the fieldwork repo (if you haven't already)
+git clone https://github.com/nikitadubovikov/fieldwork.git
+
+# Copy the skill into your project's skills folder
+# For Claude Code:
+cp -r fieldwork/skills/summarize your-project/.claude/skills/summarize
+
+# For Codex CLI:
+cp -r fieldwork/skills/summarize your-project/.codex/skills/summarize
+```
+
+### Option 3: Download just this skill
+Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/summarize` folder into your project's skills directory.
+
+---
+
+## Setup: Install dependencies
+
+Installing the skill (above) just copies the instruction files. You also need the `summarize` CLI and optional tools installed on your machine.
+
+### What you'll need
+
+- **macOS with Homebrew** -- Homebrew is a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+
+### Install the summarize CLI
 
 ```bash
+# Add the tool repository to Homebrew
 brew tap steipete/tap
+
+# Install the content extraction tool
 brew install summarize
 ```
 
-### Optional dependencies (for full capability)
+### Verify it's working
 
 ```bash
-brew install yt-dlp ffmpeg tesseract
-pip install markitdown  # PDF support
-# For audio transcription: brew install whisper-cli
-```
-
-### Verify installation
-
-```bash
+# You should see version info (e.g., "summarize 0.x.x")
 summarize --version
 ```
 
-## How to install this skill
+If you see `command not found`, Homebrew may not be on your PATH. Restart your terminal and try again, or run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
 
-### Claude Code
-
-```bash
-cp -r path/to/fieldwork/skills/summarize .claude/skills/summarize
-```
-
-### Codex CLI
+### Optional dependencies (install only what you need)
 
 ```bash
-cp -r path/to/fieldwork/skills/summarize .codex/skills/summarize
+# For YouTube video downloads and podcast audio
+brew install yt-dlp
+
+# For video slide extraction and audio processing
+brew install ffmpeg
+
+# For audio/video transcription (local, no API key needed)
+# Only install if you need to transcribe audio or video files
+# brew install whisper-cli
+
+# For PDF text extraction
+pip install markitdown
 ```
 
-### Or just point your agent to it
-
-Give your AI agent this URL: https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize
+Each optional dependency unlocks specific features. See the Dependency Matrix below for which features require which tools. You do not need all of them -- install only when you need that specific capability.
 
 ## Decision Tree: summarize vs Other Tools
 

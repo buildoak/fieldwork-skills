@@ -7,37 +7,70 @@ description: Web search and content extraction skill for AI coding agents. Zero 
 
 Web search, scraping, and content extraction for AI coding agents. Zero API keys required. Five tools organized in fallback chains: WebSearch and Crawl4AI as primary, Jina as secondary, duckduckgo-search and WebFetch as fallbacks. Use when your agent needs web information -- finding pages, extracting content, or conducting research.
 
-## Setup
+## How to install this skill
 
-### Install scraping tools
+### Option 1: Point your agent at it (easiest)
+Just paste this into your Claude Code or Codex CLI chat:
+
+> Install the web-search skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search
+
+Your agent will read the skill and know how to use it.
+
+### Option 2: Clone into your project
 ```bash
-pip install crawl4ai duckduckgo-search
-crawl4ai-setup  # Downloads Playwright browsers
+# Clone the fieldwork repo (if you haven't already)
+git clone https://github.com/nikitadubovikov/fieldwork.git
+
+# Copy the skill into your project's skills folder
+# For Claude Code:
+cp -r fieldwork/skills/web-search your-project/.claude/skills/web-search
+
+# For Codex CLI:
+cp -r fieldwork/skills/web-search your-project/.codex/skills/web-search
 ```
 
-### That's it -- zero API keys required
+### Option 3: Download just this skill
+Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/web-search` folder into your project's skills directory.
 
-### Verify installation
+---
+
+## Setup: Install dependencies
+
+Installing the skill (above) just copies the instruction files. You also need the tools installed on your machine so the skill can use them.
+
+### What you'll need
+
+- **Python 3.10+** -- programming language runtime, needed for the web scraping libraries. Check with `python3 --version`. Download from https://python.org if needed.
+
+### Install scraping tools
+
+```bash
+# Install web scraping and search libraries
+pip install crawl4ai duckduckgo-search
+
+# Set up browser engine for crawl4ai (needed for JS-heavy websites)
+crawl4ai-setup
+```
+
+### Verify it's working
+
+```bash
+# You should see "crawl4ai ready" with no errors
+python -c "import crawl4ai; print('crawl4ai ready')"
+```
+
+If you see `ModuleNotFoundError`, the pip install did not work. Make sure you're using the right Python -- try `pip3 install` instead of `pip install`.
+
+### No API keys needed
+
+Everything works out of the box. The built-in tools (WebSearch, WebFetch) require zero installation. Crawl4AI and duckduckgo-search are free and keyless.
+
+Optional: `JINA_API_KEY` (get from https://jina.ai) increases Jina rate limits, but is not required.
+
+### Verify full setup
 ```bash
 ./scripts/search-check.sh
 ```
-
-## How to install this skill
-
-### Claude Code
-```bash
-# From your project root:
-cp -r path/to/fieldwork/skills/web-search .claude/skills/web-search
-```
-
-### Codex CLI
-```bash
-cp -r path/to/fieldwork/skills/web-search .codex/skills/web-search
-```
-
-### Or just point your agent to it
-Give your AI agent this URL and ask it to learn the skill:
-`https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search`
 
 ---
 

@@ -12,147 +12,17 @@ Terminology used in this file:
 - **SPA:** Single-page application; content is rendered dynamically in JavaScript.
 - **MCP:** Model Context Protocol, a standard for exposing tool servers to AI agents.
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the web-search skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/web-search
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
-
-```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.claude/skills/web-search
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:web-search -->"
-  cat /tmp/fieldwork/skills/web-search/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-### Option 3: Download just this skill
-
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/web-search
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:web-search -->"
-  cat /tmp/fieldwork-main/skills/web-search/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
----
-
-## Setup: Install dependencies
-
-Installing the skill (above) copies instruction files only. You also need the runtime tools installed on your machine.
-
-### Prerequisites checklist
-
-**Python 3.10+** -- Programming language runtime needed by the web scraping libraries.
-```bash
-python3 --version  # Should print "Python 3.10" or higher
-```
-Don't have it? Install from [https://python.org/downloads/](https://python.org/downloads/) or run `brew install python3` (macOS) / `sudo apt install -y python3 python3-pip` (Ubuntu/Debian).
-
-### Step 1: Install web scraping and search libraries
-
-The two Python packages that power this skill: Crawl4AI (JS-rendering scraper) and duckduckgo-search (fallback search).
+## Setup
 
 ```bash
 python3 -m pip install crawl4ai duckduckgo-search
-```
-
-✓ **Success:** Ends with "Successfully installed crawl4ai-X.X.X duckduckgo-search-X.X.X" (version numbers vary).
-
-✗ **If you see "Permission denied":** Run `python3 -m pip install --user crawl4ai duckduckgo-search` instead.
-
-✗ **If you see "requires a different Python: 3.9":** Upgrade to Python 3.10+ and retry.
-
-### Step 2: Set up Crawl4AI browser engine
-
-This installs Playwright browser binaries so Crawl4AI can render JavaScript-heavy websites. Downloads ~150MB of browser files.
-
-```bash
 crawl4ai-setup
 ```
 
-✓ **Success:** Completes and returns to your shell without errors.
+- **Claude Code:** copy this skill folder into `.claude/skills/web-search/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-✗ **If you see `crawl4ai-setup: command not found`:** The package didn't install its CLI. Run `python3 -m crawl4ai.setup` instead.
-
-### Step 3: Verify everything works
-
-```bash
-python3 -c "import crawl4ai, duckduckgo_search; print('All imports OK')"
-crwl --help
-```
-
-✓ **Success:** Prints "All imports OK" and `crwl` shows its help text.
-
-✗ **If you see `ModuleNotFoundError`:** Rerun `python3 -m pip install crawl4ai duckduckgo-search`.
-
-✗ **If you see `crwl: command not found`:** Rerun `crawl4ai-setup`.
-
-### No API keys needed
-
-Everything works out of the box. The built-in tools (WebSearch, WebFetch) require zero installation. Crawl4AI and duckduckgo-search are free and keyless.
-
-Optional: Set `JINA_API_KEY` to increase Jina rate limits (get from [https://jina.ai](https://jina.ai)), but it is not required.
-
-```bash
-# Optional: add to your shell profile (~/.zshrc or ~/.bashrc) for persistence
-export JINA_API_KEY='jina_...'
-```
-
-### Verify full setup
-
-```bash
-# Run from the skill directory
-bash ./scripts/search-check.sh
-```
-
-### Troubleshooting
-
-| If you see | Fix |
-|---|---|
-| `python3: command not found` | Install Python 3.10+ from [https://python.org](https://python.org) or `brew install python3` (macOS) |
-| `ERROR: Package 'crawl4ai' requires a different Python: 3.9` | Upgrade to Python 3.10+, then rerun `python3 -m pip install crawl4ai duckduckgo-search` |
-| `ModuleNotFoundError: No module named 'crawl4ai'` | Run `python3 -m pip install crawl4ai` |
-| `crawl4ai-setup: command not found` | Run `python3 -m crawl4ai.setup` instead |
-| `Executable doesn't exist` (Playwright browser error) | Run `crawl4ai-setup` to install browser binaries |
-
-### Platform notes
-
-- **macOS:** Primary instructions above work as written. Use `brew install python3` if you prefer Homebrew.
-- **Linux:** Same steps. Install Python via your package manager (`sudo apt install -y python3 python3-pip` on Ubuntu/Debian, `sudo dnf install -y python3 python3-pip` on Fedora).
-- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
-
----
+For the full installation walkthrough (prerequisites, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -446,6 +316,7 @@ Verify: `./scripts/search-check.sh`
 |---|---|---|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/tool-comparison.md` | Side-by-side comparison: latency, cost, JS support, accuracy | When choosing between tools for a specific use case |
 | `./references/error-patterns.md` | Detailed failure modes and recovery per tool | When debugging a failed extraction or search |
 | `./scripts/search-check.sh` | Health check: verifies all tools are available | Before first web search task in a session |

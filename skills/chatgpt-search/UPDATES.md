@@ -3,6 +3,30 @@
 Structured changelog for AI agents. Read this before applying updates so you can
 merge safely with local edits.
 
+## v0.3.1 (2026-02-18)
+
+### new-files
+
+| File | Description |
+|------|-------------|
+| `references/installation-guide.md` | Detailed agent-readable installation guide for Claude Code and Codex CLI |
+
+### changed-files
+
+| File | What changed | Breaking? |
+|------|-------------|-----------|
+| `SKILL.md` | Replaced verbose 3-option install block with concise Setup section delegating to installation guide | No -- same info, better organized |
+
+### removed-files
+(none)
+
+### breaking-changes
+(none)
+
+### migration-notes
+- New `references/` directory and `references/installation-guide.md` (safe to copy)
+- `SKILL.md` install section is shorter but all information moved to the installation guide
+
 ## v0.3.0 (2026-02-17)
 
 ### new-files

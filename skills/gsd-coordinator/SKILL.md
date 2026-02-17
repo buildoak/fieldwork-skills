@@ -25,58 +25,18 @@ Key constraint: do not spawn Claude subagents via `Task`; use `agent-mux --engin
 - Optional local dependency: `skills/agent-mux` in this repo is an integration pointer only, not required if `agent-mux` is already installed.
 - Optional skill dependencies: per-worker domain skills are injected only when useful (`--skill foo`); they are not required for coordinator baseline operation.
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the gsd-coordinator skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/gsd-coordinator
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
+## Setup
 
 ```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:gsd-coordinator -->"
-  cat /tmp/fieldwork/skills/gsd-coordinator/SKILL.md
-} >> /path/to/your-project/AGENTS.md
+# Install agent-mux CLI (required upstream dependency)
+git clone https://github.com/buildoak/agent-mux.git /path/to/agent-mux
+cd /path/to/agent-mux && ./setup.sh && bun link
 ```
 
-### Option 3: Download just this skill
+- **Claude Code:** copy this skill folder into `.claude/skills/gsd-coordinator/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:gsd-coordinator -->"
-  cat /tmp/fieldwork-main/skills/gsd-coordinator/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
+For the full installation walkthrough (prerequisites, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ### Artifact directory setup
 
@@ -308,5 +268,6 @@ Never dump raw content back. Always return path + summary + status.
 |------|------|--------------|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/orchestration-examples.md` | Prompting and orchestration examples | When building or debugging dispatch plans |
 | `https://github.com/buildoak/agent-mux` | Required upstream CLI docs and runtime contract | Always for installation/flags/runtime behavior |

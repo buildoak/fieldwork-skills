@@ -14,134 +14,17 @@ Terminology used in this file:
 - **OCR:** Optical character recognition (extracting text from images/scans).
 - **ANSI codes:** Terminal color/control sequences; `--plain` removes them for machine parsing.
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the summarize skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/summarize
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
-
-```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.claude/skills/summarize
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:summarize -->"
-  cat /tmp/fieldwork/skills/summarize/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-### Option 3: Download just this skill
-
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/summarize
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:summarize -->"
-  cat /tmp/fieldwork-main/skills/summarize/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
----
-
-## Setup: Install dependencies
-
-Installing the skill (above) copies instruction files only. You also need the `summarize` CLI and optional extraction tools installed on your machine.
-
-### Prerequisites checklist
-
-**Homebrew** -- Package manager for macOS, needed to install the `summarize` CLI and optional tools.
-```bash
-brew --version  # Should print "Homebrew X.Y.Z"
-```
-Don't have it? Install from [https://brew.sh](https://brew.sh) or run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
-
-### Step 1: Add the summarize Homebrew tap
-
-This registers the formula source that contains the `summarize` CLI.
+## Setup
 
 ```bash
 brew tap steipete/tap
-```
-
-✓ **Success:** Output includes "Tapped" and mentions `steipete/tap`.
-
-✗ **If you see an error:** Check your internet connection and run `brew doctor` for diagnostics.
-
-### Step 2: Install the summarize CLI
-
-```bash
 brew install summarize
 ```
 
-✓ **Success:** Install completes with no error lines.
+- **Claude Code:** copy this skill folder into `.claude/skills/summarize/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-✗ **If you see `No available formula with the name "summarize"`:** Run `brew tap steipete/tap` first (Step 1), then retry.
-
-### Step 3: Verify everything works
-
-```bash
-summarize --version
-summarize --extract "https://example.com" --plain | head -5
-```
-
-✓ **Success:** Version prints (e.g., "summarize 0.x.x") and extraction returns text from example.com.
-
-✗ **If you see `command not found`:** Homebrew's bin directory is not on your PATH. Run `eval "$(/opt/homebrew/bin/brew shellenv)"` (Apple Silicon) or `eval "$(/usr/local/bin/brew shellenv)"` (Intel Mac), then try again. Add that line to your `~/.zshrc` for persistence.
-
-### Optional dependencies (install only what you need)
-
-Each tool below unlocks a specific capability. You do not need all of them -- install only when you need that feature.
-
-| Tool | What it unlocks | Install command |
-|---|---|---|
-| `yt-dlp` | YouTube video downloads and podcast audio extraction | `brew install yt-dlp` |
-| `ffmpeg` | Video slide extraction and audio processing | `brew install ffmpeg` |
-| `whisper-cli` | Local speech-to-text for audio/video (no API key needed, ~1.5GB download) | `brew install whisper-cli` |
-| `markitdown` | PDF and document text extraction via Python | `python3 -m pip install markitdown` |
-| `uv` | Fast Python tool runner, alternative way to run markitdown (`uvx markitdown`) | `brew install uv` |
-| `tesseract` | OCR for scanned images and image-only PDFs | `brew install tesseract` |
-
-### Troubleshooting
-
-| If you see | Fix |
-|---|---|
-| `brew: command not found` | Install Homebrew from [https://brew.sh](https://brew.sh), restart your terminal |
-| `No available formula with the name "summarize"` | Run `brew tap steipete/tap` first, then `brew install summarize` |
-| `summarize: command not found` | Add Homebrew to PATH: `eval "$(/opt/homebrew/bin/brew shellenv)"` then restart terminal |
-| `Error: The following directories are not writable` | Fix ownership: `sudo chown -R "$(whoami)":admin /opt/homebrew` then retry |
-| `Error: Failed to download resource` | Check internet connection, run `brew update`, then retry install |
-
-### Platform notes
-
-- **macOS:** Primary instructions above work as written (`brew tap` + `brew install`).
-- **Linux:** Either install [Linuxbrew](https://brew.sh) and follow the same steps, or check the [summarize repo](https://github.com/steipete/summarize) for alternative install methods.
-- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
+For the full installation walkthrough (prerequisites, optional dependencies, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -458,4 +341,5 @@ Configure only what your workflow needs. If you use LLM Summarization Mode, add 
 |------|------|-------------|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/commands.md` | Full CLI flag reference with all options | When you need exact flag syntax or env var names |

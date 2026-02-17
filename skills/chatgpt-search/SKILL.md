@@ -20,58 +20,18 @@ with title boosting, code separation, TF-IDF (term-frequency/inverse-document-fr
 keyword extraction,
 and filtering by date, role, model, and language.
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the chatgpt-search skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/chatgpt-search
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
+## Setup
 
 ```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:chatgpt-search -->"
-  cat /tmp/fieldwork/skills/chatgpt-search/SKILL.md
-} >> /path/to/your-project/AGENTS.md
+cd /path/to/skills/chatgpt-search
+./scripts/setup.sh /path/to/your/conversations.json
+export PYTHONPATH=/path/to/skills/chatgpt-search/src
 ```
 
-### Option 3: Download just this skill
+- **Claude Code:** copy this skill folder into `.claude/skills/chatgpt-search/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:chatgpt-search -->"
-  cat /tmp/fieldwork-main/skills/chatgpt-search/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
+For the full installation walkthrough (prerequisites, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -258,6 +218,7 @@ Tested on 149MB export (1,514 conversations, 16,689 messages):
 |------|------|--------------|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./README.md` | Local package and development notes | When debugging setup or extending the CLI |
 | `./scripts/setup.sh` | One-command dependency setup and index bootstrap | During first-time setup or rebuild reset |
 | `./src/chatgpt_search/` | Search/index implementation modules | When patching ranking, parsing, or filters |

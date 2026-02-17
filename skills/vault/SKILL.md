@@ -12,60 +12,17 @@ Keep your secrets encrypted. API keys, passwords, tokens -- locked in a vault th
 
 ---
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the vault skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/vault
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
+## Setup
 
 ```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/vault /path/to/your-project/.claude/skills/vault
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:vault -->"
-  cat /tmp/fieldwork/skills/vault/SKILL.md
-} >> /path/to/your-project/AGENTS.md
+cd /path/to/skills/vault
+./scripts/setup.sh
 ```
 
-### Option 3: Download just this skill
+- **Claude Code:** copy this skill folder into `.claude/skills/vault/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/vault /path/to/your-project/.claude/skills/vault
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:vault -->"
-  cat /tmp/fieldwork-main/skills/vault/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
----
+For the full installation walkthrough (prerequisites, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -313,5 +270,6 @@ The vault directory looks like this:
 
 | Path | What | When to load |
 |------|------|-------------|
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./scripts/vault.sh` | Vault CLI -- the main interface | Always |
 | `./scripts/setup.sh` | First-time setup script | Initial setup only |

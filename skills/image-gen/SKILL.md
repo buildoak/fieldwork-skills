@@ -16,102 +16,16 @@ Terminology used in this file:
 - **Inpainting (mask-based editing):** Editing only selected regions of an image using a mask file.
 - **JSON output contract:** Machine-readable output format your automation should parse directly.
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the image-gen skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/image-gen
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
+## Setup
 
 ```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/image-gen /path/to/your-project/.claude/skills/image-gen
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:image-gen -->"
-  cat /tmp/fieldwork/skills/image-gen/SKILL.md
-} >> /path/to/your-project/AGENTS.md
+export OPENROUTER_API_KEY_IMAGES='your-key-here'
 ```
 
-### Option 3: Download just this skill
+- **Claude Code:** copy this skill folder into `.claude/skills/image-gen/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/image-gen /path/to/your-project/.claude/skills/image-gen
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:image-gen -->"
-  cat /tmp/fieldwork-main/skills/image-gen/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
-## Setup: Get your API key
-
-### Required: OpenRouter API key
-
-1. Go to [https://openrouter.ai](https://openrouter.ai)
-2. Create an account
-3. Add credits
-4. Generate an API key
-
-```bash
-export OPENROUTER_API_KEY_IMAGES=your-key-here
-# Fallback supported by scripts:
-# export OPENROUTER_API_KEY=your-key-here
-```
-
-### Optional: OpenAI key (mask-based inpainting)
-
-Needed only for `edit.py --mode openai`.
-
-```bash
-export OPENAI_API_KEY=your-openai-key-here
-```
-
-### Optional: Anthropic key (auto-review)
-
-Needed only for `review.py --auto`.
-
-```bash
-export ANTHROPIC_API_KEY=your-anthropic-key-here
-```
-
-### Quick test
-
-```bash
-python ./scripts/generate.py \
-  --prompt "A simple blue circle icon on white background" \
-  --model nanobanana \
-  --aspect-ratio 1:1 \
-  --size 1K \
-  --output-dir ./data/
-```
-
-If setup is correct, the command returns JSON with `"success": true` and a file path in `./data/`.
+For the full installation walkthrough (prerequisites, API keys, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Model selection
 
@@ -364,6 +278,7 @@ Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to cont
 | `./scripts/review.py` | Vision-based quality review | Quality-critical workflows |
 | `./references/prompt-templates.md` | Prompt templates and enhancement techniques | Prompt engineering step |
 | `./references/model-card.md` | Model capabilities, tradeoffs, pricing context | Model selection and optimization |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/api-reference.md` | API payload and integration details | Debugging and advanced usage |
 | `./examples/` | Example outputs by model | Visual quality and style calibration |
 | `./UPDATES.md` | Changelog for this skill | Checking new features/fixes |

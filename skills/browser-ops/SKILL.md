@@ -14,154 +14,17 @@ Terminology used in this file:
 - **CSS selector:** A rule for targeting specific DOM elements (for example `.price` or `#submit`).
 - **OAuth:** A standard login/authorization flow that redirects through an identity provider (for example, "Sign in with GitHub").
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the browser-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/browser-ops
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
-
-```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:browser-ops -->"
-  cat /tmp/fieldwork/skills/browser-ops/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-### Option 3: Download just this skill
-
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:browser-ops -->"
-  cat /tmp/fieldwork-main/skills/browser-ops/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
----
-
-## Setup: Install dependencies
-
-Installing the skill (above) copies instruction files only. You also need the runtime tools installed on your machine.
-
-### Prerequisites checklist
-
-**Node.js 18+** -- JavaScript runtime needed to run the browser automation server.
-```bash
-node --version  # Should print "v18" or higher
-```
-Don't have it? Install from [https://nodejs.org](https://nodejs.org) or run `brew install node` (macOS) / `sudo apt install -y nodejs npm` (Ubuntu/Debian).
-
-**npm** -- Package manager for Node.js, comes bundled with Node.js.
-```bash
-npm --version  # Should print a version number
-```
-Don't have it? Reinstall Node.js from [https://nodejs.org](https://nodejs.org) -- npm is included.
-
-### Step 1: Install agent-browser
-
-The browser automation server that provides the 25 browser tools.
+## Setup
 
 ```bash
 npm install -g @anthropic-ai/agent-browser
-```
-
-✓ **Success:** No red error text. Ends with a summary of installed packages.
-
-✗ **If you see `EACCES` / "Permission denied":** Run `sudo npm install -g @anthropic-ai/agent-browser` instead.
-
-✗ **If you see `npm: command not found`:** Install Node.js first (see prerequisites above).
-
-### Step 2: Verify the CLI is installed
-
-```bash
-agent-browser --version
-```
-
-✓ **Success:** Prints a version number `0.10.0` or higher.
-
-✗ **If you see `command not found`:** npm's global bin directory is not on your PATH. Run `export PATH="$(npm config get prefix)/bin:$PATH"` and try again. Add that line to your `~/.zshrc` or `~/.bashrc` for persistence.
-
-**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug.
-
-### Step 3: Start the daemon
-
-The browser daemon must be running before your agent can use browser tools.
-
-```bash
 agent-browser start
 ```
 
-✓ **Success:** Reports daemon startup and returns control to your shell.
+- **Claude Code:** copy this skill folder into `.claude/skills/browser-ops/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-✗ **If it exits with an error:** Check that no other `agent-browser` process is running (`agent-browser stop` first, then `agent-browser start`).
-
-### Step 4: Verify everything works
-
-```bash
-agent-browser status
-```
-
-✓ **Success:** Output includes "running" and a port number.
-
-✗ **If it says "not running":** Run `agent-browser start` first, wait 2-3 seconds, then check status again.
-
-### Optional: AgentMail for email verification flows
-
-Only needed if your agent signs up for services that require email verification (OTP codes, confirmation links).
-
-```bash
-python3 -m pip install agentmail
-```
-
-✓ **Success:** Prints "Successfully installed agentmail".
-
-Get your API key at [https://agentmail.to](https://agentmail.to) (free tier available).
-
-### Troubleshooting
-
-| If you see | Fix |
-|---|---|
-| `npm ERR! code EACCES` | Run with `sudo`: `sudo npm install -g @anthropic-ai/agent-browser` |
-| `agent-browser: command not found` | Add npm bin to PATH: `export PATH="$(npm config get prefix)/bin:$PATH"` then restart your terminal |
-| `agent-browser status` shows "not running" | Start the daemon: `agent-browser start` |
-| `Error: listen EADDRINUSE` | Another process is using the port. Run `agent-browser stop` then `agent-browser start` |
-| `node: command not found` | Install Node.js 18+ from [https://nodejs.org](https://nodejs.org) |
-
-### Platform notes
-
-- **macOS:** Primary instructions above work as written. Use `brew install node` if you prefer Homebrew.
-- **Linux:** Same steps. Install Node.js via your package manager (`sudo apt install -y nodejs npm` on Ubuntu/Debian, `sudo dnf install -y nodejs npm` on Fedora).
-- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
+For the full installation walkthrough (prerequisites, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -552,6 +415,7 @@ Common browser automation errors and recovery strategies.
 |------|------|-------------|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/tool-inventory.md` | Full 25-tool API reference with params and examples | When you need exact tool syntax |
 | `./references/battle-tested-patterns.md` | 12 validated workflow patterns from benchmark | When building a new browser workflow |
 | `./references/failure-log.md` | Benchmark results, anti-bot findings, AgentMail details | Before targeting a new site |

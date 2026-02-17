@@ -12,149 +12,18 @@ Terminology used in this file:
 - **GCP:** Google Cloud Platform, where you create the project and OAuth credentials.
 - **RFC3339:** Standard date-time format used by Google APIs (for example, `2026-02-18T09:00:00+00:00`).
 
-## How to install this skill
-
-Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
-
-### Option 1: Tell your AI agent (easiest)
-
-Paste this into your AI agent chat:
-
-> Install the google-workspace-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/google-workspace-ops
-
-The agent will read this `SKILL.md` and install it for your environment.
-
-### Option 2: Clone and copy
-
-```bash
-# 1. Clone the fieldwork repo
-git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:google-workspace-ops -->"
-  cat /tmp/fieldwork/skills/google-workspace-ops/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-### Option 3: Download just this skill
-
-```bash
-# 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
-unzip -q /tmp/fieldwork.zip -d /tmp
-
-# 2A. Claude Code: copy this skill folder into your project
-mkdir -p /path/to/your-project/.claude/skills
-cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
-
-# 2B. Codex CLI: Codex reads AGENTS.md only
-touch /path/to/your-project/AGENTS.md
-{
-  echo
-  echo "<!-- fieldwork-skill:google-workspace-ops -->"
-  cat /tmp/fieldwork-main/skills/google-workspace-ops/SKILL.md
-} >> /path/to/your-project/AGENTS.md
-```
-
-For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
-
----
-
-## Setup: Install dependencies
-
-Installing the skill (above) copies instruction files only. You also need the `gog` CLI tool installed on your machine.
-
-### Prerequisites checklist
-
-**Homebrew** -- Package manager for macOS, needed to install the `gog` CLI.
-```bash
-brew --version  # Should print "Homebrew X.Y.Z"
-```
-Don't have it? Install from [https://brew.sh](https://brew.sh) or run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
-
-### Step 1: Add the gogcli Homebrew tap
-
-This registers the formula source that contains the `gog` CLI.
+## Setup
 
 ```bash
 brew tap steipete/tap
-```
-
-✓ **Success:** Output includes "Tapped" and mentions `steipete/tap`.
-
-✗ **If you see an error:** Check your internet connection and run `brew doctor` for diagnostics.
-
-### Step 2: Install the gog CLI
-
-```bash
 brew install gogcli
-```
-
-✓ **Success:** Install completes with no error lines.
-
-✗ **If you see `No available formula with the name "gogcli"`:** Run `brew tap steipete/tap` first (Step 1), then retry.
-
-### Step 3: Verify the CLI is installed
-
-```bash
-gog version
-```
-
-✓ **Success:** Prints something like "gog version 0.x.x".
-
-✗ **If you see `command not found`:** Homebrew's bin directory is not on your PATH. Run `eval "$(/opt/homebrew/bin/brew shellenv)"` (Apple Silicon) or `eval "$(/usr/local/bin/brew shellenv)"` (Intel Mac), then try again. Add that line to your `~/.zshrc` for persistence.
-
-### Step 4: Connect your Google account (one-time setup, ~10-15 minutes)
-
-Before using this skill, you need to connect it to your Google account. This is a one-time setup:
-
-1. Create a Google Cloud project (free, no billing required)
-2. Enable the Google APIs you need (Gmail, Calendar, Drive, etc.)
-3. Download a credentials JSON file from the Google Cloud Console
-4. Run `gog login` to authorize access to your account
-
-The full process is documented with screenshots in [references/auth-setup.md](references/auth-setup.md).
-
-```bash
 gog login YOUR_EMAIL --services all
 ```
 
-✓ **Success:** Login flow completes and the OAuth token is saved.
+- **Claude Code:** copy this skill folder into `.claude/skills/google-workspace-ops/`
+- **Codex CLI:** append this SKILL.md content to your project's root `AGENTS.md`
 
-✗ **If OAuth fails:** Make sure you downloaded the credentials JSON first. See [references/auth-setup.md](references/auth-setup.md).
-
-### Step 5: Verify everything works
-
-```bash
-gog auth status
-```
-
-✓ **Success:** Shows your email address and active auth status.
-
-✗ **If you see `auth_required`:** Run `gog login YOUR_EMAIL --services all` and complete the browser consent flow.
-
-### Troubleshooting
-
-| If you see | Fix |
-|---|---|
-| `brew: command not found` | Install Homebrew from [https://brew.sh](https://brew.sh), restart your terminal |
-| `No available formula with the name "gogcli"` | Run `brew tap steipete/tap` first, then `brew install gogcli` |
-| `gog: command not found` | Add Homebrew to PATH: `eval "$(/opt/homebrew/bin/brew shellenv)"` then restart terminal |
-| `auth_required` | Run `gog login YOUR_EMAIL --services all` and complete browser consent |
-| `invalid_grant` | Remove and re-add: `gog auth remove YOUR_EMAIL` then `gog login YOUR_EMAIL --services all` |
-
-### Platform notes
-
-- **macOS:** Primary instructions above work as written (`brew tap` + `brew install`).
-- **Linux:** Homebrew may not be present by default. Either install [Linuxbrew](https://brew.sh) and follow the same steps, or build from source -- see the [gogcli repo](https://github.com/steipete/gogcli).
-- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
+For the full installation walkthrough (prerequisites, OAuth setup, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
 ## Staying Updated
 
@@ -495,6 +364,7 @@ gog config set default_account work@company.com
 |------|------|-------------|
 | `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/gog-commands.md` | Full command reference for all 15 services | Need exact command syntax and flags |
 | `./references/pipeline-patterns.md` | Composable patterns: `gog` + jq + multi-service workflows | Building complex automation |
 | `./references/onboarding-headless.md` | Headless server OAuth setup via SSH tunneling | Setting up on a server without a display |

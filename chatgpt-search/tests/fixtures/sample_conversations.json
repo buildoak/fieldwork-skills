@@ -1,0 +1,489 @@
+[
+  {
+    "title": "Test: Python List Sorting",
+    "create_time": 1735689600.0,
+    "update_time": 1735689900.0,
+    "mapping": {
+      "a0000000-0000-0000-0000-000000000001": {
+        "id": "a0000000-0000-0000-0000-000000000001",
+        "message": null,
+        "parent": null,
+        "children": ["a0000000-0000-0000-0000-000000000002"]
+      },
+      "a0000000-0000-0000-0000-000000000002": {
+        "id": "a0000000-0000-0000-0000-000000000002",
+        "message": {
+          "id": "a0000000-0000-0000-0000-000000000002",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": [""]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "a0000000-0000-0000-0000-000000000001",
+        "children": ["a0000000-0000-0000-0000-000000000003"]
+      },
+      "a0000000-0000-0000-0000-000000000003": {
+        "id": "a0000000-0000-0000-0000-000000000003",
+        "message": {
+          "id": "a0000000-0000-0000-0000-000000000003",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1735689600.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["How do I sort a list of dictionaries by the value of a specific key in Python?"]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "a0000000-0000-0000-0000-000000000002",
+        "children": ["a0000000-0000-0000-0000-000000000004"]
+      },
+      "a0000000-0000-0000-0000-000000000004": {
+        "id": "a0000000-0000-0000-0000-000000000004",
+        "message": {
+          "id": "a0000000-0000-0000-0000-000000000004",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1735689650.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["You can use the built-in sorted function with a key argument. The sorted function returns a new list while preserving the original."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "a0000000-0000-0000-0000-000000000003",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "a0000000-0000-0000-0000-000000000004",
+    "plugin_ids": null,
+    "conversation_id": "a0000000-0000-0000-0000-000000000000",
+    "id": "a0000000-0000-0000-0000-000000000000",
+    "default_model_slug": "gpt-4o"
+  },
+  {
+    "title": "Test: Docker Compose Setup",
+    "create_time": 1738368000.0,
+    "update_time": 1738368600.0,
+    "mapping": {
+      "b0000000-0000-0000-0000-000000000001": {
+        "id": "b0000000-0000-0000-0000-000000000001",
+        "message": null,
+        "parent": null,
+        "children": ["b0000000-0000-0000-0000-000000000002"]
+      },
+      "b0000000-0000-0000-0000-000000000002": {
+        "id": "b0000000-0000-0000-0000-000000000002",
+        "message": {
+          "id": "b0000000-0000-0000-0000-000000000002",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": [""]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "b0000000-0000-0000-0000-000000000001",
+        "children": ["b0000000-0000-0000-0000-000000000003"]
+      },
+      "b0000000-0000-0000-0000-000000000003": {
+        "id": "b0000000-0000-0000-0000-000000000003",
+        "message": {
+          "id": "b0000000-0000-0000-0000-000000000003",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1738368000.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["I need a Docker Compose file for the following stack: PostgreSQL 16, Redis, and a Python FastAPI app. The database should persist data to a volume."]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "b0000000-0000-0000-0000-000000000002",
+        "children": ["b0000000-0000-0000-0000-000000000004"]
+      },
+      "b0000000-0000-0000-0000-000000000004": {
+        "id": "b0000000-0000-0000-0000-000000000004",
+        "message": {
+          "id": "b0000000-0000-0000-0000-000000000004",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1738368100.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Here is a Docker Compose configuration for your stack. The services are connected via a shared network and the database uses a named volume for persistence.\n\n```yaml\nversion: '3.8'\nservices:\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_DB: appdb\n      POSTGRES_USER: appuser\n      POSTGRES_PASSWORD: changeme\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n    ports:\n      - \"5432:5432\"\n  redis:\n    image: redis:7-alpine\n    ports:\n      - \"6379:6379\"\n  app:\n    build: .\n    ports:\n      - \"8000:8000\"\n    depends_on:\n      - db\n      - redis\nvolumes:\n  pgdata:\n```\n\nAnd here is the corresponding Dockerfile:\n\n```python\n# app/main.py\nfrom fastapi import FastAPI\nimport redis\n\napp = FastAPI()\n\n@app.get(\"/health\")\ndef health():\n    return {\"status\": \"ok\"}\n```\n\nYou can start everything with `docker compose up -d`."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "b0000000-0000-0000-0000-000000000003",
+        "children": ["b0000000-0000-0000-0000-000000000005"]
+      },
+      "b0000000-0000-0000-0000-000000000005": {
+        "id": "b0000000-0000-0000-0000-000000000005",
+        "message": {
+          "id": "b0000000-0000-0000-0000-000000000005",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1738368200.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Can you add a health check to the PostgreSQL service so the app waits until the database is ready?"]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "b0000000-0000-0000-0000-000000000004",
+        "children": ["b0000000-0000-0000-0000-000000000006"]
+      },
+      "b0000000-0000-0000-0000-000000000006": {
+        "id": "b0000000-0000-0000-0000-000000000006",
+        "message": {
+          "id": "b0000000-0000-0000-0000-000000000006",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1738368300.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Add the following healthcheck block to your db service and update the app to use a condition:\n\n```yaml\nservices:\n  db:\n    image: postgres:16\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U appuser\"]\n      interval: 5s\n      timeout: 5s\n      retries: 5\n  app:\n    depends_on:\n      db:\n        condition: service_healthy\n```\n\nThis ensures the app container starts only after PostgreSQL passes the health check."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "b0000000-0000-0000-0000-000000000005",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "b0000000-0000-0000-0000-000000000006",
+    "plugin_ids": null,
+    "conversation_id": "b0000000-0000-0000-0000-000000000000",
+    "id": "b0000000-0000-0000-0000-000000000000",
+    "default_model_slug": "gpt-4o"
+  },
+  {
+    "title": "Test: Multilingual Chat",
+    "create_time": 1741046400.0,
+    "update_time": 1741046800.0,
+    "mapping": {
+      "c0000000-0000-0000-0000-000000000001": {
+        "id": "c0000000-0000-0000-0000-000000000001",
+        "message": null,
+        "parent": null,
+        "children": ["c0000000-0000-0000-0000-000000000002"]
+      },
+      "c0000000-0000-0000-0000-000000000002": {
+        "id": "c0000000-0000-0000-0000-000000000002",
+        "message": {
+          "id": "c0000000-0000-0000-0000-000000000002",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": [""]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "c0000000-0000-0000-0000-000000000001",
+        "children": ["c0000000-0000-0000-0000-000000000003"]
+      },
+      "c0000000-0000-0000-0000-000000000003": {
+        "id": "c0000000-0000-0000-0000-000000000003",
+        "message": {
+          "id": "c0000000-0000-0000-0000-000000000003",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1741046400.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Объясни мне разницу между списком и кортежем в Python. Какие основные отличия в использовании?"]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "c0000000-0000-0000-0000-000000000002",
+        "children": ["c0000000-0000-0000-0000-000000000004"]
+      },
+      "c0000000-0000-0000-0000-000000000004": {
+        "id": "c0000000-0000-0000-0000-000000000004",
+        "message": {
+          "id": "c0000000-0000-0000-0000-000000000004",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1741046500.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Основная разница между списком (list) и кортежем (tuple) в Python заключается в изменяемости. Список — это изменяемая структура данных, а кортеж — неизменяемая. Вот основные отличия:\n\n1. **Изменяемость**: списки можно модифицировать после создания, кортежи нельзя.\n2. **Производительность**: кортежи работают быстрее благодаря неизменяемости.\n3. **Использование**: кортежи часто используют как ключи словаря, списки — нет."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "c0000000-0000-0000-0000-000000000003",
+        "children": ["c0000000-0000-0000-0000-000000000005"]
+      },
+      "c0000000-0000-0000-0000-000000000005": {
+        "id": "c0000000-0000-0000-0000-000000000005",
+        "message": {
+          "id": "c0000000-0000-0000-0000-000000000005",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1741046600.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Thanks, now explain the same thing in English for my colleague. Keep it short and practical."]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "c0000000-0000-0000-0000-000000000004",
+        "children": ["c0000000-0000-0000-0000-000000000006"]
+      },
+      "c0000000-0000-0000-0000-000000000006": {
+        "id": "c0000000-0000-0000-0000-000000000006",
+        "message": {
+          "id": "c0000000-0000-0000-0000-000000000006",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1741046700.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Lists are mutable (you can add, remove, and change elements), while tuples are immutable (fixed after creation). Use lists when the data needs to change, tuples when it should stay constant. Tuples are slightly faster and can serve as dictionary keys."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "c0000000-0000-0000-0000-000000000005",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "c0000000-0000-0000-0000-000000000006",
+    "plugin_ids": null,
+    "conversation_id": "c0000000-0000-0000-0000-000000000000",
+    "id": "c0000000-0000-0000-0000-000000000000",
+    "default_model_slug": "gpt-4o"
+  },
+  {
+    "title": "Test: Edge Cases",
+    "create_time": 1743638400.0,
+    "update_time": 1743639000.0,
+    "mapping": {
+      "d0000000-0000-0000-0000-000000000001": {
+        "id": "d0000000-0000-0000-0000-000000000001",
+        "message": null,
+        "parent": null,
+        "children": ["d0000000-0000-0000-0000-000000000002"]
+      },
+      "d0000000-0000-0000-0000-000000000002": {
+        "id": "d0000000-0000-0000-0000-000000000002",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000002",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": [""]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000001",
+        "children": ["d0000000-0000-0000-0000-000000000003"]
+      },
+      "d0000000-0000-0000-0000-000000000003": {
+        "id": "d0000000-0000-0000-0000-000000000003",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000003",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1743638400.0,
+          "update_time": null,
+          "content": {
+            "content_type": "multimodal_text",
+            "parts": [
+              "Describe what you see in the image and summarize the key findings.",
+              {"asset_pointer": "file-service://file-fake12345", "size_bytes": 204800, "width": 1024, "height": 768}
+            ]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000002",
+        "children": ["d0000000-0000-0000-0000-000000000004", "d0000000-0000-0000-0000-000000000006"]
+      },
+      "d0000000-0000-0000-0000-000000000004": {
+        "id": "d0000000-0000-0000-0000-000000000004",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000004",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1743638500.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["The image shows a bar chart comparing the quarterly revenue growth. The first response was not detailed enough so the user regenerated it."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000003",
+        "children": ["d0000000-0000-0000-0000-000000000005"]
+      },
+      "d0000000-0000-0000-0000-000000000005": {
+        "id": "d0000000-0000-0000-0000-000000000005",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000005",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1743638600.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Good overview. Now find me the latest research papers on this topic citeturn0search1 and include references citeturn2view0 please."]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000004",
+        "children": ["d0000000-0000-0000-0000-000000000008"]
+      },
+      "d0000000-0000-0000-0000-000000000006": {
+        "id": "d0000000-0000-0000-0000-000000000006",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000006",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1743638550.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["This is the alternate branch response that was regenerated. The image shows quarterly revenue data with an upward trend in Q3 and Q4."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000003",
+        "children": ["d0000000-0000-0000-0000-000000000007"]
+      },
+      "d0000000-0000-0000-0000-000000000007": {
+        "id": "d0000000-0000-0000-0000-000000000007",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000007",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1743638700.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Expand on the Q4 analysis with more detail about the growth drivers."]
+          },
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000006",
+        "children": []
+      },
+      "d0000000-0000-0000-0000-000000000008": {
+        "id": "d0000000-0000-0000-0000-000000000008",
+        "message": {
+          "id": "d0000000-0000-0000-0000-000000000008",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1743638800.0,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": ["Based on the analysis, here are the key research findings regarding quarterly revenue growth patterns and their correlation with market conditions."]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {"model_slug": "gpt-4o"},
+          "recipient": "all",
+          "channel": null
+        },
+        "parent": "d0000000-0000-0000-0000-000000000005",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "d0000000-0000-0000-0000-000000000008",
+    "plugin_ids": null,
+    "conversation_id": "d0000000-0000-0000-0000-000000000000",
+    "id": "d0000000-0000-0000-0000-000000000000",
+    "default_model_slug": "gpt-4o"
+  }
+]

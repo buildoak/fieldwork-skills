@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+*.db
+*.sqlite
+.pytest_cache/
+
+# Never commit user data
+conversations.json
+*.zip
+data/

@@ -36,25 +36,27 @@ Prompts are one-shot. Skills encode judgment.
 
 | Skill | What you can do with it |
 |-------|------------------------|
-| [browser-ops](skills/browser-ops/) | Let your agent fill forms, log into websites, scrape data, verify emails — anything that needs a real browser. 9 ready-made playbooks for common sites. |
-| [web-search](skills/web-search/) | Ask your agent to research anything on the web. Three fallback engines, zero API keys needed — it just works. |
+| [browser-ops](skills/browser-ops/) | Let your agent fill forms, log into websites, scrape data, verify emails — anything that needs a real browser. 9 ready-made playbooks for common use cases. |
+| [web-search](skills/web-search/) | Ask your agent to research anything on the web. Three fallback engines, zero API keys needed — probably better than Exa + Firecrawl, and it just works. |
 | [google-workspace-ops](skills/google-workspace-ops/) | Have your agent send emails, manage your calendar, search Drive, edit Docs, Slides, and Sheets on your behalf. |
 | [summarize](skills/summarize/) | Drop a YouTube link, podcast, PDF, or audio file — get clean extracted text back. Works with images too. |
 | [chatgpt-search](skills/chatgpt-search/) | Search through your old ChatGPT conversations. Find that one discussion you had months ago in seconds. |
 | [vault](skills/vault/) | Store API keys and secrets encrypted. Your agent can use them without ever seeing plaintext on disk. |
-| [agent-mux](skills/agent-mux/) | Dispatch work across Codex, Claude, and OpenCode from one command. Same contract, any engine. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
+| [agent-mux](skills/agent-mux/) | Run Claude inside Codex or Codex inside Claude — second opinions, best of both worlds, one unified contract. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
 | [gsd-coordinator](skills/gsd-coordinator/) | Give your agent complex multi-step tasks — it breaks them down, dispatches workers, verifies results, and synthesizes the output. |
 | [image-gen](skills/image-gen/) | Generate and edit images from text prompts. Five models, smart prompt engineering, quality review built in. |
 
 ## The compound play
 
-`agent-mux` is the execution layer -- one CLI command dispatches a worker to Claude, Codex, or OpenCode with the same JSON contract every time. `gsd-coordinator` is the orchestration brain -- it decides when to use which engine, which pattern fits the task (10x pipeline, triple-check, fan-out parallel work), and how to verify results before I trust them.
+Each skill works on its own — but they get dramatically better together.
 
-Together, they form the 10x pipeline I keep reaching for: Claude architects, Codex executes, the coordinator verifies and synthesizes. Alone, each one is weaker -- `agent-mux` without the coordinator is just a clean CLI, and the coordinator without `agent-mux` can't reach Codex or OpenCode. This compound setup is the same multi-model pipeline that built this repo.
+**Research pipeline.** `web-search` finds pages, `browser-ops` logs into the ones behind auth walls, `summarize` extracts the content, `vault` supplies the API keys — your agent chains them without you wiring anything up.
 
-When workers produce large outputs, `gsd-coordinator` writes artifacts to a configurable directory (defaults to `_workbench/` inside the skill). Deliverables go to their final destination.
+**Content production.** `web-search` gathers source material, `summarize` distills it, `image-gen` creates visuals, `google-workspace-ops` drafts the final doc and emails it to your team.
 
-Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
+**The 10x engine.** `agent-mux` + `gsd-coordinator` are the enablers that make everything else compound. `agent-mux` lets you run Claude inside Codex or Codex inside Claude — one command, one JSON contract, any engine. `gsd-coordinator` is the orchestration brain on top: it breaks complex tasks into steps, dispatches workers across engines in parallel, verifies results, and synthesizes the output. Together they form a multi-model pipeline where Claude architects, Codex executes, and the coordinator makes sure nothing slips through. This compound setup is the same pipeline that built and audited this repo.
+
+The more skills you install, the more your agent can chain on its own. That's the whole point — operational judgment that compounds.
 
 ## Quick start
 

@@ -34,17 +34,17 @@ Prompts are one-shot. Skills encode judgment.
 
 ## Skills
 
-| Skill | What it does |
-|-------|-------------|
-| [browser-ops](skills/browser-ops/) | Browser automation — forms, auth flows, scraping, email verification. 9 battle-tested site-specific playbooks. |
-| [web-search](skills/web-search/) | Web search and content extraction. Three-tier fallback chain, zero API keys required. |
-| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets — full Google Workspace automation. |
-| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video → clean extracted text. |
-| [chatgpt-search](skills/chatgpt-search/) | Full-text search across your ChatGPT conversation exports. 15 languages, keyword analysis. |
-| [vault](skills/vault/) | Encrypted secrets vault — API keys, passwords, tokens. Never plaintext on disk. |
-| [agent-mux](skills/agent-mux/) | Unified CLI for dispatching AI workers across Codex, Claude, and OpenCode. One command, one JSON contract. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
-| [gsd-coordinator](skills/gsd-coordinator/) | Multi-step task orchestration — dispatch, verify, synthesize across engines. The brain on top of agent-mux. |
-| [image-gen](skills/image-gen/) | Image generation and editing — five models, SOTA prompt engineering, vision-based quality review loop. |
+| Skill | What you can do with it |
+|-------|------------------------|
+| [browser-ops](skills/browser-ops/) | Let your agent fill forms, log into websites, scrape data, verify emails — anything that needs a real browser. 9 ready-made playbooks for common sites. |
+| [web-search](skills/web-search/) | Ask your agent to research anything on the web. Three fallback engines, zero API keys needed — it just works. |
+| [google-workspace-ops](skills/google-workspace-ops/) | Have your agent send emails, manage your calendar, search Drive, edit Docs, Slides, and Sheets on your behalf. |
+| [summarize](skills/summarize/) | Drop a YouTube link, podcast, PDF, or audio file — get clean extracted text back. Works with images too. |
+| [chatgpt-search](skills/chatgpt-search/) | Search through your old ChatGPT conversations. Find that one discussion you had months ago in seconds. |
+| [vault](skills/vault/) | Store API keys and secrets encrypted. Your agent can use them without ever seeing plaintext on disk. |
+| [agent-mux](skills/agent-mux/) | Dispatch work across Codex, Claude, and OpenCode from one command. Same contract, any engine. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
+| [gsd-coordinator](skills/gsd-coordinator/) | Give your agent complex multi-step tasks — it breaks them down, dispatches workers, verifies results, and synthesizes the output. |
+| [image-gen](skills/image-gen/) | Generate and edit images from text prompts. Five models, smart prompt engineering, quality review built in. |
 
 ## The compound play
 

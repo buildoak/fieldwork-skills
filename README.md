@@ -30,6 +30,7 @@ Prompts are one-shot. Skills encode judgment.
 | [web-search](skills/web-search/) | Web search + content extraction, zero API keys | `pip install` |
 | [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | `brew install` + OAuth |
 | [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | `brew install` |
+| [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | `./setup.sh` |
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
 

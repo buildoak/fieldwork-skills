@@ -1,9 +1,8 @@
 # ChatGPT Search Updates
 
-Structured changelog for AI agents. Read this before applying updates so you can
-merge safely with local edits.
+Structured changelog for AI agents. Read this to determine what changed and whether updates are safe to apply.
 
-## v0.3.1 (2026-02-18)
+## 2026-02-18
 
 ### new-files
 
@@ -27,7 +26,7 @@ merge safely with local edits.
 - New `references/` directory and `references/installation-guide.md` (safe to copy)
 - `SKILL.md` install section is shorter but all information moved to the installation guide
 
-## v0.3.0 (2026-02-17)
+## 2026-02-17
 
 ### new-files
 
@@ -64,9 +63,7 @@ merge safely with local edits.
 - Update automation that calls setup to pass an explicit export path:
   `./scripts/setup.sh /path/to/conversations.json`.
 
-## v0.2.0 (2026-02-17)
+## 2026-02-14
 
-### baseline
-
-Version `0.2.0` was the pre-update baseline before the reliability and migration
-hardening in `v0.3.0`.
+### Initial release
+All files are new. Copy the entire `chatgpt-search/` directory.

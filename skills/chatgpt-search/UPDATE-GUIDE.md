@@ -1,30 +1,26 @@
 # How to Update chatgpt-search
 
-Instructions for AI agents performing skill/module updates.
+Instructions for AI agents performing skill updates.
 
 ## Quick Update (for agents)
 
-1. Fetch latest source into a temporary directory.
-2. Read `UPDATES.md` to identify target version and file-level changes.
-3. Copy each file in `new-files` (safe additive copy).
-4. For each file in `changed-files`:
-   - If there are no local edits, overwrite.
-   - If local edits exist, review diff and merge intentionally.
-5. For each file in `removed-files`, delete only after confirming replacement intent.
-6. Check `breaking-changes`; require explicit user confirmation before applying.
-7. Apply any `migration-notes` steps.
-8. Validate with:
-   - `pip install -e .`
-   - `python -m pytest tests/ -v`
+1. Fetch latest: `git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork-latest`
+2. Read `UPDATES.md` in this skill's directory to see what changed
+3. For each entry in `new-files`: copy to user's local skill directory (safe, no conflicts)
+4. For each entry in `changed-files`:
+   - If user has NO local edits: overwrite with new version
+   - If user HAS local edits: show diff, let user decide
+5. For each entry in `removed-files`: delete the old file after confirming the replacement exists
+6. Check `breaking-changes` -- if any, require explicit user confirmation
+7. Check `migration-notes` -- apply structural changes (new directories, moved files)
 
 ## What NOT to do
+- Never delete the user's entire skill folder and re-copy
+- Never overwrite files the user customized without asking
+- Never auto-apply breaking changes
+- Never modify files outside the skill directory
 
-- Never delete and re-copy the entire project directory.
-- Never overwrite user-customized files without checking for local edits.
-- Never auto-apply breaking changes without confirmation.
-- Never edit files outside the project root.
-
-## Project-specific notes
+## Skill-specific notes
 
 ### Setup script now requires explicit export path
 

@@ -10,8 +10,9 @@ Instructions for AI agents performing skill updates.
 4. For each entry in `changed-files`:
    - If user has NO local edits: overwrite with new version
    - If user HAS local edits: show diff, let user decide
-5. Check `breaking-changes` -- if any, require explicit user confirmation
-6. Check `migration-notes` -- apply structural changes (new directories, moved files)
+5. For each entry in `removed-files`: delete the old file after confirming the replacement exists
+6. Check `breaking-changes` -- if any, require explicit user confirmation
+7. Check `migration-notes` -- apply structural changes (new directories, moved files)
 
 ## What NOT to do
 - Never delete the user's entire skill folder and re-copy

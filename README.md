@@ -97,7 +97,7 @@ If you're new to AI coding agents, here's the whole process:
 2. **Clone this repo.** `git clone https://github.com/buildoak/fieldwork-skills.git`
 3. **Pick a skill.** Open the skill's folder (e.g., `skills/browser-ops/`) and read the SKILL.md. It has detailed setup instructions with prerequisites, install commands, and troubleshooting.
 4. **Install the skill** into your agent runtime. Claude Code uses `.claude/skills/<skillname>/`. Codex CLI reads root `AGENTS.md` only, so append the skill's `SKILL.md` there.
-5. **Install runtime dependencies.** Each SKILL.md has a "Setup: Install dependencies" section. Follow it.
+5. **Install runtime dependencies.** Each SKILL.md has a "Setup" section. Follow it.
 6. **Use it.** Tell your agent to use the skill. It reads the SKILL.md and follows the runbook.
 
 Each skill's SKILL.md is self-contained -- it walks you through every step, including what to do when things go wrong.

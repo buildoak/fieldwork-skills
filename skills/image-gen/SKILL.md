@@ -288,7 +288,7 @@ Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to cont
 
 This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
 
-After installing, tell your agent: "Check `UPDATES.md` in the image-gen skill for any new features."
+After installing, tell your agent: "Check `UPDATES.md` in the image-gen skill for any new features or changes."
 
 When updating, tell your agent: "Read `UPDATE-GUIDE.md` and apply the latest changes from `UPDATES.md`."
 

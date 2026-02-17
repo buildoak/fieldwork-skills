@@ -74,6 +74,10 @@ for f in skills/*/SKILL.md; do
 done
 ```
 
+## Install Runtime Dependencies
+
+After copying skill folders, read each skill's `SKILL.md` for runtime dependency setup. Skills may require brew packages, pip packages, npm packages, API keys, or other prerequisites. Each `SKILL.md` has a "Setup" section with the specific instructions. For a detailed walkthrough, see `references/installation-guide.md` inside each skill directory.
+
 ## Check for Updates
 
 Each skill includes `UPDATES.md` describing:

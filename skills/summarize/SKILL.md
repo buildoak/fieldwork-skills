@@ -30,9 +30,9 @@ For the full installation walkthrough (prerequisites, optional dependencies, ver
 
 This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
 
-After installing, tell your agent: "Check UPDATES.md in the summarize skill for any new features."
+After installing, tell your agent: "Check `UPDATES.md` in the summarize skill for any new features or changes."
 
-When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+When updating, tell your agent: "Read `UPDATE-GUIDE.md` and apply the latest changes from `UPDATES.md`."
 
 Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
 

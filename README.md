@@ -4,9 +4,13 @@
 
 **Teach your AI agent to operate 10x better.**
 
-A collection of self-contained skills — each one a battle-tested playbook with code, decision trees, and failure recovery baked in. Not prompts. Not links. Operational runbooks your agent reads and follows autonomously.
+A collection of self-contained skills — each one a battle-tested playbook with code, decision trees, and failure recovery baked in. Not prompts. Not links. Operational runbooks your agent reads and follows autonomously. Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex).
 
 > AI agents: read root `AGENTS.md` first. It has the canonical installation/update flow for both Codex CLI and Claude Code.
+
+---
+
+## Backstory
 
 So here is the story. I have been building my ideal Claude Code setup, well, for a while. Burning it down and starting again something like 10 times. Until I made the full circle and returned to simple `CLAUDE.md` + skills + some spice (nested agents).
 

@@ -8,12 +8,12 @@ SOTA prompt techniques per model. Use these as starting points, not rigid templa
 
 Every effective image prompt has four layers. Order matters for attention weighting.
 
-```
+```text
 [SUBJECT] + [ACTION/STATE] + [STYLE/MEDIUM] + [CONTEXT/ENVIRONMENT]
 ```
 
 **Example:**
-```
+```text
 A weathered lighthouse keeper (subject) standing at the railing, looking out to sea (action)
 in the style of Edward Hopper (style), dramatic cliff edge at golden hour with crashing waves below (context)
 ```
@@ -26,13 +26,13 @@ Flux responds best to concise, front-loaded prompts. Put the most important elem
 
 ### Photorealistic
 
-```
+```text
 [Subject with key details], [camera angle/shot type], [lighting condition],
 [lens specification], [film stock/processing], [environment details]
 ```
 
 **Example:**
-```
+```text
 Portrait of an elderly Japanese potter with weathered hands shaping clay on a kick wheel,
 medium close-up shot, soft natural window light from the left, shot on 85mm f/1.4 lens,
 Kodak Portra 400 film stock, traditional workshop with wooden shelves of finished ceramics
@@ -40,12 +40,12 @@ Kodak Portra 400 film stock, traditional workshop with wooden shelves of finishe
 
 ### Illustration / Concept Art
 
-```
+```text
 [Subject], [art style], [color palette], [mood/atmosphere], [composition notes]
 ```
 
 **Example:**
-```
+```text
 Ancient library floating in the clouds, Studio Ghibli art style, warm amber and
 deep blue color palette, serene and magical atmosphere, wide establishing shot
 with tiny figures for scale
@@ -53,13 +53,13 @@ with tiny figures for scale
 
 ### Product / Commercial
 
-```
+```text
 [Product description], [presentation style], [background], [lighting setup],
 [post-processing look]
 ```
 
 **Example:**
-```
+```text
 Sleek matte black wireless headphones, product hero shot on white marble surface,
 single overhead softbox with subtle rim light, clean commercial photography,
 high-key lighting with soft shadows
@@ -73,7 +73,7 @@ GPT-5 Image processes longer, more detailed prompts well. It benefits from natur
 
 ### With Text Rendering
 
-```
+```text
 Create [image type] with the text "[EXACT TEXT]" prominently displayed.
 [Describe the visual context, layout, typography style].
 The text should be [font style, size, position].
@@ -81,7 +81,7 @@ The text should be [font style, size, position].
 ```
 
 **Example:**
-```
+```text
 Create a vintage-style travel poster with the text "TOKYO" prominently displayed
 at the top in bold Art Deco typography. Below the text, show the Tokyo skyline
 at sunset with Mount Fuji in the background. Use a warm color palette of
@@ -93,7 +93,7 @@ paper appearance. Include "JAPAN" in smaller text at the bottom.
 
 GPT-5 Image reasons before generating. Leverage this with detailed scene descriptions.
 
-```
+```text
 I need an image of [scene description with multiple elements].
 Key requirements:
 1. [Specific element/positioning]
@@ -105,7 +105,7 @@ Please ensure [critical detail that must not be missed].
 
 ### Diagram / Infographic
 
-```
+```text
 Create a clean, professional [diagram type] showing [subject].
 Use [color scheme]. Label each section clearly with [specific labels].
 Style: [minimal/detailed/technical]. Background: [color].
@@ -120,7 +120,7 @@ NanoBanana (Gemini-based) responds well to structured prompts with clear creativ
 
 ### Standard Generation
 
-```
+```text
 Generate an image: [subject description].
 Style: [artistic style].
 Mood: [emotional tone].
@@ -133,7 +133,7 @@ Quality: [photorealistic/illustration/painting].
 
 When editing an existing image:
 
-```
+```text
 Edit this image: [specific change instruction].
 Keep everything else unchanged.
 Maintain the same [lighting/style/color palette] as the original.
@@ -222,19 +222,19 @@ Copy-paste these for photorealistic prompts.
 Add these to the end of any prompt for higher quality output.
 
 **For photorealism:**
-```
+```text
 masterful composition, ultra-sharp focus, professional photography, award-winning,
 8K resolution, National Geographic quality
 ```
 
 **For illustration:**
-```
+```text
 highly detailed, trending on ArtStation, concept art, professional illustration,
 award-winning digital art
 ```
 
 **For commercial/product:**
-```
+```text
 studio photography, professional retouching, magazine quality, commercial campaign,
 product photography masterclass
 ```
@@ -295,14 +295,14 @@ Add 1-2 quality boosters appropriate to the style.
 **User says:** "a cat in space"
 
 **Enhanced for Flux 2 Pro:**
-```
+```text
 Orange tabby cat in a custom spacesuit floating in zero gravity, Earth visible through
 the helmet visor reflection, dramatic rim lighting from nearby star, shot on 50mm lens,
 Kodak Ektachrome vivid colors, cinematic composition, ultra-detailed
 ```
 
 **Enhanced for GPT-5 Image:**
-```
+```text
 Create a playful and heartwarming illustration of an orange tabby cat wearing a
 miniature astronaut suit, floating gracefully in the vacuum of space. The cat should
 have a curious expression visible through the clear helmet visor. Earth is visible

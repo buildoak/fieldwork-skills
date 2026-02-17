@@ -2,6 +2,11 @@
 
 Side-by-side comparison of all 5 tools in the web-search skill. Use lighter tools first; escalate only when they fail.
 
+Terminology:
+- **JS:** JavaScript-driven page behavior.
+- **Playwright:** Browser automation framework used by Crawl4AI.
+- **SPA:** Single-page application with dynamic client-side rendering.
+
 ## Comparison Matrix
 
 | Tool | Type | JS Support | API Key | Latency | Best For |

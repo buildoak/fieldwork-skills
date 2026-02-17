@@ -5,13 +5,18 @@
 **Result:** PASS
 **Stealth:** None needed (Stripe demo has no anti-bot)
 
+Terminology:
+- **iframe:** An embedded webpage loaded inside another page.
+- **Cross-origin:** Loaded from a different domain, which triggers browser security restrictions.
+- **a11y tree:** Accessibility tree used by snapshot tools.
+
 ## What Works
 
 ### The iframe bypass pattern
 
 Stripe payment forms live inside cross-origin iframes. Standard `browser_fill` and `browser_type` cannot interact with elements inside cross-origin iframes due to browser security restrictions. The workaround: extract the iframe's `src` URL and navigate directly to it.
 
-```
+```text
 # Step 1: Navigate to the page containing the Stripe payment form
 browser_navigate(url="https://checkout.stripe.dev/preview")
 browser_wait(target="2000")
@@ -79,7 +84,7 @@ browser_close()
 
 ## Sample Worker Prompt
 
-```
+```text
 Complete a Stripe payment form on a demo checkout page.
 
 The payment form is inside a cross-origin iframe. Standard browser_fill will NOT work on iframe elements.

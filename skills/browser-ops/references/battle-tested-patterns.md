@@ -2,13 +2,19 @@
 
 Patterns extracted from 15-task browser autonomy benchmark (Feb 11-12, 2026). Every pattern below was validated end-to-end on real websites.
 
+Terminology used in this file:
+- **SPA:** Single-page application; content updates in JavaScript without full page reloads.
+- **OAuth:** Redirect-based login/authorization protocol (for example, "Sign in with GitHub").
+- **DOM:** Document Object Model, the browser's tree of page elements.
+- **a11y tree:** Accessibility tree used by snapshot tools and assistive technologies.
+
 ---
 
 ## Pattern 1: Standard Login Flow
 
 **Proven on:** saucedemo.com (Task 1), quotes.toscrape.com (Task 9)
 
-```
+```text
 browser_navigate(url="https://site.com/login")
 browser_snapshot()                              # find form refs
 browser_fill(ref="@eN", text="username")        # username/email field
@@ -29,7 +35,7 @@ browser_snapshot()                              # verify logged in
 
 **Proven on:** automationexercise.com (Task 7), demo.automationtesting.in (Task 2)
 
-```
+```text
 1. browser_navigate(url="https://site.com/signup")
 2. browser_snapshot()                           # get form refs
 3. browser_fill(ref="@eN", text="name")
@@ -57,7 +63,7 @@ browser_snapshot()                              # verify logged in
 **Proven on:** demoqa.com (Task 3)
 
 ### Date Picker
-```
+```text
 browser_click(ref="@eN")                       # open date picker
 browser_snapshot()                              # see calendar widget
 browser_click(ref="@eM")                        # select date
@@ -65,7 +71,7 @@ browser_snapshot()                              # verify date selected
 ```
 
 ### Autocomplete/Search-as-you-type
-```
+```text
 browser_type(ref="@eN", text="partial")        # type triggers suggestions
 browser_wait(target=".suggestions")            # wait for dropdown
 browser_snapshot()                              # see suggestions
@@ -75,7 +81,7 @@ browser_click(ref="@eM")                        # select suggestion
 **Key:** Use `browser_type` (character-by-character) for autocomplete fields, not `browser_fill` (which replaces value instantly without triggering keystrokes).
 
 ### File Upload
-```
+```text
 browser_fill(ref="@eN", text="/path/to/file")  # input[type=file]
 ```
 
@@ -87,7 +93,7 @@ browser_fill(ref="@eN", text="/path/to/file")  # input[type=file]
 
 This is the most complex validated pattern: real SaaS product, real anti-abuse measures, multi-step with email verification.
 
-```
+```text
 # Step 1: Create AgentMail inbox
 # (Use agentmail CLI -- see scripts/agentmail.sh)
 agentmail create browser-task-01
@@ -143,7 +149,7 @@ browser_close()
 
 **Proven on:** quotes.toscrape.com (Task 9) -- 50 quotes across 5 pages
 
-```
+```text
 browser_navigate(url="https://site.com/page1")
 browser_snapshot(mode="compact")               # need text content, not just interactive
 # Extract data from snapshot...
@@ -170,7 +176,7 @@ browser_close()
 
 **Proven on:** dashboard.render.com (Task 13) -- GitHub OAuth
 
-```
+```text
 browser_navigate(url="https://site.com/login")
 browser_snapshot()
 browser_click(ref="@eN")                       # "Sign in with GitHub"
@@ -206,7 +212,7 @@ browser_snapshot()                              # verify authenticated
 **Proven on:** the-internet.herokuapp.com (Task 14)
 
 ### Form Validation Recovery
-```
+```text
 # Submit incomplete form (intentional)
 browser_click(ref="@eN")                       # submit with empty fields
 browser_snapshot()                              # see validation errors
@@ -218,7 +224,7 @@ browser_snapshot()                              # verify success
 ```
 
 ### JavaScript Alert/Confirm/Prompt
-```
+```text
 # Alerts are handled automatically by agent-browser
 browser_click(ref="@eN")                       # triggers alert
 # Alert auto-dismissed, continue
@@ -230,7 +236,7 @@ browser_click(ref="@eN")                       # triggers prompt
 ```
 
 ### Iframe Content Extraction
-```
+```text
 browser_snapshot()                              # shows iframe refs
 browser_click(ref="@eN")                       # click into iframe
 browser_snapshot()                              # now inside iframe context
@@ -243,7 +249,7 @@ browser_get_text(ref="@eM")                    # extract iframe content
 
 **Proven on:** Task 15 -- automationexercise.com + quotes.toscrape.com in single session
 
-```
+```text
 # Site 1: Full account lifecycle
 browser_navigate(url="https://site1.com/signup")
 # ... registration flow (Pattern 2) ...
@@ -272,7 +278,7 @@ browser_close()
 
 **Proven on:** google.com/travel/flights (Task 11) -- complex JS-rendered SPA
 
-```
+```text
 browser_navigate(url="https://www.google.com/travel/flights")
 browser_snapshot()
 
@@ -321,7 +327,7 @@ browser_snapshot(mode="compact")               # extract flight data
 
 When a11y tree doesn't show the data you need, or you know exactly where it is:
 
-```
+```text
 browser_navigate(url="https://known-site.com/product")
 
 # Extract JSON-LD structured data (bypasses many anti-bot measures)
@@ -353,7 +359,7 @@ After submitting any search form, immediately snapshot the results page and veri
 2. URL contains expected parameters
 3. Prices are date-specific, not generic "from $X"
 
-```
+```text
 # Submit search
 browser_click(ref="@eN")                       # search button
 browser_wait(target="2000")
@@ -391,7 +397,7 @@ browser_snapshot()                              # verify date-locked pricing
 
 Never type dates into travel site date fields -- they are often read-only or get overwritten by the calendar widget.
 
-```
+```text
 # Step 1: Open the calendar
 browser_click(ref="@eN")                       # click date input field
 browser_snapshot()                              # see calendar widget with current month

@@ -5,13 +5,18 @@
 **Result:** PASS
 **Stealth:** None needed (Google does not block search functionality)
 
+Terminology:
+- **SPA:** Single-page application; content updates dynamically without full page reloads.
+- **Autocomplete widget:** Input that requires keystrokes to trigger suggestions.
+- **a11y tree:** Accessibility tree used by snapshot tools.
+
 ## What Works
 
 ### Primary approach: URL pre-population (recommended)
 
 Bypass the form entirely by navigating to a URL with a natural language query parameter:
 
-```
+```text
 browser_navigate(url="https://www.google.com/travel/flights?q=Flights+from+SFO+to+NRT+on+2026-04-17+return+2026-05-01")
 browser_wait(target="2000")                    # wait for results to load
 browser_snapshot()                             # verify flights are displayed
@@ -21,7 +26,7 @@ Google parses the natural language query and populates all form fields automatic
 
 ### Applying filters after URL load
 
-```
+```text
 # After results load from URL pre-population:
 browser_snapshot(mode="interactive")           # get refs for filter controls
 
@@ -39,7 +44,7 @@ browser_snapshot(mode="compact")               # need text content for prices
 
 If URL pre-population doesn't work for a specific query:
 
-```
+```text
 browser_navigate(url="https://www.google.com/travel/flights")
 browser_snapshot()
 
@@ -98,7 +103,7 @@ browser_snapshot(mode="compact")               # extract results
 
 ## Sample Worker Prompt
 
-```
+```text
 Search Google Flights for round-trip flights from SFO to NRT (Tokyo Narita), departing April 17, 2026, returning May 1, 2026.
 
 Use URL pre-population to bypass the form:

@@ -2,6 +2,12 @@
 
 Anti-detection configuration for agent-browser. Layered approach -- apply from top down, escalate only when needed.
 
+Terminology used in this file:
+- **Playwright:** The browser automation framework used by `agent-browser`.
+- **CDP:** Chrome DevTools Protocol, the low-level control channel automation tools use.
+- **UA:** User-Agent string, the browser identification text sent to websites.
+- **CAPTCHA:** Human-verification challenge shown by anti-bot systems.
+
 ---
 
 ## Quick Setup (5 Minutes, $0)
@@ -33,7 +39,7 @@ mkdir -p ~/.agent-browser/profiles/stealth
 
 ## Layer 2: CDP Leak Fix (30 Minutes, $0) — CURRENTLY BLOCKED
 
-> **Feb 2026:** rebrowser-patches 1.0.19 (latest) targets playwright-core 1.52. agent-browser 0.10.0 requires pw ^1.57 (ships 1.58.2). Patch fails on all target files. Project inactive 9+ months. See `failure-log.md` for options. Skip to Layer 3 if you need Turnstile bypass now.
+> **Feb 2026:** rebrowser-patches 1.0.19 (latest) targets playwright-core 1.52. agent-browser 0.10.0 requires Playwright ^1.57 (ships 1.58.2). Patch fails on all target files. Project inactive 9+ months. See `failure-log.md` for options. Skip to Layer 3 if you need Turnstile bypass now.
 
 The #1 detection vector in 2025-2026 is Playwright's `Runtime.Enable` CDP command. When a compatible version of rebrowser-patches exists, apply:
 
@@ -106,7 +112,7 @@ export AGENT_BROWSER_PROXY="http://username:password@proxy.provider.com:7777"
 
 ## Decision Tree: Which Layer Do I Need?
 
-```
+```text
 Target site has no bot protection?
   YES --> Layer 1 env vars only (or skip stealth entirely)
 

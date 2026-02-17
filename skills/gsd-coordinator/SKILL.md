@@ -1,6 +1,6 @@
 ---
 name: gsd-coordinator
-description: End-to-end task orchestration across AI coding engines. Coordinates Claude, Codex, Codex Spark, and OpenCode workers using dispatch-verify-synthesize workflows. Use when work spans multiple dependent steps, benefits from model diversity, or needs structured quality verification.
+description: End-to-end task orchestration across AI coding engines. Coordinates Claude, Codex, Codex Spark (the faster Codex variant), and OpenCode workers using dispatch-verify-synthesize workflows. Requires the upstream agent-mux CLI for worker dispatch. Use when work spans multiple dependent steps, benefits from model diversity, or needs structured quality verification.
 ---
 
 **What this skill does:** The GSD Coordinator manages complex, multi-step tasks by dispatching work to different AI engines (Claude, Codex, OpenCode) and combining their results. Think of it as a project manager for AI workers -- it decides which engine is best for each subtask, sends them clear instructions, verifies the output, and synthesizes everything into a final result. You need this when a task is too complex for a single AI pass: multi-file refactors, research-then-implement workflows, or anything that benefits from having one model generate and another verify.
@@ -19,6 +19,12 @@ Key constraint: do not spawn Claude subagents via `Task`; use `agent-mux --engin
 - Installation docs: https://github.com/buildoak/agent-mux#readme
 - Works with Claude Code and Codex CLI
 
+## Dependency Boundaries
+
+- Required external dependency: upstream `agent-mux` CLI (`https://github.com/buildoak/agent-mux`).
+- Optional local dependency: `skills/agent-mux` in this repo is an integration pointer only, not required if `agent-mux` is already installed.
+- Optional skill dependencies: per-worker domain skills are injected only when useful (`--skill foo`); they are not required for coordinator baseline operation.
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -29,7 +35,7 @@ Paste this into your AI agent chat:
 
 > Install the gsd-coordinator skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/gsd-coordinator
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -37,15 +43,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/gsd-coordinator/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:gsd-coordinator -->"
+  cat /tmp/fieldwork/skills/gsd-coordinator/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -55,16 +63,20 @@ cp -R /tmp/fieldwork/skills/gsd-coordinator /path/to/your-project/.claude/skills
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/gsd-coordinator/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:gsd-coordinator -->"
+  cat /tmp/fieldwork-main/skills/gsd-coordinator/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ### Artifact directory setup
 
@@ -72,7 +84,7 @@ Workers occasionally write file artifacts (outputs exceeding 200 lines, delivera
 
 If you prefer a different location -- a project scratch folder, a `tmp/` directory, wherever -- set the path when you first configure the skill. The SKILL.md uses `<artifacts-dir>` as a placeholder throughout. Replace it with your chosen path, or leave the default:
 
-```
+```text
 Default:  .claude/skills/gsd-coordinator/_workbench/
 Override: any directory you prefer for working artifacts
 ```
@@ -86,6 +98,20 @@ This skill ships with an UPDATES.md changelog and UPDATE-GUIDE.md for your AI ag
 After installing, tell your agent: "Check UPDATES.md in the gsd-coordinator skill for any new features or changes."
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
+## Quick Start
+
+Run this checklist before first orchestration:
+
+1. Verify CLI is installed: `agent-mux --help`
+2. Run one bounded worker task:
+   ```bash
+   agent-mux --engine codex --reasoning high "List changed files and summarize intent in 5 bullets"
+   ```
+3. Parse the JSON output and keep only the worker's `response` field.
+4. Escalate to multi-step orchestration only after the single worker pass succeeds.
 
 ## Two Operating Modes
 
@@ -111,7 +137,7 @@ Use when `gsd-coordinator` is loaded by a Codex worker that cannot orchestrate n
 Match the right worker to each step:
 
 - Claude Opus 4.6 (`--engine claude`): Natural orchestrator. Thrives on ambiguity, decides from available info, and writes strong prompts. Use for architecture, synthesis, open-ended exploration, and prompt crafting.
-- Codex 5.3 (`--engine codex`): Precise executor. Pedantic, thorough, and detail-attentive. Needs explicit scope: one goal, specific files, explicit output path. Use `--reasoning high` for implementation; reserve `xhigh` for deep audits.
+- Codex 5.3 (`--engine codex`): Precise executor. Pedantic, thorough, and detail-attentive. Needs explicit scope: one goal, specific files, explicit output path. Use `--reasoning high` (standard deep-reasoning mode) for implementation; reserve `xhigh` (maximum reasoning mode) for deep audits.
 - Codex Spark (`--engine codex --model gpt-5.3-codex-spark`): Same precision style, much faster, smaller context window. Use for parallel workers, filesystem scanning, and focused medium-difficulty tasks.
 - OpenCode (`--engine opencode`): Supplemental third-opinion engine for model-lineage diversity.
   - `kimi`
@@ -124,7 +150,7 @@ Match the right worker to each step:
 For any task, follow this sequence. Deviate when you have a reason.
 
 1. Triage: read the task and identify inputs, outputs, and constraints.
-2. Pick a pattern: Implementation, Audit, Research, or Fan-Out.
+2. Pick a pattern: Implementation, Audit, Research, or Fan-Out (parallel independent workers).
 3. Select skills: for each step, identify which skills (if any) the worker needs.
 4. Choose workers: match each step to the right engine.
 5. Write prompt specs: one goal, specific files, explicit output path.
@@ -145,7 +171,7 @@ For any task, follow this sequence. Deviate when you have a reason.
 | Synthesis or documentation | Claude | Strong structured output |
 | Third-opinion verification | OpenCode | Independent lineage cross-check |
 
-### Fan Out vs Go Deep
+### Fan-Out vs Go Deep
 
 Fan out (parallel workers) when subtasks are independent, speed matters, tasks are medium difficulty, or you need broad coverage.
 
@@ -252,19 +278,35 @@ When finished, return to the main thread:
 
 Never dump raw content back. Always return path + summary + status.
 
+## Error Handling
+
+| Symptom | Cause | Recovery |
+|---------|-------|----------|
+| `agent-mux: command not found` | Upstream CLI not installed or missing from `$PATH` | Install from `https://github.com/buildoak/agent-mux` and re-run with absolute path if needed |
+| Worker returns malformed/non-JSON output | Wrong runtime flags or worker crash | Re-run with strict JSON mode in `agent-mux`, capture stderr, and reduce prompt scope |
+| Worker output is empty or generic | Prompt is underspecified | Rewrite prompt with one goal, explicit files, and expected output contract |
+| Repeated failures on same step | Wrong engine or decomposition | Switch engine (Codex vs Claude), split the step, and re-dispatch |
+| Coordinator cannot orchestrate nested workers | Running in planner-only environment | Return `status: needs-orchestrator` with an executable plan |
+
 ## Anti-Patterns
 
-- Blind retry: if a worker fails, diagnose root cause (engine choice, scope, skill, or prompt quality) before retrying.
-- Context bombing: do not paste full artifacts into prompts; write to file and pass paths.
-- Wrong worker: do not send exploration to Codex or focused implementation to Claude when Codex would be faster.
-- Spawning Claude for more Claude: you are Claude; use Codex for diversity.
-- `xhigh` for routine work: reserve for audits and deep analysis; `high` is the default workhorse.
-- Assuming main thread context: read what you need; do not assume prior context is present.
-- Skillless dispatch: when a relevant skill exists, inject it.
-- Over-prompting workers: do not write novels; give one goal, relevant skill(s), specific files, and output path, then let the skill carry domain knowledge.
-- Over-verification: do not run Triple-Check for low-risk tasks where simpler verification is sufficient.
+| Do NOT | Do instead |
+|--------|------------|
+| Blind retry worker failures | Diagnose root cause (engine choice, scope, skill, prompt quality) before retrying |
+| Paste full artifacts into prompts | Write artifacts to files and pass only file paths |
+| Send exploration to Codex or focused implementation to Claude by habit | Match worker to step needs with the heuristics table |
+| Spawn Claude for more Claude by default | Use Codex/OpenCode for model diversity unless parallelization/context isolation is needed |
+| Use `xhigh` for routine work | Default to `high`; escalate only after failure or high-stakes risk |
+| Assume main-thread context is present | Re-read required files in each worker prompt |
+| Skip skill injection when a relevant skill exists | Inject only the minimal relevant skill set |
+| Over-prompt with long novels | Give one goal, relevant files, and expected output format |
+| Run Triple-Check for low-risk tasks | Use proportional verification based on risk |
 
-## Bundled Resources
+## Bundled Resources Index
 
-- `agent-mux` CLI and reference docs: https://github.com/buildoak/agent-mux
-- Use the upstream `agent-mux` repo for CLI flags, output format, and engine-specific runtime notes
+| Path | What | When to load |
+|------|------|--------------|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./references/orchestration-examples.md` | Prompting and orchestration examples | When building or debugging dispatch plans |
+| `https://github.com/buildoak/agent-mux` | Required upstream CLI docs and runtime contract | Always for installation/flags/runtime behavior |

@@ -5,14 +5,19 @@
 **Result:** Mixed -- depends on Cloudflare tier
 **Stealth:** Layer 1 through Layer 3 depending on protection level
 
+Terminology:
+- **Turnstile:** Cloudflare's interactive CAPTCHA challenge.
+- **Transparent challenge:** Cloudflare's silent JavaScript challenge with no visible checkbox.
+- **Layer 3 (Kernel):** Cloud browser provider mode with built-in stealth and CAPTCHA handling.
+
 ## Decision Tree
 
-```
+```text
 Is the site behind Cloudflare?
   |
   +-- How do you know?
   |     - Page briefly shows "Checking your browser..." on first visit
-  |     - cf-ray header in response
+  |     - `cf-ray` header in response (Cloudflare request ID header)
   |     - Cloudflare error pages (1xxx codes)
   |     - Turnstile checkbox widget visible
   |
@@ -28,7 +33,7 @@ Is the site behind Cloudflare?
         |     No interactive CAPTCHA exposed -- challenge happens silently in JS
         |
         +-- Turnstile (interactive checkbox/puzzle CAPTCHA)
-              --> Layer 1: FAIL, Layer 2: BLOCKED (pw version mismatch), Layer 3: REQUIRED
+              --> Layer 1: FAIL, Layer 2: BLOCKED (Playwright version mismatch), Layer 3: REQUIRED
               Tested: linear.app (PARTIAL)
 ```
 
@@ -44,7 +49,7 @@ export AGENT_BROWSER_PROFILE="$HOME/.agent-browser/profiles/stealth"
 export AGENT_BROWSER_ARGS="--disable-blink-features=AutomationControlled"
 ```
 
-```
+```text
 browser_navigate(url="https://target-site.com")
 browser_wait(target="3000")                    # give Cloudflare challenge time to resolve
 browser_snapshot()                             # should show the actual page content
@@ -58,7 +63,7 @@ Cloudflare free tier performs a brief JS challenge that resolves automatically w
 
 ### Diagnostic check (nowsecure.nl validated)
 
-```
+```text
 browser_navigate(url="https://nowsecure.nl")
 browser_wait(target="3000")
 browser_snapshot()                             # should show "You are not detected" or similar
@@ -86,7 +91,7 @@ With Kernel, Cloudflare challenges (including Turnstile) are handled by the clou
 
 2. **Layer 1 against Turnstile.** Linear (Cloudflare Turnstile) showed an interactive checkbox CAPTCHA that Layer 1 cannot solve. The automation cannot click the checkbox with the right browser signals.
 
-3. **Layer 2 (rebrowser-patches) as of Feb 2026.** rebrowser-patches 1.0.19 targets playwright-core 1.52, but agent-browser 0.10.0 ships pw 1.58.2. All 3 patch hunks fail. The project has been inactive 9+ months. **Do not attempt `npx rebrowser-patches@latest patch`.**
+3. **Layer 2 (rebrowser-patches) as of Feb 2026.** rebrowser-patches 1.0.19 targets playwright-core 1.52, but agent-browser 0.10.0 ships Playwright 1.58.2. All three patch hunks fail. The project has been inactive for 9+ months. **Do not attempt `npx rebrowser-patches@latest patch`.**
 
 4. **Retrying against blocked sites without escalating stealth.** If Cloudflare blocks you, retrying with the same stealth level will produce the same result. Escalate first, then retry.
 
@@ -125,7 +130,7 @@ Cloudflare free tier does not check the deeper signals (plugins, chrome object).
 
 ## Sample Worker Prompt
 
-```
+```text
 Navigate to [TARGET_URL] which is protected by Cloudflare.
 
 STEALTH CHECK: Before starting, verify your stealth configuration:

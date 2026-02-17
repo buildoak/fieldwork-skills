@@ -8,7 +8,7 @@ Source: `brew install steipete/tap/summarize`
 
 ## Usage
 
-```
+```text
 summarize [options] [input]
 ```
 

@@ -187,7 +187,7 @@ export AGENT_BROWSER_PROXY="http://username-country-us:password@proxy.provider.c
 
 ## Quick Decision Tree
 
-```
+```text
 Does the site have bot protection?
   |
   +-- No protection (demo sites, internal tools)
@@ -240,7 +240,7 @@ Based on testing across 25 tasks in two benchmark suites.
 
 The tiers are cumulative, not alternatives. Each higher tier adds to the previous ones:
 
-```
+```text
 Tier 1 (env vars)
   + Tier 2 (binary patches)    = Covers ~65% of detection signals
     + Tier 3 (cloud browser)   = Covers ~90% of detection signals

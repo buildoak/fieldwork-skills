@@ -1,11 +1,12 @@
 # agent-mux
 
-`agent-mux` is a standalone project: https://github.com/buildoak/agent-mux
-
-It provides a unified CLI for dispatching AI coding workers across multiple engines: Codex, Claude, and OpenCode.
-Use one command with one JSON output contract regardless of engine.
-
-For installation, usage docs, and the canonical `SKILL.md`, use the upstream repository:
+This folder is an integration pointer for the standalone `agent-mux` project:
 - https://github.com/buildoak/agent-mux
 
-This project depends on `agent-mux` for the `gsd-coordinator` orchestration workflow.
+`agent-mux` provides a unified CLI for dispatching AI coding workers across Codex, Claude, and OpenCode with one JSON output contract.
+
+Dependency note:
+- `skills/gsd-coordinator` requires the upstream `agent-mux` CLI at runtime.
+- This repository does not vendor the full `agent-mux` implementation.
+
+Use `SKILL.md` in this folder for fieldwork integration guidance, and use the upstream repository for installation, flags, and canonical runtime behavior.

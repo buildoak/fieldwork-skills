@@ -23,7 +23,7 @@ merge safely with local edits.
 | `src/chatgpt_search/searcher.py` | Convert all SQLite `OperationalError` query failures into user-facing `ValueError` | No |
 | `src/chatgpt_search/enrichment.py` | Removed unused imports | No |
 | `scripts/setup.sh` | Removed hardcoded export path, require export arg, use `python3 -m pip`, fixed usage path text | Yes (setup now requires path argument) |
-| `SKILL.md` | Removed hardcoded local paths, removed unsupported column filter syntax, updated TF-IDF `min_df` notes | No |
+| `SKILL.md` | Removed hardcoded local paths, removed unsupported column filter syntax, updated TF-IDF (keyword-weighting) `min_df` notes | No |
 
 ### removed-files
 

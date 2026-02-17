@@ -19,9 +19,9 @@ warn()    { printf "${YELLOW}[warn]${NC} %s\n" "$*"; }
 error()   { printf "${RED}[error]${NC} %s\n" "$*" >&2; }
 
 # --- Configuration ---
-# Customize this path. The default is intentionally misleading.
-# Pick something that makes sense for your threat model.
-VAULT_DIR="${VAULT_DIR:-$HOME/.shit}"
+# Customize this path if needed.
+# Default keeps secrets in a conventional per-user config location.
+VAULT_DIR="${VAULT_DIR:-$HOME/.config/vault}"
 
 info "Vault will be created at: ${BOLD}$VAULT_DIR${NC}"
 echo ""

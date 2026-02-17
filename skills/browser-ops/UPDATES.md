@@ -12,7 +12,7 @@ Files that didn't exist before. Safe to copy without conflict risk.
 | `references/playbooks/booking-com.md` | Booking.com hotel search with date-locked pricing |
 | `references/playbooks/google-flights.md` | Google Flights URL pre-population and filter patterns |
 | `references/playbooks/linear-signup.md` | Linear signup (partial -- blocked by Cloudflare Turnstile) |
-| `references/playbooks/notion-signup.md` | Notion full E2E signup with AgentMail OTP verification |
+| `references/playbooks/notion-signup.md` | Notion full end-to-end signup with AgentMail OTP verification |
 | `references/playbooks/reddit-scraping.md` | Reddit scraping via old.reddit.com with evaluate extraction |
 | `references/playbooks/stripe-iframe.md` | Stripe cross-origin iframe bypass for payment forms |
 | `references/playbooks/cloudflare-sites.md` | Cloudflare protection decision tree (free vs Pro vs Turnstile) |

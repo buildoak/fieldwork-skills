@@ -7,6 +7,11 @@ description: Google Workspace CLI automation via gogcli. Gmail, Calendar, Drive,
 
 Automates Google Workspace work using the `gog` CLI with machine-parseable JSON output, from email and calendar operations to Drive/docs/sheets workflows. Use it when you need repeatable workspace automation, but avoid it for non-Google services or ad hoc UI workflows.
 
+Terminology used in this file:
+- **OAuth:** Google's delegated login/authorization flow used to grant CLI access without sharing your password.
+- **GCP:** Google Cloud Platform, where you create the project and OAuth credentials.
+- **RFC3339:** Standard date-time format used by Google APIs (for example, `2026-02-18T09:00:00+00:00`).
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -17,7 +22,7 @@ Paste this into your AI agent chat:
 
 > Install the google-workspace-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/google-workspace-ops
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -25,15 +30,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/google-workspace-ops/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:google-workspace-ops -->"
+  cat /tmp/fieldwork/skills/google-workspace-ops/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -43,16 +50,20 @@ cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.claude/s
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/google-workspace-ops/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:google-workspace-ops -->"
+  cat /tmp/fieldwork-main/skills/google-workspace-ops/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ---
 
@@ -153,11 +164,27 @@ After installing, tell your agent: "Check UPDATES.md in the google-workspace-ops
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 ---
+
+## Quick Start
+
+Run one read-only Gmail flow end-to-end:
+
+```bash
+gog auth status
+gog gmail search "is:unread" --max 5 --json --no-input
+gog gmail thread get THREAD_ID --json --no-input
+```
+
+Use this baseline pattern for automation:
+- read/list/search: `--json --no-input`
+- send/create/modify/delete: run `--dry-run` first, then ask user approval
 
 ## Decision Tree: When to Use gog
 
-```
+```text
 Need to interact with Google Workspace?
   |
   +-- Is it email? (read, search, send, labels, drafts)
@@ -437,6 +464,17 @@ gog config set default_account work@company.com
 | Docs markdown not rendering | Missing `--markdown` flag | Use `gog docs write DOC_ID --replace --markdown` |
 | `--select` returns empty | Field path wrong | Run once with `--json` first to inspect schema |
 | Slides from markdown: empty | Missing `--content` or `--content-file` | Provide content inline or via file |
+
+## Error Handling
+
+| Symptom | Exit code / signal | Recovery |
+|---------|---------------------|----------|
+| No results when data is expected | `3` (`empty_results`) | Re-run without `--fail-empty` to inspect envelope; broaden query or change filters |
+| OAuth expired or missing | `4` (`auth_required`) | Run `gog login EMAIL --services all`, then `gog auth status` |
+| API permission denied | `6` (`permission_denied`) | Re-auth with the needed scopes and verify API is enabled in Google Cloud |
+| Rate limit hit | `7` (`rate_limited`) | Back off (`sleep`), reduce `--max`, retry with jitter |
+| Transient backend error | `8` (`retryable`) | Retry with exponential backoff; keep idempotent operations safe |
+| Invalid command/flags | `2` (`usage`) | Re-check command syntax in `references/gog-commands.md` |
 
 ## Anti-Patterns
 

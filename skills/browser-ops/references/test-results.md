@@ -1,8 +1,14 @@
 # Browser-Ops Test Results
 
-> All tests run in **headless mode** using agent-browser with Playwright Chromium.
-> Layer 1 stealth enabled globally (headed mode, custom UA, persistent profile, automation flag disabled).
+> Tests used a consistent agent-browser + Playwright Chromium setup.
+> Most runs used headless mode. Stealth validation runs used headed mode with custom UA, persistent profile, and automation flag disabled.
 > Results reflect baseline capability of the browser-ops skill documentation alone.
+
+Terminology used in this file:
+- **Playwright:** A browser automation framework used under the hood by `agent-browser`.
+- **SPA:** Single-page application; most content is rendered dynamically in JavaScript.
+- **DOM:** Document Object Model, the browser's tree of page elements.
+- **OAuth:** Redirect-based login protocol (for example, "Sign in with GitHub").
 
 ---
 

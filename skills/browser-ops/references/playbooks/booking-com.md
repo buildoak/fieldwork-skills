@@ -21,7 +21,7 @@ The working approach discovered after multiple iterations:
 
 ### Step-by-step
 
-```
+```text
 browser_navigate(url="https://www.booking.com")
 browser_snapshot()
 
@@ -80,7 +80,7 @@ browser_close()
 
 ## Sample Worker Prompt
 
-```
+```text
 Navigate to Booking.com and find hotel prices near Sepilok Orangutan Rehabilitation Centre in Sandakan, Malaysia for March 14-17, 2026.
 
 CRITICAL: Search by the LANDMARK NAME "Sepilok Orangutan Rehabilitation Centre", NOT the city name "Sandakan". City name searches redirect to a static page that strips date parameters.

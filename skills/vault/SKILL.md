@@ -1,6 +1,6 @@
 ---
 name: vault
-description: Encrypted secrets vault for AI coding agents. Store API keys, passwords, and tokens with age/sops encryption. Never plaintext.
+description: Encrypted secrets vault for AI coding agents. Store API keys, passwords, and tokens with `age` (public-key encryption) and `sops` (encrypted YAML secrets files). Never plaintext.
 ---
 
 # vault
@@ -22,7 +22,7 @@ Paste this into your AI agent chat:
 
 > Install the vault skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/vault
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -30,15 +30,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/vault /path/to/your-project/.claude/skills/vault
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/vault/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:vault -->"
+  cat /tmp/fieldwork/skills/vault/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -48,16 +50,20 @@ cp -R /tmp/fieldwork/skills/vault /path/to/your-project/.claude/skills/vault
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/vault /path/to/your-project/.claude/skills/vault
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/vault/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:vault -->"
+  cat /tmp/fieldwork-main/skills/vault/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ---
 
@@ -69,6 +75,8 @@ After installing, tell your agent: "Check UPDATES.md in the vault skill for any 
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 ---
 
 ## Why this matters
@@ -78,14 +86,14 @@ Right now, your secrets probably live in a `.env` file. Plain text. Anyone who c
 This vault encrypts them. Even if someone copies your entire hard drive, they can't read your secrets without your encryption key. And your AI agent only sees secrets for the instant it needs them -- they never sit in memory or get written to a file.
 
 **Before (plaintext .env):**
-```
+```text
 OPENAI_API_KEY=sk-abc123-real-key-here     <- anyone can read this
 DATABASE_URL=postgres://admin:password@...  <- sitting in plain text
 STRIPE_SECRET=sk_live_...                   <- one leak away from disaster
 ```
 
 **After (encrypted vault):**
-```
+```text
 OPENAI_API_KEY: ENC[AES256_GCM,data:8f3k2...]   <- gibberish without your key
 DATABASE_URL: ENC[AES256_GCM,data:j4m9x...]      <- encrypted at rest
 STRIPE_SECRET: ENC[AES256_GCM,data:p2w7n...]     <- safe even if file leaks
@@ -95,7 +103,7 @@ The flow: `secret -> encrypt -> vault -> agent needs it -> decrypt to memory -> 
 
 ---
 
-## Quick start
+## Quick Start
 
 Three steps. That's it.
 
@@ -212,11 +220,11 @@ All paths are configurable via environment variables:
 
 | Variable | Default | What it controls |
 |----------|---------|-----------------|
-| `VAULT_DIR` | `~/.shit` | Where the vault lives |
+| `VAULT_DIR` | `~/.config/vault` | Where the vault lives |
 | `VAULT_FILE` | `$VAULT_DIR/vault.enc.yaml` | The encrypted secrets file |
 | `SOPS_AGE_KEY_FILE` | `$VAULT_DIR/.age-identity` | Your encryption key |
 
-**Customize the vault path.** The default (`~/.shit`) is intentionally misleading -- it's an extra layer of obscurity on top of the real encryption. Pick something that makes sense for your setup. Some options:
+**Customize the vault path if needed.** The default is a conventional per-user config location. Some alternatives:
 
 ```bash
 # In your shell profile (~/.zshrc or ~/.bashrc):
@@ -238,15 +246,15 @@ Two tools do the heavy lifting:
 
 The vault directory looks like this:
 
-```
-~/.shit/                    chmod 700 (only you can access)
+```text
+~/.config/vault/            chmod 700 (only you can access)
   .age-identity             Your encryption key (chmod 600)
   vault.enc.yaml            Your encrypted secrets
   .sops.yaml                Config telling sops which key to use
 ```
 
 **Key security facts:**
-- Secrets are encrypted with X25519 (the same algorithm Signal uses)
+- Secrets are encrypted with X25519 (the elliptic-curve key-exchange algorithm Signal uses)
 - Decrypted values only exist in memory -- stdout, pipes, env vars
 - Nothing writes plaintext to disk, ever
 - The `vault.sh` script validates all input to prevent injection attacks
@@ -273,7 +281,7 @@ The vault directory looks like this:
 
 ---
 
-## Troubleshooting
+## Error Handling
 
 | Problem | Solution |
 |---------|----------|
@@ -289,7 +297,19 @@ The vault directory looks like this:
 
 ---
 
-## Bundled Resources
+## Anti-Patterns
+
+| Do NOT | Do instead |
+|--------|------------|
+| Store secrets in `.env` plaintext files | Store secrets with `./scripts/vault.sh set ...` |
+| Leave secrets exported in shell for long sessions | Prefer `./scripts/vault.sh exec <command>` for scoped access |
+| Print secrets to logs or command history | Use env vars and avoid echoing secret values |
+| Commit decrypted outputs or temp files | Keep secrets encrypted at rest and out of git |
+| Skip `vault.sh doctor` when setup fails | Run `vault.sh doctor` first, then fix reported issues |
+
+---
+
+## Bundled Resources Index
 
 | Path | What | When to load |
 |------|------|-------------|

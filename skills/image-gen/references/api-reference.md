@@ -164,7 +164,7 @@ curl -X POST https://openrouter.ai/api/v1/chat/completions \
 ## Extracting Images from Response
 
 The base64 image data lives at:
-```
+```text
 response.choices[0].message.images[0].image_url.url
 ```
 
@@ -269,13 +269,13 @@ curl -X POST https://api.openai.com/v1/images/edits \
 ## Headers
 
 ### Required
-```
+```text
 Authorization: Bearer $API_KEY
 Content-Type: application/json
 ```
 
 ### Optional (recommended)
-```
+```text
 HTTP-Referer: https://your-app.com
 X-Title: Your App Name
 ```

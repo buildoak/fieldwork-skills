@@ -11,6 +11,11 @@ description: |
 
 Generate and edit images via OpenRouter with a practical model-selection workflow, prompt-enhancement templates, and an optional vision-based quality review loop. This skill is built for reliable CLI use with Python stdlib-only scripts and JSON outputs that are easy to automate.
 
+Terminology used in this file:
+- **OpenRouter:** API gateway that provides access to multiple image models through one key.
+- **Inpainting (mask-based editing):** Editing only selected regions of an image using a mask file.
+- **JSON output contract:** Machine-readable output format your automation should parse directly.
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -21,7 +26,7 @@ Paste this into your AI agent chat:
 
 > Install the image-gen skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/image-gen
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -29,15 +34,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/image-gen /path/to/your-project/.claude/skills/image-gen
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/image-gen/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:image-gen -->"
+  cat /tmp/fieldwork/skills/image-gen/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -47,16 +54,20 @@ cp -R /tmp/fieldwork/skills/image-gen /path/to/your-project/.claude/skills/image
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/image-gen /path/to/your-project/.claude/skills/image-gen
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/image-gen/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:image-gen -->"
+  cat /tmp/fieldwork-main/skills/image-gen/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ## Setup: Get your API key
 
@@ -104,7 +115,7 @@ If setup is correct, the command returns JSON with `"success": true` and a file 
 
 ## Model selection
 
-```
+```text
 What do you need?
   |
   +-- Fast + cheap + good enough?
@@ -137,7 +148,7 @@ What do you need?
 
 Full comparison: `./references/model-card.md`
 
-## Quick reference
+## Quick Reference
 
 Default output directory in this skill: `./data/`
 
@@ -321,7 +332,7 @@ Report cost after every generation. Use the `cost_estimate` field from script ou
 
 Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to control spend.
 
-## Error handling
+## Error Handling
 
 | Error | Action |
 |---|---|
@@ -332,7 +343,7 @@ Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to cont
 | Timeout (>180s) | Model may be overloaded. Try Klein or NanoBanana for speed. |
 | Image quality too low | Run review loop. Refine prompt or switch to higher-quality model. |
 
-## Anti-patterns
+## Anti-Patterns
 
 | Do NOT | Do Instead |
 |---|---|
@@ -344,7 +355,7 @@ Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to cont
 | Use review loop for casual requests | Reserve for quality-critical work |
 | Forget to set API key before running | Export required keys before running scripts |
 
-## Bundled resources
+## Bundled Resources Index
 
 | Path | What | When to Load |
 |---|---|---|
@@ -365,6 +376,8 @@ This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your A
 After installing, tell your agent: "Check `UPDATES.md` in the image-gen skill for any new features."
 
 When updating, tell your agent: "Read `UPDATE-GUIDE.md` and apply the latest changes from `UPDATES.md`."
+
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
 
 To check upstream updates directly from GitHub:
 

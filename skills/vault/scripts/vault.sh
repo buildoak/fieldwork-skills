@@ -6,7 +6,7 @@ set -euo pipefail
 # All output goes to stdout (values) or stderr (messages).
 
 # --- Configuration (override via env vars) ---
-VAULT_DIR="${VAULT_DIR:-$HOME/.shit}"
+VAULT_DIR="${VAULT_DIR:-$HOME/.config/vault}"
 VAULT_FILE="${VAULT_FILE:-$VAULT_DIR/vault.enc.yaml}"
 SOPS_CONFIG="$VAULT_DIR/.sops.yaml"
 export SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-$VAULT_DIR/.age-identity}"

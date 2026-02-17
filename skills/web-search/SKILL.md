@@ -7,6 +7,11 @@ description: Web search and content extraction skill for AI coding agents. Zero 
 
 Web search, scraping, and content extraction for AI coding agents. Zero API keys required. Five tools organized in fallback chains: WebSearch and Crawl4AI as primary, Jina as secondary, duckduckgo-search and WebFetch as fallbacks. Use when your agent needs web information -- finding pages, extracting content, or conducting research.
 
+Terminology used in this file:
+- **Playwright:** Browser automation framework used by Crawl4AI for JavaScript-rendered pages.
+- **SPA:** Single-page application; content is rendered dynamically in JavaScript.
+- **MCP:** Model Context Protocol, a standard for exposing tool servers to AI agents.
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -17,7 +22,7 @@ Paste this into your AI agent chat:
 
 > Install the web-search skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/web-search
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -25,15 +30,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.claude/skills/web-search
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/web-search/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:web-search -->"
+  cat /tmp/fieldwork/skills/web-search/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -43,16 +50,20 @@ cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.claude/skills/web-
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/web-search
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/web-search/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:web-search -->"
+  cat /tmp/fieldwork-main/skills/web-search/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ---
 
@@ -151,7 +162,26 @@ After installing, tell your agent: "Check UPDATES.md in the web-search skill for
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 ---
+
+## Quick Start
+
+Run this minimal fallback-safe sequence:
+
+```bash
+# 1) Find candidate pages
+python3 -c "from duckduckgo_search import DDGS; import json; print(json.dumps(DDGS().text('your query', max_results=5), indent=2))"
+
+# 2) Extract one page quickly (no local deps)
+curl -s "https://r.jina.ai/http://example.com/article" | head -80
+
+# 3) Escalate to Crawl4AI if JS rendering is needed
+crwl https://example.com/app --f markdown --bypass-cache
+```
+
+Use this routing rule: search with `WebSearch` first, extract with Jina/WebFetch for simple pages, escalate to Crawl4AI for JS-heavy targets.
 
 ## Decision Tree
 
@@ -187,7 +217,7 @@ Rule of thumb: WebSearch for finding, Jina for reading, Crawl4AI for rendering.
 **Strengths:** Zero setup, zero API keys, integrated into agent workflow, always available
 **Weaknesses:** No direct SDK/CLI access (tool-only), results are search-result blocks not raw JSON
 
-```
+```text
 # Invoked as a Claude Code tool:
 WebSearch(query="your search query")
 
@@ -205,7 +235,7 @@ WebSearch(query="your query", blocked_domains=["pinterest.com"])
 **Strengths:** Zero setup, AI-processed output, handles redirects, 15-min cache
 **Weaknesses:** Cannot handle authenticated/private URLs, may summarize large content
 
-```
+```text
 # Invoked as a Claude Code tool:
 WebFetch(url="https://example.com/page", prompt="Extract the main content")
 ```
@@ -351,7 +381,7 @@ Jina MCP (optional enhancement, not required):
 }
 ```
 
-MCP is optional. Your agent can use CLI/Python/built-in tools directly.
+MCP (Model Context Protocol) is optional. Your agent can use CLI/Python/built-in tools directly.
 
 ---
 

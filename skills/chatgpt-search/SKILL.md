@@ -1,8 +1,9 @@
 ---
 name: chatgpt-search
 description: |
-  Search ChatGPT conversation exports using SQLite FTS5.
-  BM25-ranked full-text search with TF-IDF keywords,
+  Search ChatGPT conversation exports using SQLite FTS5 (SQLite full-text search).
+  BM25-ranked full-text search (relevance scoring) with TF-IDF keywords
+  (term-weighted key phrases),
   date/role/model/language filtering, and conversation browsing.
   Use when agent needs to search past ChatGPT conversations by topic,
   find specific discussions, browse conversation history,
@@ -13,8 +14,10 @@ description: |
 
 # chatgpt-search
 
-SQLite FTS5 search engine for ChatGPT conversation exports. BM25-ranked full-text search
-with title boosting, code separation, TF-IDF keyword extraction,
+SQLite FTS5 (SQLite full-text search) engine for ChatGPT conversation exports.
+BM25-ranked full-text search (relevance scoring)
+with title boosting, code separation, TF-IDF (term-frequency/inverse-document-frequency)
+keyword extraction,
 and filtering by date, role, model, and language.
 
 ## How to install this skill
@@ -27,7 +30,7 @@ Paste this into your AI agent chat:
 
 > Install the chatgpt-search skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/chatgpt-search
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -35,15 +38,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/chatgpt-search/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:chatgpt-search -->"
+  cat /tmp/fieldwork/skills/chatgpt-search/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -53,16 +58,20 @@ cp -R /tmp/fieldwork/skills/chatgpt-search /path/to/your-project/.claude/skills/
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/chatgpt-search/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:chatgpt-search -->"
+  cat /tmp/fieldwork-main/skills/chatgpt-search/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ## Staying Updated
 
@@ -72,11 +81,21 @@ After installing, tell your agent: "Check UPDATES.md in the chatgpt-search skill
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 **Repo:** `./`
 **Data:** `<your-export-path>/conversations.json`
 **Default DB:** `~/.chatgpt-search/index.db`
 
-## DECISION TREE
+## Quick Start
+
+```bash
+cd . && ./scripts/setup.sh <your-export-path>/conversations.json
+export PYTHONPATH=./src
+python -m chatgpt_search.cli "your topic query" --limit 10
+```
+
+## Decision Tree
 
 ```text
 Need to search past ChatGPT conversations?
@@ -97,7 +116,7 @@ Need to search past ChatGPT conversations?
   |
   +-- Need to search non-ChatGPT docs? --> Use your project's document search skill
   +-- Need to search Apple Notes/Obsidian? --> Use a dedicated document search tool
-  +-- Need web search? --> Use web-search skill
+  +-- Need web search? --> Use web-search skill (optional companion, not required)
 ```
 
 ## Setup
@@ -176,7 +195,7 @@ python -m chatgpt_search.cli --db /path/to/index.db "query"
 
 ## Search Syntax
 
-FTS5 query syntax is supported:
+FTS5 query syntax (SQLite full-text query operators) is supported:
 
 | Syntax | Example | Meaning |
 |--------|---------|---------|
@@ -188,17 +207,17 @@ FTS5 query syntax is supported:
 
 ## Architecture
 
-- **Engine:** SQLite FTS5 with BM25 ranking
+- **Engine:** SQLite FTS5 (SQLite full-text search) with BM25 ranking (relevance scoring)
 - **Indexing:** Message-level rows, conversation metadata joined at query time
 - **Boosting:** Title at 10x weight, content at 1x, code at 0.5x
 - **Tokenizer:** Porter stemmer + Unicode61 (handles diacritics)
-- **TF-IDF:** scikit-learn TfidfVectorizer, unigrams + bigrams, code blocks stripped,
+- **TF-IDF:** scikit-learn TfidfVectorizer (term-weighting), unigrams + bigrams, code blocks stripped,
   top-10 keywords per conversation, min_df=2 for larger language groups and min_df=1
   for small groups, max_df=0.8
 - **Language Detection:** langdetect per message, 15 languages supported
 - **Parser:** Canonical thread extraction via `current_node` backward traversal
 - **Code separation:** Fenced code blocks extracted to separate field
-- **PUA cleanup:** Unicode Private Use Area citation markers stripped
+- **PUA cleanup:** Unicode Private Use Area (PUA) citation markers stripped
 - **Citeturn cleanup:** ChatGPT citation markup (citeturn0search1, etc.) stripped
 
 ## Performance
@@ -232,3 +251,14 @@ Tested on 149MB export (1,514 conversations, 16,689 messages):
 | No keyword results | Corpus too small or low textual signal | Normal for small exports; rebuild with more data |
 | "Invalid search query" | FTS5 syntax error | Check query syntax; avoid unmatched quotes |
 | scikit-learn warning during build | scikit-learn not installed | Run `python3 -m pip install scikit-learn` |
+
+## Bundled Resources Index
+
+| Path | What | When to load |
+|------|------|--------------|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
+| `./README.md` | Local package and development notes | When debugging setup or extending the CLI |
+| `./scripts/setup.sh` | One-command dependency setup and index bootstrap | During first-time setup or rebuild reset |
+| `./src/chatgpt_search/` | Search/index implementation modules | When patching ranking, parsing, or filters |
+| `./tests/` | Coverage for parser/index/search behavior | Before refactors and when validating fixes |

@@ -9,6 +9,11 @@ Extract clean text and media transcripts from URLs, files, and streams so your A
 
 Use this skill when you need deterministic extraction for YouTube, podcast feeds, PDFs, scanned images, or local media files.
 
+Terminology used in this file:
+- **DOM:** Document Object Model, the page element structure used by browser-based extractors.
+- **OCR:** Optical character recognition (extracting text from images/scans).
+- **ANSI codes:** Terminal color/control sequences; `--plain` removes them for machine parsing.
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -19,7 +24,7 @@ Paste this into your AI agent chat:
 
 > Install the summarize skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/summarize
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -27,15 +32,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.claude/skills/summarize
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/summarize/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:summarize -->"
+  cat /tmp/fieldwork/skills/summarize/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -45,16 +52,20 @@ cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.claude/skills/summa
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/summarize
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/summarize/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:summarize -->"
+  cat /tmp/fieldwork-main/skills/summarize/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ---
 
@@ -140,11 +151,25 @@ After installing, tell your agent: "Check UPDATES.md in the summarize skill for 
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 ---
+
+## Quick Start
+
+Run one extraction flow end-to-end:
+
+```bash
+summarize --version
+summarize --extract "https://www.youtube.com/watch?v=VIDEO_ID" --plain
+summarize --extract "/path/to/document.pdf" --plain
+```
+
+Use `--extract --plain` as the default pattern for deterministic, non-ANSI output.
 
 ## Decision Tree: summarize vs Other Tools
 
-```
+```text
 Need content from the web?
   |
   +-- Static web page (article, docs, blog)?
@@ -182,7 +207,7 @@ Need content from the web?
         --> Requires: whisper-cli (local) or OPENAI_API_KEY (cloud)
 ```
 
-**Rule of thumb:** summarize is the default for media extraction (YouTube, podcasts, audio, video, images). For web pages, prefer WebFetch/Jina/Crawl4AI depending on DOM complexity. Use summarize for web only when other tools fail.
+**Rule of thumb:** summarize is the default for media extraction (YouTube, podcasts, audio, video, images). For web pages, prefer WebFetch/Jina/Crawl4AI depending on DOM complexity (how hard the page structure is to parse). Use summarize for web only when other tools fail.
 
 ## Extraction Mode (Primary)
 
@@ -380,7 +405,6 @@ summarize --extract "https://paywalled-site.com/article" --firecrawl always --pl
 for url in "URL1" "URL2" "URL3"; do
   echo "=== $url ==="
   summarize --extract "$url" --plain
-
 done
 ```
 

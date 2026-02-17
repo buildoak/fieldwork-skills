@@ -5,6 +5,10 @@
 **Result:** PARTIAL (Phases 1-2 pass, Phase 3 blocked by Cloudflare Turnstile)
 **Stealth:** Layer 3 required (Kernel cloud provider with CAPTCHA solving)
 
+Terminology:
+- **Turnstile:** Cloudflare's interactive CAPTCHA challenge.
+- **Layer 3 (Kernel):** Cloud browser provider mode with built-in stealth and CAPTCHA solving.
+
 ## What Works
 
 ### Phase 1: AgentMail inbox creation
@@ -23,7 +27,7 @@ Worker handled the 3-inbox quota limit autonomously during testing by detecting 
 
 ### Phase 2: Signup form fill
 
-```
+```text
 browser_navigate(url="https://linear.app/signup")
 browser_snapshot()
 
@@ -38,7 +42,7 @@ This phase completes successfully with Layer 1 stealth.
 
 ### Phase 3: Email verification (BLOCKED)
 
-```
+```text
 # This is where the flow breaks:
 # Cloudflare Turnstile interactive CAPTCHA appears at the email verification step.
 # The CAPTCHA cannot be bypassed with Layer 1 stealth.
@@ -75,9 +79,9 @@ Would use standard browser interaction to create an issue in the workspace.
 
 ### Stealth escalation for Linear
 
-```
+```text
 Layer 1 (env vars)          --> FAILS at email verification (Turnstile)
-Layer 2 (rebrowser-patches) --> INCOMPATIBLE (pw version mismatch, Feb 2026)
+Layer 2 (rebrowser-patches) --> INCOMPATIBLE (Playwright version mismatch, Feb 2026)
 Layer 3 (Kernel cloud)      --> REQUIRED (CAPTCHA solving + clean fingerprint)
 ```
 
@@ -91,7 +95,7 @@ export KERNEL_PROFILE_NAME=linear-signup
 
 ## Sample Worker Prompt
 
-```
+```text
 Sign up for a Linear account using AgentMail for email verification.
 
 IMPORTANT: This site uses Cloudflare Turnstile CAPTCHA. You MUST have Layer 3 stealth enabled (Kernel cloud provider). If running with Layer 1 only, the flow will block at email verification. Report the block and stop -- do not waste calls retrying.

@@ -5,11 +5,17 @@
 **Result:** PASS (after retry)
 **Stealth:** Layer 1 sufficient for old.reddit.com
 
+Terminology:
+- **SPA:** Single-page application, where content is rendered dynamically in JavaScript.
+- **DOM:** Document Object Model, the page element tree queried by `browser_evaluate`.
+- **a11y tree:** Accessibility tree returned by snapshot tools.
+- **CSS selector:** A rule used to target DOM elements (for example, `.thing` or `a.title`).
+
 ## What Works
 
 ### Use old.reddit.com exclusively
 
-```
+```text
 browser_navigate(url="https://old.reddit.com/r/programming")
 browser_snapshot()
 
@@ -22,7 +28,7 @@ browser_snapshot()
 
 ### Extract data via browser_evaluate (not snapshots)
 
-```
+```text
 # Extract posts with targeted JS DOM queries
 browser_evaluate(script="JSON.stringify(Array.from(document.querySelectorAll('.thing')).slice(0, 5).map(el => ({title: el.querySelector('a.title')?.textContent, score: el.querySelector('.score.unvoted')?.textContent, comments: el.querySelector('.comments')?.textContent, url: el.querySelector('a.title')?.href})))")
 
@@ -64,7 +70,7 @@ browser_close()
 
 ## Sample Worker Prompt
 
-```
+```text
 Scrape the top 5 posts from r/programming on Reddit.
 
 CRITICAL: Use old.reddit.com, NOT reddit.com. The modern Reddit SPA blocks headless browsers.

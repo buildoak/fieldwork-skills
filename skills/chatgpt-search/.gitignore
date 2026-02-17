@@ -1,13 +1,22 @@
 __pycache__/
+src/chatgpt_search/__pycache__/
 *.pyc
 *.pyo
 *.egg-info/
 dist/
 build/
 .venv/
+.env
+.env.*
+!.env.example
 *.db
 *.sqlite
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+*.log
 
 # Never commit user data
 conversations.json

@@ -4,9 +4,9 @@
 
 ChatGPT gives you a data export. It's a 150MB JSON file with every conversation you've ever had. Useful in theory. In practice, it's a blob. You can't search it. You can't filter by date, language, or model. You can't find that one conversation where you worked out that pricing strategy six months ago.
 
-This tool fixes that. It parses the export, builds a SQLite FTS5 index with BM25 ranking, extracts TF-IDF keywords per conversation, and gives you a CLI that actually works. Search by topic, filter by date range, filter by which model answered, filter by language. Browse full conversations. Explore keywords.
+This tool fixes that. It parses the export, builds a SQLite FTS5 index (SQLite's built-in full-text search engine) with BM25 ranking (a relevance-scoring formula), extracts TF-IDF keywords (a term-weighting method that surfaces distinctive words) per conversation, and gives you a CLI that actually works. Search by topic, filter by date range, filter by which model answered, filter by language. Browse full conversations. Explore keywords.
 
-A prompt says "search your chats." A skill says "here's a persistent FTS5 index with title boosting, date filtering, language detection, and TF-IDF keywords -- and here's when to use it vs. grep."
+A prompt says "search your chats." A skill says "here's a persistent FTS5 index with title boosting, date filtering, language detection, and TF-IDF keywords -- and here's when to use it vs. grep (plain text matching)."
 
 ---
 
@@ -17,7 +17,7 @@ ChatGPT's built-in search is real-time and forgetful. It searches the server, re
 The export is the raw material. This tool makes it useful.
 
 What it does well:
-- BM25-ranked full-text search with Porter stemming
+- BM25-ranked full-text search with Porter stemming (basic word-root matching for English)
 - Title boosted 10x (conversation titles are strong signals)
 - Code blocks extracted to a separate field (0.5x weight, so code doesn't drown out prose)
 - Per-message language detection across 15 languages
@@ -119,7 +119,7 @@ chatgpt-search --db /path/to/index.db "query"
 
 ### Search syntax
 
-FTS5 query syntax is supported:
+FTS5 query syntax (SQLite full-text query operators) is supported:
 
 | Syntax | Example | Meaning |
 |--------|---------|---------|

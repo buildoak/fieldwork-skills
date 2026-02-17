@@ -2,6 +2,13 @@
 
 Known failures, anti-bot findings, and operational gotchas. Read this before planning any browser task against a site you haven't tested before.
 
+Terminology used in this file:
+- **Playwright:** A browser automation framework used by `agent-browser`.
+- **SPA:** Single-page application, a site that renders most content in JavaScript after load.
+- **DOM:** Document Object Model, the browser's structured page element tree.
+- **a11y tree:** Accessibility tree used by `browser_snapshot`.
+- **OAuth:** Redirect-based login protocol (for example, "Sign in with GitHub").
+
 ---
 
 ## The Feb 12 Disaster: Significant token budget burned in one task
@@ -154,7 +161,7 @@ For tasks requiring email verification (account signup, OTP flows).
 
 ### Usage pattern
 
-```
+```text
 1. Create or reuse a mailbox via CLI
 2. Use mailbox email in browser signup form
 3. Poll mailbox for incoming verification email
@@ -204,5 +211,4 @@ Navigate to signup -> enter email -> poll AgentMail for OTP -> extract and submi
 | AgentMail integration into all benchmark tasks | Partial | Only Task 10 and 12 use email |
 | Session persistence (stay logged in) | Not implemented | Each task starts fresh |
 | Rate limiting for production use | Not implemented | Risk of triggering anti-bot on sustained use |
-| Layer 2 rebrowser-patches | Blocked (pw 1.52 vs 1.58) | Cannot bypass Turnstile; skip to Layer 3 when needed |
 | Layer 2 rebrowser-patches | Blocked (pw 1.52 vs 1.58) | Cannot bypass Turnstile; skip to Layer 3 when needed |

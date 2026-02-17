@@ -7,6 +7,13 @@ description: Browser automation skill for AI coding agents. 25 Playwright-based 
 
 Browser automation via [agent-browser](https://github.com/anthropics/agent-browser). 25 tools wrapping Playwright for navigation, interaction, observation, and session management. Validated on two benchmark suites: 12/15 pass on a 15-task suite (100% excluding external blockers), 9/10 on a 10-task progressive suite. Standout: Notion end-to-end signup with AgentMail OTP verification.
 
+Terminology used in this file:
+- **Playwright:** A browser automation framework that lets tools control Chromium/Chrome.
+- **a11y tree:** The accessibility tree (screen-reader-friendly page structure) used by `browser_snapshot`.
+- **DOM:** Document Object Model, the browser's structured representation of page elements.
+- **CSS selector:** A rule for targeting specific DOM elements (for example `.price` or `#submit`).
+- **OAuth:** A standard login/authorization flow that redirects through an identity provider (for example, "Sign in with GitHub").
+
 ## How to install this skill
 
 Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
@@ -17,7 +24,7 @@ Paste this into your AI agent chat:
 
 > Install the browser-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/browser-ops
 
-The agent will read the SKILL.md and copy the skill folder into your project automatically.
+The agent will read this `SKILL.md` and install it for your environment.
 
 ### Option 2: Clone and copy
 
@@ -25,15 +32,17 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 # 1. Clone the fieldwork repo
 git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:browser-ops -->"
+  cat /tmp/fieldwork/skills/browser-ops/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
 
 ### Option 3: Download just this skill
@@ -43,16 +52,20 @@ cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/bro
 curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# 2. Copy into your project (replace /path/to/your-project with your actual path)
-# For Claude Code:
+# 2A. Claude Code: copy this skill folder into your project
 mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
-# For Codex CLI:
-# Codex CLI reads instructions from AGENTS.md at your project root.
-# Copy the SKILL.md content into your project's AGENTS.md, or reference the URL:
-# See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
+# 2B. Codex CLI: Codex reads AGENTS.md only
+touch /path/to/your-project/AGENTS.md
+{
+  echo
+  echo "<!-- fieldwork-skill:browser-ops -->"
+  cat /tmp/fieldwork-main/skills/browser-ops/SKILL.md
+} >> /path/to/your-project/AGENTS.md
 ```
+
+For Codex CLI, do not use `codex.md` or `.codex/skills/`. Root `AGENTS.md` is the only instruction source.
 
 ---
 
@@ -158,13 +171,15 @@ After installing, tell your agent: "Check UPDATES.md in the browser-ops skill fo
 
 When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
+Follow `UPDATE-GUIDE.md` so customized local files are diffed before any overwrite.
+
 ---
 
 ## Quick Start
 
 The simplest possible browser flow: navigate, inspect, capture.
 
-```
+```text
 browser_navigate(url="https://example.com")
 browser_snapshot(mode="interactive")
 browser_screenshot(path="/tmp/example.png")
@@ -177,7 +192,7 @@ browser_close()
 
 **Ask this FIRST. Getting it wrong wastes significant token budget.**
 
-```
+```text
 Need data from the web?
   |
   +-- Is it static content? (prices, articles, search results, public data)
@@ -203,7 +218,7 @@ Need data from the web?
 
 Every browser task follows this loop:
 
-```
+```text
 1. browser_navigate(url)                       -- go to the page
 2. browser_snapshot(mode='interactive')        -- get refs (@e1, @e2...)
 3. Identify target ref from snapshot           -- find the button/input/link
@@ -231,7 +246,7 @@ Every browser task follows this loop:
 
 ## Tiered Access Model
 
-```
+```text
 Tier 1: A11y Tree Snapshot (~1,400 tokens/page)
   browser_snapshot(mode='interactive') --> get refs --> click/fill
   For: navigation, form filling, structured page interaction
@@ -255,7 +270,7 @@ For content-rich pages (HN, Reddit, forums, dashboards), the interactive snapsho
 
 **Pattern:** Snapshot first to understand page structure, then `browser_evaluate` with targeted JS for bulk extraction.
 
-```
+```text
 1. browser_navigate(url)
 2. browser_snapshot(mode='interactive')   -- understand structure (pay cost once)
 3. browser_evaluate('                     -- extract data surgically
@@ -286,7 +301,7 @@ For tasks requiring email verification (account signup, OTP flows).
 
 ### The Pattern (Validated on Notion Signup)
 
-```
+```text
 1. Create mailbox:     ./scripts/agentmail.sh create <username>
 2. Fill signup form:   browser_fill(ref, "username@agentmail.to")
 3. Submit form:        browser_click(ref)
@@ -318,7 +333,7 @@ For tasks requiring email verification (account signup, OTP flows).
 - Per-session isolation is NOT yet implemented
 
 **Always close the browser when done:**
-```
+```text
 browser_close()  -- releases the session for the next task
 ```
 

@@ -2,6 +2,10 @@
 
 Step-by-step guide for setting up gogcli on a headless Mac or Linux server.
 
+Terminology:
+- **OAuth:** Google's delegated authorization flow for API access.
+- **GCP:** Google Cloud Platform, where you create projects, credentials, and API settings.
+
 ---
 
 ## 1. Install
@@ -12,7 +16,7 @@ brew install steipete/tap/gogcli
 
 ---
 
-## 2. GCP Setup
+## 2. GCP Setup (Google Cloud Platform)
 
 ### Create Project
 

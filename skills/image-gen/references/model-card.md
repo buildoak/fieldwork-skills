@@ -18,7 +18,7 @@ All models accessed via OpenRouter `/api/v1/chat/completions` unless noted.
 
 ## Decision Tree
 
-```
+```text
 What do you need?
   |
   +-- Fast, cheap, good enough?

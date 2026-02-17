@@ -6,7 +6,7 @@ Battle-tested patterns from real GSD coordinator sessions. Each example document
 
 ## Example 1: Writing Style Distillation (Fan-Out + Sequential Synthesis)
 
-**Pattern:** Fan-Out (Phase 1) into Sequential Synthesis (Phases 2-3)
+**Pattern:** Fan-Out (parallel independent workers) in Phase 1, then Sequential Synthesis in Phases 2-3
 **Task:** Analyze a corpus of blog posts across multiple dimensions, synthesize findings into a canonical style reference, then update the consuming skill.
 **Why this pattern:** Three independent analysis angles (quantitative, qualitative, delta) that feed into a single synthesis. Fan-out for speed on the independent work; sequential for the dependent synthesis that needs all three outputs.
 
@@ -50,10 +50,10 @@ Using Spark for the delta analysis (Worker 3) and the skill update (Worker 5) wa
 
 ---
 
-## Example 2: Vault Build + Security Audit (10x Pipeline with Codex xHigh Audit)
+## Example 2: Vault Build + Security Audit (10x Pipeline with Codex `xhigh` Audit)
 
 **Pattern:** 10x Pipeline -- Codex `high` builds, Codex `xhigh` audits, Codex `high` fixes
-**Task:** Build an encrypted secrets vault (age + SOPS), then security-audit it, then harden and package for public release.
+**Task:** Build an encrypted secrets vault (`age` for encryption keys + `SOPS` for encrypted YAML secrets files), then security-audit it, then harden and package for public release.
 **Why this pattern:** Security-sensitive code benefits from model diversity between builder and auditor. The builder optimizes for functionality; the auditor (at `xhigh` reasoning) catches the edge cases the builder's "get it working" mindset missed.
 
 ### Setup
@@ -117,7 +117,7 @@ The coordinator had a 10-test suite ranging from medium (Reddit scraping) to bru
 
 Tests 1-3 were dispatched to a GSD coordinator as a batch:
 
-```
+```text
 Engine: Codex Spark via agent-mux
 Skill: browser-ops (loaded via --browser flag)
 Sandbox: danger-full-access (required for Unix socket to browser daemon)
@@ -139,7 +139,7 @@ Tests 4-10 followed the same pattern with progressively harder targets.
 Key discoveries during the benchmark:
 - **URL pre-population pattern:** Google Flights' autocomplete widget resisted `browser_type`. Bypassed by navigating directly to `?q=` URL with parameters pre-encoded. 21 tool calls vs 67+ calls with timeout on the form-based approach.
 - **iframe bypass pattern:** Stripe's cross-origin iframes blocked `browser_fill`. Solution: extract iframe `src` URL via `browser_evaluate`, navigate directly to it, interact normally.
-- **Evaluate-only mode:** Wikipedia's massive a11y tree blew token budgets. Skipped snapshots entirely, used `browser_evaluate` with targeted CSS selectors for all extraction. 11 calls, 63 seconds, zero snapshots.
+- **Evaluate-only mode:** Wikipedia's massive a11y tree (accessibility tree snapshot) blew token budgets. Skipped snapshots entirely, used `browser_evaluate` with targeted CSS selectors (rule-based HTML element matching) for all extraction. 11 calls, 63 seconds, zero snapshots.
 
 ### What made it work
 
@@ -213,7 +213,7 @@ The coordinator read the prompt, assessed the task, and built the entire tool di
 
 91 tool calls, 15 minutes. Working tool shipped.
 
-But: the coordinator skipped two planned enrichment layers (NER + TF-IDF keyword extraction) that the user had explicitly approved. The main thread caught this:
+But: the coordinator skipped two planned enrichment layers (NER, named-entity recognition, plus TF-IDF keyword extraction) that the user had explicitly approved. The main thread caught this:
 
 > "The GSD was pragmatic -- it shipped a working tool fast. But it cut two enrichment layers you approved."
 

@@ -14,10 +14,10 @@ All files are new. Copy the entire `vault/` directory.
 | Docs | `UPDATES.md`, `UPDATE-GUIDE.md` |
 
 ### Features
-- Encrypted secrets vault using age + sops
+- Encrypted secrets vault using `age` (public-key encryption) + `sops` (encrypted YAML secrets files)
 - Commands: get, set, list, source, exec, verify, doctor, setup
 - Colorized output (green/red/yellow) with graceful fallback for non-terminals
-- Input validation preventing SOPS path injection and shell injection
+- Input validation preventing SOPS path-expression injection and shell injection
 - Shell-safe export generation (printf %q) for eval safety
 - Auto-fix file permissions on every operation
 - Comprehensive `doctor` command with round-trip encryption test

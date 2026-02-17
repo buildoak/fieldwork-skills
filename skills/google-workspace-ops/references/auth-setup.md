@@ -2,6 +2,11 @@
 
 Complete OAuth setup, token management, and multi-account configuration for gogcli.
 
+Terminology:
+- **OAuth:** Google's delegated authorization flow that grants API access without sharing passwords.
+- **Google Cloud Project (GCP project):** The cloud project where you enable APIs and create OAuth credentials.
+- **Keyring:** Secure local credential storage (for example, macOS Keychain).
+
 ---
 
 ## Headless Mac Setup (Headless / SSH)

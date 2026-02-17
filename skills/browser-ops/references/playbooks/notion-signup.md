@@ -7,7 +7,7 @@
 
 ## What Works
 
-The complete validated flow -- signup through OTP verification through onboarding through page creation. This is the standout benchmark task and the most complex validated pattern.
+The complete validated flow -- signup through OTP (one-time passcode) verification through onboarding through page creation. This is the standout benchmark task and the most complex validated pattern.
 
 ### Step-by-step
 
@@ -17,7 +17,7 @@ The complete validated flow -- signup through OTP verification through onboardin
 # Returns: inbox ID and email address (notion-signup-01@agentmail.to)
 ```
 
-```
+```text
 # Step 2: Navigate to signup
 browser_navigate(url="https://www.notion.so/signup")
 browser_snapshot()
@@ -39,7 +39,7 @@ browser_snapshot()                             # should show "check your email" 
 # Returns: { "otp": "123456" } or { "link": "https://..." }
 ```
 
-```
+```text
 # Step 6: Enter OTP in browser
 browser_fill(ref="@otp_field", text="123456")
 browser_click(ref="@submit_button")            # submit OTP
@@ -96,7 +96,7 @@ browser_close()
 
 ## Sample Worker Prompt
 
-```
+```text
 Sign up for a new Notion account using AgentMail for email verification, complete onboarding, and create a test page.
 
 Steps:

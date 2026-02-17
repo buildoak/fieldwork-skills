@@ -1,26 +1,51 @@
 # Python
 venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 *.egg-info/
 dist/
 build/
+pip-wheel-metadata/
 
 # Node
 node_modules/
 
-# Environment
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment and secrets
 .env
-.env.local
+.env.*
+!.env.example
+.envrc
 .env.keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.secret
+*.secrets
+secrets.*
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Temp
+# Temp/cache/logs
 .tmp/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+*.log
 
 # IDE
 .idea/

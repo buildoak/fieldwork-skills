@@ -1,3 +1,5 @@
+![fieldwork-skills](assets/banner.png)
+
 # fieldwork
 
 **Teach your AI agent to operate, not just code.**

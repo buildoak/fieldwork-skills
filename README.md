@@ -1,6 +1,6 @@
 # Fieldwork Tools
 
-\![fieldwork-skills](assets/banner.png)
+![fieldwork-skills](assets/banner.png)
 
 **Teach your AI agent to operate 10x better.**
 

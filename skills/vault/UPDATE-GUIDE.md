@@ -4,7 +4,7 @@ Instructions for AI agents performing skill updates.
 
 ## Quick Update (for agents)
 
-1. Fetch latest: `git clone https://github.com/user/fieldwork-skills.git /tmp/fieldwork-latest`
+1. Fetch latest: `git clone https://github.com/buildoak/fieldwork.git /tmp/fieldwork-latest`
 2. Read `UPDATES.md` in this skill's directory to see what changed
 3. For each entry in `new-files`: copy to user's local skill directory (safe, no conflicts)
 4. For each entry in `changed-files`:

@@ -11,118 +11,124 @@ Use this skill when you need deterministic extraction for YouTube, podcast feeds
 
 ## How to install this skill
 
-### Option 1: Point your agent at it (easiest)
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
 
-Tell your AI coding agent to install this skill by pasting this into your chat:
+### Option 1: Tell your AI agent (easiest)
 
-> Install the summarize skill from [github.com/nikitadubovikov/fieldwork/skills/summarize](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize)
+Paste this into your AI agent chat:
 
-Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
+> Install the summarize skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize
 
-### Option 2: Clone into your project
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
 
 ```bash
-# Clone the fieldwork repo (if you haven't already)
-git clone https://github.com/nikitadubovikov/fieldwork.git
+# 1. Clone the fieldwork repo
+git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
 
-# Go to your project directory
-cd /path/to/your-project
-
-# Create the skills directory if it doesn't exist
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
-mkdir -p .claude/skills
-cp -r /path/to/fieldwork/skills/summarize .claude/skills/summarize
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.claude/skills/summarize
 
 # For Codex CLI:
-mkdir -p .codex/skills
-cp -r /path/to/fieldwork/skills/summarize .codex/skills/summarize
+mkdir -p /path/to/your-project/.codex/skills
+cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.codex/skills/summarize
 ```
 
 ### Option 3: Download just this skill
 
 ```bash
-# Download and extract the fieldwork repo
+# 1. Download and extract the repo zip
 curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# Copy the skill into your project (Claude Code)
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
 mkdir -p /path/to/your-project/.claude/skills
-cp -r /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/
+cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/summarize
 
-# Or for Codex CLI:
+# For Codex CLI:
 mkdir -p /path/to/your-project/.codex/skills
-cp -r /tmp/fieldwork-main/skills/summarize /path/to/your-project/.codex/skills/
+cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.codex/skills/summarize
 ```
-
-> **Platform notes:**
-> The `summarize` CLI is installed via Homebrew (macOS). On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.) or check the [summarize repo](https://github.com/steipete/summarize) for alternative install methods. On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
 ## Setup: Install dependencies
 
-Installing the skill (above) just copies the instruction files. You also need the `summarize` CLI and optional tools installed on your machine.
+Installing the skill (above) copies instruction files only. You also need the `summarize` CLI and optional extraction tools installed on your machine.
 
-### What you'll need
+### Prerequisites checklist
 
-- **Homebrew** -- a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+**Homebrew** -- Package manager for macOS, needed to install the `summarize` CLI and optional tools.
+```bash
+brew --version  # Should print "Homebrew X.Y.Z"
+```
+Don't have it? Install from [https://brew.sh](https://brew.sh) or run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
 
-### Check prerequisites
+### Step 1: Add the summarize Homebrew tap
+
+This registers the formula source that contains the `summarize` CLI.
 
 ```bash
-# Check if Homebrew is installed (macOS package manager)
-# If this command fails, install Homebrew first: https://brew.sh
-brew --version
+brew tap steipete/tap
 ```
 
-### Install the summarize CLI
+✓ **Success:** Output includes "Tapped" and mentions `steipete/tap`.
+
+✗ **If you see an error:** Check your internet connection and run `brew doctor` for diagnostics.
+
+### Step 2: Install the summarize CLI
 
 ```bash
-# Add the tool repository to Homebrew
-brew tap steipete/tap
-
-# Install the content extraction tool
 brew install summarize
 ```
 
-If `brew tap` or `brew install` fails, check your internet connection and run `brew doctor` for diagnostics.
+✓ **Success:** Install completes with no error lines.
 
-### Verify it's working
+✗ **If you see `No available formula with the name "summarize"`:** Run `brew tap steipete/tap` first (Step 1), then retry.
+
+### Step 3: Verify everything works
 
 ```bash
-# Check the summarize CLI is installed
 summarize --version
-
-# Expected: output like "summarize 0.x.x"
-# If you see "command not found": Homebrew may not be on your PATH
-# Fix: run `eval "$(/opt/homebrew/bin/brew shellenv)"` and try again
-# Or restart your terminal
+summarize --extract "https://example.com" --plain | head -5
 ```
+
+✓ **Success:** Version prints (e.g., "summarize 0.x.x") and extraction returns text from example.com.
+
+✗ **If you see `command not found`:** Homebrew's bin directory is not on your PATH. Run `eval "$(/opt/homebrew/bin/brew shellenv)"` (Apple Silicon) or `eval "$(/usr/local/bin/brew shellenv)"` (Intel Mac), then try again. Add that line to your `~/.zshrc` for persistence.
 
 ### Optional dependencies (install only what you need)
 
-Each dependency below unlocks specific features. See the Dependency Matrix below for which features require which tools. You do not need all of them -- install only when you need that specific capability.
+Each tool below unlocks a specific capability. You do not need all of them -- install only when you need that feature.
 
-```bash
-# For YouTube video downloads and podcast audio
-brew install yt-dlp
+| Tool | What it unlocks | Install command |
+|---|---|---|
+| `yt-dlp` | YouTube video downloads and podcast audio extraction | `brew install yt-dlp` |
+| `ffmpeg` | Video slide extraction and audio processing | `brew install ffmpeg` |
+| `whisper-cli` | Local speech-to-text for audio/video (no API key needed, ~1.5GB download) | `brew install whisper-cli` |
+| `markitdown` | PDF and document text extraction via Python | `python3 -m pip install markitdown` |
+| `uv` | Fast Python tool runner, alternative way to run markitdown (`uvx markitdown`) | `brew install uv` |
+| `tesseract` | OCR for scanned images and image-only PDFs | `brew install tesseract` |
 
-# For video slide extraction and audio processing
-brew install ffmpeg
+### Troubleshooting
 
-# For audio/video transcription (local, no API key needed)
-# Heavy binary (~1.5GB) -- only install if you need to transcribe audio or video files
-# brew install whisper-cli
+| If you see | Fix |
+|---|---|
+| `brew: command not found` | Install Homebrew from [https://brew.sh](https://brew.sh), restart your terminal |
+| `No available formula with the name "summarize"` | Run `brew tap steipete/tap` first, then `brew install summarize` |
+| `summarize: command not found` | Add Homebrew to PATH: `eval "$(/opt/homebrew/bin/brew shellenv)"` then restart terminal |
+| `Error: The following directories are not writable` | Fix ownership: `sudo chown -R "$(whoami)":admin /opt/homebrew` then retry |
+| `Error: Failed to download resource` | Check internet connection, run `brew update`, then retry install |
 
-# For PDF text extraction (markitdown Python package)
-python3 -m pip install markitdown
+### Platform notes
 
-# For PDF extraction via uvx (alternative to markitdown)
-brew install uv
-
-# For image OCR (optical character recognition)
-brew install tesseract
-```
+- **macOS:** Primary instructions above work as written (`brew tap` + `brew install`).
+- **Linux:** Either install [Linuxbrew](https://brew.sh) and follow the same steps, or check the [summarize repo](https://github.com/steipete/summarize) for alternative install methods.
+- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
 ## Decision Tree: summarize vs Other Tools
 

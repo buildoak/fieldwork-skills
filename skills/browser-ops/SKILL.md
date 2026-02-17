@@ -9,118 +9,144 @@ Browser automation via [agent-browser](https://github.com/anthropics/agent-brows
 
 ## How to install this skill
 
-### Option 1: Point your agent at it (easiest)
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
 
-Tell your AI coding agent to install this skill by pasting this into your chat:
+### Option 1: Tell your AI agent (easiest)
 
-> Install the browser-ops skill from [github.com/nikitadubovikov/fieldwork/skills/browser-ops](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops)
+Paste this into your AI agent chat:
 
-Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
+> Install the browser-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops
 
-### Option 2: Clone into your project
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
 
 ```bash
-# Clone the fieldwork repo (if you haven't already)
-git clone https://github.com/nikitadubovikov/fieldwork.git
+# 1. Clone the fieldwork repo
+git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
 
-# Go to your project directory
-cd /path/to/your-project
-
-# Create the skills directory if it doesn't exist
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
-mkdir -p .claude/skills
-cp -r /path/to/fieldwork/skills/browser-ops .claude/skills/browser-ops
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
 # For Codex CLI:
-mkdir -p .codex/skills
-cp -r /path/to/fieldwork/skills/browser-ops .codex/skills/browser-ops
+mkdir -p /path/to/your-project/.codex/skills
+cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.codex/skills/browser-ops
 ```
 
 ### Option 3: Download just this skill
 
 ```bash
-# Download and extract the fieldwork repo
+# 1. Download and extract the repo zip
 curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# Copy the skill into your project (Claude Code)
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
 mkdir -p /path/to/your-project/.claude/skills
-cp -r /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/
+cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
-# Or for Codex CLI:
+# For Codex CLI:
 mkdir -p /path/to/your-project/.codex/skills
-cp -r /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.codex/skills/
+cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.codex/skills/browser-ops
 ```
-
-> **Platform notes:**
-> These instructions are for macOS and Linux. On Windows, use WSL2 (Windows Subsystem for Linux) and follow the same commands inside your WSL terminal.
 
 ---
 
 ## Setup: Install dependencies
 
-Installing the skill (above) just copies the instruction files. You also need the actual tools installed on your machine so the skill can use them.
+Installing the skill (above) copies instruction files only. You also need the runtime tools installed on your machine.
 
-### What you'll need
+### Prerequisites checklist
 
-- **Node.js 18+** -- JavaScript runtime, needed to run the browser automation server. Download from https://nodejs.org if you don't have it.
-- **npm** -- package manager for Node.js, comes bundled with Node.js.
-
-### Check prerequisites
-
+**Node.js 18+** -- JavaScript runtime needed to run the browser automation server.
 ```bash
-# Check Node.js version (18 or newer required)
-# If this fails, install Node.js from https://nodejs.org
-node --version
-
-# Check npm is available (comes with Node.js)
-npm --version
+node --version  # Should print "v18" or higher
 ```
+Don't have it? Install from [https://nodejs.org](https://nodejs.org) or run `brew install node` (macOS) / `sudo apt install -y nodejs npm` (Ubuntu/Debian).
 
-### Install agent-browser
+**npm** -- Package manager for Node.js, comes bundled with Node.js.
+```bash
+npm --version  # Should print a version number
+```
+Don't have it? Reinstall Node.js from [https://nodejs.org](https://nodejs.org) -- npm is included.
+
+### Step 1: Install agent-browser
+
+The browser automation server that provides the 25 browser tools.
 
 ```bash
-# Install the browser automation server globally
 npm install -g @anthropic-ai/agent-browser
 ```
 
-If you get a permission error, either:
-- Use `sudo npm install -g @anthropic-ai/agent-browser` (macOS/Linux)
-- Or fix npm permissions: https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+✓ **Success:** No red error text. Ends with a summary of installed packages.
 
-**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug. Check with `agent-browser --version`.
+✗ **If you see `EACCES` / "Permission denied":** Run `sudo npm install -g @anthropic-ai/agent-browser` instead.
 
-### Start the daemon (must be running before your agent can use browsers)
+✗ **If you see `npm: command not found`:** Install Node.js first (see prerequisites above).
+
+### Step 2: Verify the CLI is installed
 
 ```bash
-# Start the browser daemon in the background
+agent-browser --version
+```
+
+✓ **Success:** Prints a version number `0.10.0` or higher.
+
+✗ **If you see `command not found`:** npm's global bin directory is not on your PATH. Run `export PATH="$(npm config get prefix)/bin:$PATH"` and try again. Add that line to your `~/.zshrc` or `~/.bashrc` for persistence.
+
+**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug.
+
+### Step 3: Start the daemon
+
+The browser daemon must be running before your agent can use browser tools.
+
+```bash
 agent-browser start
 ```
 
-This launches a persistent background process. Keep it running while your agent uses browser tools.
+✓ **Success:** Reports daemon startup and returns control to your shell.
 
-### Verify it's working
+✗ **If it exits with an error:** Check that no other `agent-browser` process is running (`agent-browser stop` first, then `agent-browser start`).
+
+### Step 4: Verify everything works
 
 ```bash
-# Check the daemon is running
 agent-browser status
-
-# Expected: output shows "running" and a port number
-# If you see "command not found": Node.js/npm is not installed or not on your PATH
-# If you see "not running": run `agent-browser start` first
 ```
+
+✓ **Success:** Output includes "running" and a port number.
+
+✗ **If it says "not running":** Run `agent-browser start` first, wait 2-3 seconds, then check status again.
 
 ### Optional: AgentMail for email verification flows
 
-If you need your agent to sign up for services that require email verification (OTP codes, confirmation links):
+Only needed if your agent signs up for services that require email verification (OTP codes, confirmation links).
 
 ```bash
-# Install the AgentMail Python package
-# Use python3 -m pip to ensure correct Python version
 python3 -m pip install agentmail
-
-# Get your API key at https://agentmail.to -- free tier available
 ```
+
+✓ **Success:** Prints "Successfully installed agentmail".
+
+Get your API key at [https://agentmail.to](https://agentmail.to) (free tier available).
+
+### Troubleshooting
+
+| If you see | Fix |
+|---|---|
+| `npm ERR! code EACCES` | Run with `sudo`: `sudo npm install -g @anthropic-ai/agent-browser` |
+| `agent-browser: command not found` | Add npm bin to PATH: `export PATH="$(npm config get prefix)/bin:$PATH"` then restart your terminal |
+| `agent-browser status` shows "not running" | Start the daemon: `agent-browser start` |
+| `Error: listen EADDRINUSE` | Another process is using the port. Run `agent-browser stop` then `agent-browser start` |
+| `node: command not found` | Install Node.js 18+ from [https://nodejs.org](https://nodejs.org) |
+
+### Platform notes
+
+- **macOS:** Primary instructions above work as written. Use `brew install node` if you prefer Homebrew.
+- **Linux:** Same steps. Install Node.js via your package manager (`sudo apt install -y nodejs npm` on Ubuntu/Debian, `sudo dnf install -y nodejs npm` on Fedora).
+- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
 ## Quick Start
 

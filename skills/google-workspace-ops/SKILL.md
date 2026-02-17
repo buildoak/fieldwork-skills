@@ -9,97 +9,98 @@ Automates Google Workspace work using the `gog` CLI with machine-parseable JSON 
 
 ## How to install this skill
 
-### Option 1: Point your agent at it (easiest)
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
 
-Tell your AI coding agent to install this skill by pasting this into your chat:
+### Option 1: Tell your AI agent (easiest)
 
-> Install the google-workspace-ops skill from [github.com/nikitadubovikov/fieldwork/skills/google-workspace-ops](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops)
+Paste this into your AI agent chat:
 
-Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
+> Install the google-workspace-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops
 
-### Option 2: Clone into your project
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
 
 ```bash
-# Clone the fieldwork repo (if you haven't already)
-git clone https://github.com/nikitadubovikov/fieldwork.git
+# 1. Clone the fieldwork repo
+git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
 
-# Go to your project directory
-cd /path/to/your-project
-
-# Create the skills directory if it doesn't exist
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
-mkdir -p .claude/skills
-cp -r /path/to/fieldwork/skills/google-workspace-ops .claude/skills/google-workspace-ops
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
 # For Codex CLI:
-mkdir -p .codex/skills
-cp -r /path/to/fieldwork/skills/google-workspace-ops .codex/skills/google-workspace-ops
+mkdir -p /path/to/your-project/.codex/skills
+cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.codex/skills/google-workspace-ops
 ```
 
 ### Option 3: Download just this skill
 
 ```bash
-# Download and extract the fieldwork repo
+# 1. Download and extract the repo zip
 curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# Copy the skill into your project (Claude Code)
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
 mkdir -p /path/to/your-project/.claude/skills
-cp -r /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/
+cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
-# Or for Codex CLI:
+# For Codex CLI:
 mkdir -p /path/to/your-project/.codex/skills
-cp -r /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.codex/skills/
+cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.codex/skills/google-workspace-ops
 ```
-
-> **Platform notes:**
-> The `gog` CLI is installed via Homebrew (macOS). On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.) or build from source -- see the [gogcli repo](https://github.com/steipete/gogcli). On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
 ## Setup: Install dependencies
 
-Installing the skill (above) just copies the instruction files. You also need the `gog` CLI tool installed on your machine so the skill can use it.
+Installing the skill (above) copies instruction files only. You also need the `gog` CLI tool installed on your machine.
 
-### What you'll need
+### Prerequisites checklist
 
-- **Homebrew** -- a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+**Homebrew** -- Package manager for macOS, needed to install the `gog` CLI.
+```bash
+brew --version  # Should print "Homebrew X.Y.Z"
+```
+Don't have it? Install from [https://brew.sh](https://brew.sh) or run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
 
-### Check prerequisites
+### Step 1: Add the gogcli Homebrew tap
+
+This registers the formula source that contains the `gog` CLI.
 
 ```bash
-# Check if Homebrew is installed (macOS package manager)
-# If this command fails, install Homebrew first: https://brew.sh
-brew --version
+brew tap steipete/tap
 ```
 
-### Install gogcli
+✓ **Success:** Output includes "Tapped" and mentions `steipete/tap`.
+
+✗ **If you see an error:** Check your internet connection and run `brew doctor` for diagnostics.
+
+### Step 2: Install the gog CLI
 
 ```bash
-# Add the tool repository to Homebrew
-brew tap steipete/tap
-
-# Install the Google Workspace CLI tool
 brew install gogcli
 ```
 
-If `brew tap` fails, check your internet connection and run `brew doctor` for diagnostics.
+✓ **Success:** Install completes with no error lines.
 
-### Verify it's working
+✗ **If you see `No available formula with the name "gogcli"`:** Run `brew tap steipete/tap` first (Step 1), then retry.
+
+### Step 3: Verify the CLI is installed
 
 ```bash
-# Check the gog CLI is installed and on your PATH
 gog version
-
-# Expected: output like "gog version 0.x.x"
-# If you see "command not found": Homebrew may not be on your PATH
-# Fix: run `eval "$(/opt/homebrew/bin/brew shellenv)"` and try again
-# Or restart your terminal
 ```
 
-### Connect your Google account (one-time setup)
+✓ **Success:** Prints something like "gog version 0.x.x".
 
-Before using this skill, you need to connect it to your Google account. This is a one-time setup that takes about 10-15 minutes. Here is what you will do:
+✗ **If you see `command not found`:** Homebrew's bin directory is not on your PATH. Run `eval "$(/opt/homebrew/bin/brew shellenv)"` (Apple Silicon) or `eval "$(/usr/local/bin/brew shellenv)"` (Intel Mac), then try again. Add that line to your `~/.zshrc` for persistence.
+
+### Step 4: Connect your Google account (one-time setup, ~10-15 minutes)
+
+Before using this skill, you need to connect it to your Google account. This is a one-time setup:
 
 1. Create a Google Cloud project (free, no billing required)
 2. Enable the Google APIs you need (Gmail, Calendar, Drive, etc.)
@@ -108,15 +109,39 @@ Before using this skill, you need to connect it to your Google account. This is 
 
 The full process is documented with screenshots in [references/auth-setup.md](references/auth-setup.md).
 
-After completing the setup, verify your auth is working:
+```bash
+gog login YOUR_EMAIL --services all
+```
+
+✓ **Success:** Login flow completes and the OAuth token is saved.
+
+✗ **If OAuth fails:** Make sure you downloaded the credentials JSON first. See [references/auth-setup.md](references/auth-setup.md).
+
+### Step 5: Verify everything works
 
 ```bash
-# Check that your Google account is connected
 gog auth status
-
-# Expected: shows your email and enabled services
-# If you see "auth_required": run `gog login YOUR_EMAIL --services all`
 ```
+
+✓ **Success:** Shows your email address and active auth status.
+
+✗ **If you see `auth_required`:** Run `gog login YOUR_EMAIL --services all` and complete the browser consent flow.
+
+### Troubleshooting
+
+| If you see | Fix |
+|---|---|
+| `brew: command not found` | Install Homebrew from [https://brew.sh](https://brew.sh), restart your terminal |
+| `No available formula with the name "gogcli"` | Run `brew tap steipete/tap` first, then `brew install gogcli` |
+| `gog: command not found` | Add Homebrew to PATH: `eval "$(/opt/homebrew/bin/brew shellenv)"` then restart terminal |
+| `auth_required` | Run `gog login YOUR_EMAIL --services all` and complete browser consent |
+| `invalid_grant` | Remove and re-add: `gog auth remove YOUR_EMAIL` then `gog login YOUR_EMAIL --services all` |
+
+### Platform notes
+
+- **macOS:** Primary instructions above work as written (`brew tap` + `brew install`).
+- **Linux:** Homebrew may not be present by default. Either install [Linuxbrew](https://brew.sh) and follow the same steps, or build from source -- see the [gogcli repo](https://github.com/steipete/gogcli).
+- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
 ## Decision Tree: When to Use gog
 

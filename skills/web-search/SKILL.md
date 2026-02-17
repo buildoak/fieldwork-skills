@@ -9,102 +9,107 @@ Web search, scraping, and content extraction for AI coding agents. Zero API keys
 
 ## How to install this skill
 
-### Option 1: Point your agent at it (easiest)
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
 
-Tell your AI coding agent to install this skill by pasting this into your chat:
+### Option 1: Tell your AI agent (easiest)
 
-> Install the web-search skill from [github.com/nikitadubovikov/fieldwork/skills/web-search](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search)
+Paste this into your AI agent chat:
 
-Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
+> Install the web-search skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search
 
-### Option 2: Clone into your project
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
 
 ```bash
-# Clone the fieldwork repo (if you haven't already)
-git clone https://github.com/nikitadubovikov/fieldwork.git
+# 1. Clone the fieldwork repo
+git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
 
-# Go to your project directory
-cd /path/to/your-project
-
-# Create the skills directory if it doesn't exist
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
-mkdir -p .claude/skills
-cp -r /path/to/fieldwork/skills/web-search .claude/skills/web-search
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.claude/skills/web-search
 
 # For Codex CLI:
-mkdir -p .codex/skills
-cp -r /path/to/fieldwork/skills/web-search .codex/skills/web-search
+mkdir -p /path/to/your-project/.codex/skills
+cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.codex/skills/web-search
 ```
 
 ### Option 3: Download just this skill
 
 ```bash
-# Download and extract the fieldwork repo
+# 1. Download and extract the repo zip
 curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
-# Copy the skill into your project (Claude Code)
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
 mkdir -p /path/to/your-project/.claude/skills
-cp -r /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/
+cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/web-search
 
-# Or for Codex CLI:
+# For Codex CLI:
 mkdir -p /path/to/your-project/.codex/skills
-cp -r /tmp/fieldwork-main/skills/web-search /path/to/your-project/.codex/skills/
+cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.codex/skills/web-search
 ```
-
-> **Platform notes:**
-> These instructions are for macOS and Linux. On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.). On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
 ## Setup: Install dependencies
 
-Installing the skill (above) just copies the instruction files. You also need the tools installed on your machine so the skill can use them.
+Installing the skill (above) copies instruction files only. You also need the runtime tools installed on your machine.
 
-### What you'll need
+### Prerequisites checklist
 
-- **Python 3.10+** -- programming language runtime, needed for the web scraping libraries. Download from https://python.org if needed.
+**Python 3.10+** -- Programming language runtime needed by the web scraping libraries.
+```bash
+python3 --version  # Should print "Python 3.10" or higher
+```
+Don't have it? Install from [https://python.org/downloads/](https://python.org/downloads/) or run `brew install python3` (macOS) / `sudo apt install -y python3 python3-pip` (Ubuntu/Debian).
 
-### Check prerequisites
+### Step 1: Install web scraping and search libraries
+
+The two Python packages that power this skill: Crawl4AI (JS-rendering scraper) and duckduckgo-search (fallback search).
 
 ```bash
-# Check Python version (3.10 or newer required)
-# If this command fails, install Python from https://python.org
-python3 --version
+python3 -m pip install crawl4ai duckduckgo-search
 ```
 
-### Install scraping tools
+✓ **Success:** Ends with "Successfully installed crawl4ai-X.X.X duckduckgo-search-X.X.X" (version numbers vary).
+
+✗ **If you see "Permission denied":** Run `python3 -m pip install --user crawl4ai duckduckgo-search` instead.
+
+✗ **If you see "requires a different Python: 3.9":** Upgrade to Python 3.10+ and retry.
+
+### Step 2: Set up Crawl4AI browser engine
+
+This installs Playwright browser binaries so Crawl4AI can render JavaScript-heavy websites. Downloads ~150MB of browser files.
 
 ```bash
-# Install web scraping and search libraries
-# Always use python3 -m pip to avoid Python 2/3 confusion
-python3 -m pip install crawl4ai duckduckgo-search
-
-# Set up browser engine for crawl4ai
-# This installs Playwright browser binaries so crawl4ai can render JS-heavy websites
-# It may take a minute to download ~150MB of browser files
 crawl4ai-setup
 ```
 
-### Verify it's working
+✓ **Success:** Completes and returns to your shell without errors.
+
+✗ **If you see `crawl4ai-setup: command not found`:** The package didn't install its CLI. Run `python3 -m crawl4ai.setup` instead.
+
+### Step 3: Verify everything works
 
 ```bash
-# Test that crawl4ai is importable
-python3 -c "import crawl4ai; print('crawl4ai ready')"
-
-# Test that the CLI is available
+python3 -c "import crawl4ai, duckduckgo_search; print('All imports OK')"
 crwl --help
-
-# Expected: "crawl4ai ready" and crwl help output
-# If you see ModuleNotFoundError: run `python3 -m pip install crawl4ai` again
-# If you see "crwl: command not found": run `crawl4ai-setup` again
 ```
+
+✓ **Success:** Prints "All imports OK" and `crwl` shows its help text.
+
+✗ **If you see `ModuleNotFoundError`:** Rerun `python3 -m pip install crawl4ai duckduckgo-search`.
+
+✗ **If you see `crwl: command not found`:** Rerun `crawl4ai-setup`.
 
 ### No API keys needed
 
 Everything works out of the box. The built-in tools (WebSearch, WebFetch) require zero installation. Crawl4AI and duckduckgo-search are free and keyless.
 
-Optional: Set `JINA_API_KEY` to increase Jina rate limits (get from https://jina.ai), but it is not required.
+Optional: Set `JINA_API_KEY` to increase Jina rate limits (get from [https://jina.ai](https://jina.ai)), but it is not required.
 
 ```bash
 # Optional: add to your shell profile (~/.zshrc or ~/.bashrc) for persistence
@@ -117,6 +122,22 @@ export JINA_API_KEY='jina_...'
 # Run from the skill directory
 bash ./scripts/search-check.sh
 ```
+
+### Troubleshooting
+
+| If you see | Fix |
+|---|---|
+| `python3: command not found` | Install Python 3.10+ from [https://python.org](https://python.org) or `brew install python3` (macOS) |
+| `ERROR: Package 'crawl4ai' requires a different Python: 3.9` | Upgrade to Python 3.10+, then rerun `python3 -m pip install crawl4ai duckduckgo-search` |
+| `ModuleNotFoundError: No module named 'crawl4ai'` | Run `python3 -m pip install crawl4ai` |
+| `crawl4ai-setup: command not found` | Run `python3 -m crawl4ai.setup` instead |
+| `Executable doesn't exist` (Playwright browser error) | Run `crawl4ai-setup` to install browser binaries |
+
+### Platform notes
+
+- **macOS:** Primary instructions above work as written. Use `brew install python3` if you prefer Homebrew.
+- **Linux:** Same steps. Install Python via your package manager (`sudo apt install -y python3 python3-pip` on Ubuntu/Debian, `sudo dnf install -y python3 python3-pip` on Fedora).
+- **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
 ---
 

@@ -15,7 +15,7 @@ Pick one option below. Option 1 is fastest if you already have an AI coding agen
 
 Paste this into your AI agent chat:
 
-> Install the google-workspace-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops
+> Install the google-workspace-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/google-workspace-ops
 
 The agent will read the SKILL.md and copy the skill folder into your project automatically.
 
@@ -23,7 +23,7 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 
 ```bash
 # 1. Clone the fieldwork repo
-git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
+git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
 # 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
@@ -39,7 +39,7 @@ cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.codex/sk
 
 ```bash
 # 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
 # 2. Copy into your project (replace /path/to/your-project with your actual path)

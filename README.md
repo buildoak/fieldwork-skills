@@ -2,79 +2,84 @@
 
 **Teach your AI agent to operate, not just code.**
 
-Battle-tested operational skills for AI coding agents. Each skill is a self-contained runbook -- drop it into your project, and your agent gains a new capability.
+So here's how this started. A friend of mine -- Head of Growth, not an engineer -- asked me to help him use Claude Code and Codex to actually do his job faster. LinkedIn automation, company research, email workflows. The usual growth ops grind.
 
-Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
+I gave him access to some of my skills. The ones I'd been building for weeks, forging against real websites that fight back, real APIs that timeout, real anti-bot systems that make you question your life choices. Browser automation that survived 15-task benchmarks. Web search that doesn't need a single API key. Google Workspace ops for email and calendar and docs.
+
+And it worked. He went from "how do I make it click a button" to running autonomous research pipelines in a day.
+
+That's when it clicked -- these skills shouldn't live in my private setup. They should be a proper public collection. Battle-tested operational playbooks that give AI agents real-world capabilities, not just coding tricks.
+
+So here we are.
 
 ---
 
 ## What's a skill?
 
-A skill is a folder containing instructions, references, and scripts that teach an AI agent *how* to do something. Not a single prompt -- a complete operational playbook with decision trees, fallback chains, and failure patterns learned the hard way.
+A skill is a folder. Inside: a `SKILL.md` runbook that tells your AI agent *how* to do something, plus reference docs and helper scripts. Your agent reads the runbook and follows it autonomously.
 
-The difference: a prompt says "search the web." A skill says "use WebSearch first, fall back to Jina if it fails, use Crawl4AI for JS-heavy pages, here's the decision tree, here are the 12 failure modes and their recovery steps."
+The difference matters. A prompt says "search the web." A skill says "use WebSearch first, fall back to Jina if it fails, use Crawl4AI for JS-heavy pages, here's the decision tree, here are the 12 failure modes and their recovery steps."
 
-Skills encode judgment, not just instructions.
+Prompts are one-shot. Skills encode judgment.
 
 ## Skills
 
-| Skill | What it does | Setup complexity |
-|-------|-------------|-----------------|
-| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification | Medium (npm install) |
-| [web-search](skills/web-search/) | Web search + content extraction, zero API keys | Low (pip install) |
-| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets automation | Medium (brew + OAuth) |
-| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | Low (brew install) |
+| Skill | What it does | Setup |
+|-------|-------------|-------|
+| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification | `npm install` |
+| [web-search](skills/web-search/) | Web search + content extraction, zero API keys | `pip install` |
+| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | `brew install` + OAuth |
+| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video → clean text | `brew install` |
+
+Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
 
 ## Quick start
 
-### Option 1: Copy the skill folder
+### Easiest: just tell your agent
+
+Paste this into Claude Code or Codex CLI:
+
+> Learn the browser-ops skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/browser-ops
+
+The agent reads the SKILL.md and its references. Done.
+
+### Or clone it
 
 ```bash
-# Clone the repo
-git clone https://github.com/nikitadubovikov/fieldwork.git
+git clone https://github.com/buildoak/fieldwork-skills.git
 
 # Copy the skill you want into your project
-cp -r fieldwork/skills/web-search .claude/skills/web-search
+cp -r fieldwork-skills/skills/web-search .claude/skills/web-search
 ```
 
-Your agent now has the skill. It will read the SKILL.md and follow its playbook.
+Your agent now has the skill.
 
-### Option 2: Point your agent to it
+## What makes these different
 
-Tell your AI agent:
+**From prompt libraries:** A prompt tells the agent what to do. A skill teaches it how to think about a class of problems -- decision trees, fallback chains, error recovery, accumulated failure knowledge from hundreds of hours of real testing.
 
-> Learn the browser-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops
+**From MCP servers:** MCP gives agents tools -- functions they can call. Skills give agents judgment -- when to use which tool, what to do when it fails, which approach to try first. They're complementary. browser-ops uses MCP tools under the hood.
 
-The agent reads the SKILL.md and its references, then operates accordingly.
+**From awesome-lists:** Those are link directories. These are the actual runbooks your agent reads and follows. Written and maintained by someone who uses them daily.
 
 ## Design principles
 
-- **Self-contained** -- one folder, one skill, no shared dependencies between skills
-- **Battle-tested** -- forged in daily production use, not written as exercises
-- **Decision trees over instructions** -- teaches agents *when* to use each approach, not just *how*
-- **Failure-aware** -- includes what doesn't work and why, so your agent doesn't repeat mistakes
+- **Self-contained** -- one folder, one skill, no shared dependencies
+- **Battle-tested** -- forged in production against sites that fight back
+- **Decision trees over instructions** -- teaches agents *when*, not just *how*
+- **Failure-aware** -- includes what doesn't work and why
 - **Zero-friction** -- sensible defaults, minimal setup, API keys only when unavoidable
 
-## How these are different
-
-**vs prompt libraries:** Prompts are one-shot instructions. Skills are operational playbooks with decision trees, fallback chains, error recovery, and accumulated failure knowledge. A prompt tells the agent what to do. A skill teaches it how to think about a class of problems.
-
-**vs MCP servers:** MCP gives agents tools (functions they can call). Skills give agents judgment (when to use which tool, what to do when it fails, which approach to try first). Skills and MCP are complementary -- browser-ops uses MCP tools under the hood.
-
-**vs awesome-lists:** Those are link directories. These are the actual runbooks your agent reads and follows.
-
 ## Skill structure
-
-Every skill follows the same layout:
 
 ```
 skill-name/
   SKILL.md              # Main runbook -- the agent reads this
-  references/           # Supporting docs (tool inventories, error patterns, etc.)
-  scripts/              # Helper scripts (health checks, setup, utilities)
+  references/           # Supporting docs, failure logs, patterns
+  scripts/              # Health checks, setup, utilities
 ```
 
-The SKILL.md is the entry point. It contains the decision tree, core workflows, anti-patterns, and pointers to references for deeper detail.
+Each skill is self-contained. Copy one folder -- it works.
 
 ## License
 
@@ -82,6 +87,4 @@ Apache 2.0
 
 ## Author
 
-Built by [Nikita Dubovikov](https://github.com/nikitadubovikov). These skills are extracted from daily AI agent operations -- browser automation, research workflows, content processing. They represent hundreds of hours of real-world testing against production websites, APIs, and edge cases.
-
-More skills added as they mature in production.
+Built by [Nick Oak](https://nickoak.com). More skills added as they mature in production.

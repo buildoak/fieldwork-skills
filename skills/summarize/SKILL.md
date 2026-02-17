@@ -17,7 +17,7 @@ Pick one option below. Option 1 is fastest if you already have an AI coding agen
 
 Paste this into your AI agent chat:
 
-> Install the summarize skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize
+> Install the summarize skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/summarize
 
 The agent will read the SKILL.md and copy the skill folder into your project automatically.
 
@@ -25,7 +25,7 @@ The agent will read the SKILL.md and copy the skill folder into your project aut
 
 ```bash
 # 1. Clone the fieldwork repo
-git clone https://github.com/nikitadubovikov/fieldwork.git /tmp/fieldwork
+git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
 
 # 2. Copy into your project (replace /path/to/your-project with your actual path)
 # For Claude Code:
@@ -41,7 +41,7 @@ cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.codex/skills/summar
 
 ```bash
 # 1. Download and extract the repo zip
-curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
 unzip -q /tmp/fieldwork.zip -d /tmp
 
 # 2. Copy into your project (replace /path/to/your-project with your actual path)

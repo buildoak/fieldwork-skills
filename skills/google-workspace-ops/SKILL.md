@@ -31,8 +31,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/google-workspace-ops /path/to/your-project/.codex/skills/google-workspace-ops
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/google-workspace-ops/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -48,8 +49,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/google-workspace-ops
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.codex/skills/google-workspace-ops
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/google-workspace-ops/SKILL.md
 ```
 
 ---
@@ -457,4 +459,5 @@ gog config set default_account work@company.com
 | `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
 | `./references/gog-commands.md` | Full command reference for all 15 services | Need exact command syntax and flags |
 | `./references/pipeline-patterns.md` | Composable patterns: `gog` + jq + multi-service workflows | Building complex automation |
+| `./references/onboarding-headless.md` | Headless server OAuth setup via SSH tunneling | Setting up on a server without a display |
 | `./references/auth-setup.md` | OAuth setup, credentials, token handling, multi-account | First-time setup or auth troubleshooting |

@@ -33,8 +33,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.claude/skills/summarize
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/summarize /path/to/your-project/.codex/skills/summarize
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/summarize/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -50,8 +51,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/summarize
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/summarize /path/to/your-project/.codex/skills/summarize
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/summarize/SKILL.md
 ```
 
 ---

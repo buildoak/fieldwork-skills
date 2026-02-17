@@ -31,8 +31,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/browser-ops /path/to/your-project/.codex/skills/browser-ops
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -48,8 +49,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/browser-ops
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.codex/skills/browser-ops
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/browser-ops/SKILL.md
 ```
 
 ---
@@ -435,6 +437,9 @@ See `./references/battle-tested-patterns.md` for 12 complete patterns with examp
 | SPA navigation | Medium | type(not fill) + wait + snapshot for dynamic content |
 | Targeted extraction | Low | browser_evaluate(JS selector) |
 | Multi-site flow | High | Multiple navigates, single session, screenshot evidence |
+| Targeted DOM extraction | Low | browser_evaluate(JS selector) for JSON-LD and specific elements |
+| Post-search verification | Medium | snapshot results + verify params + recovery loop |
+| Calendar widget protocol | Medium | click date field + navigate months + click date cells |
 
 ---
 

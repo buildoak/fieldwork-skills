@@ -26,12 +26,12 @@ Prompts are one-shot. Skills encode judgment.
 
 | Skill | What it does | Setup |
 |-------|-------------|-------|
-| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification. 9 site-specific playbooks. | `npm install` |
-| [web-search](skills/web-search/) | Web search + content extraction, zero API keys | `pip install` |
-| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | `brew install` + OAuth |
-| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | `brew install` |
-| [chatgpt-search](skills/chatgpt-search/) | Search your ChatGPT exports -- FTS5, title boosting, 15 languages, TF-IDF keywords | `pip install` |
-| [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | `./setup.sh` |
+| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification. 9 site-specific playbooks. | See SKILL.md |
+| [web-search](skills/web-search/) | Web search + content extraction, zero API keys | See SKILL.md |
+| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | Multi-step -- see SKILL.md |
+| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | See SKILL.md |
+| [chatgpt-search](skills/chatgpt-search/) | Search your ChatGPT exports -- FTS5, title boosting, 15 languages, TF-IDF keywords | See SKILL.md |
+| [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | See SKILL.md |
 | [agent-mux](skills/agent-mux/) | Unified CLI for dispatching AI workers across Codex, Claude, and OpenCode. One command, one JSON contract. | External -- see [buildoak/agent-mux](https://github.com/buildoak/agent-mux) |
 | [gsd-coordinator](skills/gsd-coordinator/) | Multi-step task orchestration -- dispatch, verify, synthesize across engines. Requires agent-mux. | Copy skill folder |
 | [image-gen](skills/image-gen/) | Image generation and editing -- five models, prompt engineering, quality review loop. Zero deps beyond Python stdlib. | API key |
@@ -74,7 +74,7 @@ If you're new to AI coding agents, here's the whole process:
 1. **Get an AI coding agent.** Install [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) or [Codex CLI](https://github.com/openai/codex).
 2. **Clone this repo.** `git clone https://github.com/buildoak/fieldwork-skills.git`
 3. **Pick a skill.** Open the skill's folder (e.g., `skills/browser-ops/`) and read the SKILL.md. It has detailed setup instructions with prerequisites, install commands, and troubleshooting.
-4. **Copy the skill folder** into your project's `.claude/skills/` directory (for Claude Code) or `.codex/skills/` (for Codex CLI).
+4. **Copy the skill folder** into your project's `.claude/skills/` directory (for Claude Code). For Codex CLI, add the skill's SKILL.md content to your project's codex.md or reference it from AGENTS.md.
 5. **Install runtime dependencies.** Each SKILL.md has a "Setup: Install dependencies" section. Follow it.
 6. **Use it.** Tell your agent to use the skill. It reads the SKILL.md and follows the runbook.
 

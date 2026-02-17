@@ -31,8 +31,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.claude/skills/web-search
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/web-search /path/to/your-project/.codex/skills/web-search
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/web-search/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -48,8 +49,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/web-search
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/web-search /path/to/your-project/.codex/skills/web-search
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/web-search/SKILL.md
 ```
 
 ---

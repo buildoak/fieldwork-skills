@@ -1,9 +1,73 @@
+---
+name: vault
+description: Encrypted secrets vault for AI coding agents. Store API keys, passwords, and tokens with age/sops encryption. Never plaintext.
+---
+
 # vault
 
 Keep your secrets encrypted. API keys, passwords, tokens -- locked in a vault that only you can open. Your AI agent gets secrets when it needs them, then forgets them.
 
 **Script:** `./scripts/vault.sh`
 **Setup:** `./scripts/setup.sh` (run once, takes 30 seconds)
+
+---
+
+## How to install this skill
+
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
+
+### Option 1: Tell your AI agent (easiest)
+
+Paste this into your AI agent chat:
+
+> Install the vault skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/vault
+
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
+
+```bash
+# 1. Clone the fieldwork repo
+git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
+
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/vault /path/to/your-project/.claude/skills/vault
+
+# For Codex CLI:
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/vault/SKILL.md
+```
+
+### Option 3: Download just this skill
+
+```bash
+# 1. Download and extract the repo zip
+curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork-main/skills/vault /path/to/your-project/.claude/skills/vault
+
+# For Codex CLI:
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/vault/SKILL.md
+```
+
+---
+
+## Staying Updated
+
+This skill ships with an UPDATES.md changelog and UPDATE-GUIDE.md for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the vault skill for any new features or changes."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
 ---
 

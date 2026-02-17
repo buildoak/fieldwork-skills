@@ -17,7 +17,62 @@ SQLite FTS5 search engine for ChatGPT conversation exports. BM25-ranked full-tex
 with title boosting, code separation, TF-IDF keyword extraction,
 and filtering by date, role, model, and language.
 
-**Repo:** `<skill-root>`
+## How to install this skill
+
+Pick one option below. Option 1 is fastest if you already have an AI coding agent running.
+
+### Option 1: Tell your AI agent (easiest)
+
+Paste this into your AI agent chat:
+
+> Install the chatgpt-search skill from https://github.com/buildoak/fieldwork-skills/tree/main/skills/chatgpt-search
+
+The agent will read the SKILL.md and copy the skill folder into your project automatically.
+
+### Option 2: Clone and copy
+
+```bash
+# 1. Clone the fieldwork repo
+git clone https://github.com/buildoak/fieldwork-skills.git /tmp/fieldwork
+
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
+
+# For Codex CLI:
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/chatgpt-search/SKILL.md
+```
+
+### Option 3: Download just this skill
+
+```bash
+# 1. Download and extract the repo zip
+curl -L -o /tmp/fieldwork.zip https://github.com/buildoak/fieldwork-skills/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# 2. Copy into your project (replace /path/to/your-project with your actual path)
+# For Claude Code:
+mkdir -p /path/to/your-project/.claude/skills
+cp -R /tmp/fieldwork-main/skills/chatgpt-search /path/to/your-project/.claude/skills/chatgpt-search
+
+# For Codex CLI:
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/chatgpt-search/SKILL.md
+```
+
+## Staying Updated
+
+This skill ships with an UPDATES.md changelog and UPDATE-GUIDE.md for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the chatgpt-search skill for any new features or changes."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+**Repo:** `./`
 **Data:** `<your-export-path>/conversations.json`
 **Default DB:** `~/.chatgpt-search/index.db`
 
@@ -48,7 +103,7 @@ Need to search past ChatGPT conversations?
 ## Setup
 
 ```bash
-cd <skill-root> && ./scripts/setup.sh <your-export-path>/conversations.json
+cd . && ./scripts/setup.sh <your-export-path>/conversations.json
 ```
 
 This installs dependencies (scikit-learn, langdetect) and builds the index
@@ -59,7 +114,7 @@ on the full corpus (1,514 conversations, 16,689 messages).
 
 ```bash
 # Set PYTHONPATH (or install the package)
-export PYTHONPATH=<skill-root>/src
+export PYTHONPATH=./src
 
 # --- Search ---
 

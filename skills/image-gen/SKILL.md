@@ -35,8 +35,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/image-gen /path/to/your-project/.claude/skills/image-gen
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/image-gen /path/to/your-project/.codex/skills/image-gen
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/image-gen/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -52,8 +53,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/image-gen /path/to/your-project/.claude/skills/image-gen
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/image-gen /path/to/your-project/.codex/skills/image-gen
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/image-gen/SKILL.md
 ```
 
 ## Setup: Get your API key
@@ -356,7 +358,7 @@ Tip: for batch generation (5+ images), prefer NanoBanana or Flux 2 Klein to cont
 | `./UPDATES.md` | Changelog for this skill | Checking new features/fixes |
 | `./UPDATE-GUIDE.md` | Agent-oriented update instructions | Applying updates safely |
 
-## Staying updated
+## Staying Updated
 
 This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
 

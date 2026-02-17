@@ -3,6 +3,8 @@ name: gsd-coordinator
 description: End-to-end task orchestration across AI coding engines. Coordinates Claude, Codex, Codex Spark, and OpenCode workers using dispatch-verify-synthesize workflows. Use when work spans multiple dependent steps, benefits from model diversity, or needs structured quality verification.
 ---
 
+**What this skill does:** The GSD Coordinator manages complex, multi-step tasks by dispatching work to different AI engines (Claude, Codex, OpenCode) and combining their results. Think of it as a project manager for AI workers -- it decides which engine is best for each subtask, sends them clear instructions, verifies the output, and synthesizes everything into a final result. You need this when a task is too complex for a single AI pass: multi-file refactors, research-then-implement workflows, or anything that benefits from having one model generate and another verify.
+
 # GSD Coordinator
 
 You are a GSD (Get Shit Done) coordinator. Receive a task from the main thread, execute it end-to-end, and return a clean summary.
@@ -41,8 +43,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork/skills/gsd-coordinator /path/to/your-project/.codex/skills/gsd-coordinator
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/gsd-coordinator/SKILL.md
 ```
 
 ### Option 3: Download just this skill
@@ -58,8 +61,9 @@ mkdir -p /path/to/your-project/.claude/skills
 cp -R /tmp/fieldwork-main/skills/gsd-coordinator /path/to/your-project/.claude/skills/gsd-coordinator
 
 # For Codex CLI:
-mkdir -p /path/to/your-project/.codex/skills
-cp -R /tmp/fieldwork-main/skills/gsd-coordinator /path/to/your-project/.codex/skills/gsd-coordinator
+# Codex CLI reads instructions from codex.md or AGENTS.md at your project root.
+# Option A: Copy the SKILL.md content into your project's codex.md
+# Option B: Reference it in AGENTS.md: See https://github.com/buildoak/fieldwork-skills/skills/gsd-coordinator/SKILL.md
 ```
 
 ### Artifact directory setup
@@ -74,6 +78,14 @@ Override: any directory you prefer for working artifacts
 ```
 
 The coordinator will write artifacts to `<artifacts-dir>/YYYY-MM-DD-{engine}-{description}.md`. Deliverables (final outputs) always go to their canonical destination, not the artifacts directory.
+
+## Staying Updated
+
+This skill ships with an UPDATES.md changelog and UPDATE-GUIDE.md for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the gsd-coordinator skill for any new features or changes."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
 
 ## Two Operating Modes
 

@@ -36,8 +36,8 @@ check_daemon() {
     echo "=== Browser Daemon ==="
     # Try to get current URL -- if it works, daemon is running
     local result
-    result=$(agent-browser --session mcp --json get url 2>/dev/null || echo "DAEMON_NOT_RUNNING")
-    if [[ "$result" == *"DAEMON_NOT_RUNNING"* ]] || [[ "$result" == *"error"* ]]; then
+    result="$(agent-browser --session mcp --json get url 2>/dev/null || true)"
+    if [[ -z "$result" ]] || [[ "$result" == *"error"* ]]; then
         warn "Browser daemon not currently running (starts on first navigate)"
     else
         ok "Browser daemon is running"
@@ -91,21 +91,25 @@ check_stealth() {
     fi
 
     # Check rebrowser-patches
-    local ab_path
-    ab_path=$(npm root -g 2>/dev/null)/agent-browser
-    if [[ -d "$ab_path" ]]; then
-        if [[ -n "${REBROWSER_PATCHES_RUNTIME_FIX_MODE:-}" ]]; then
-            ok "rebrowser-patches: configured"
-        else
-            local patched
-            patched=$(grep -r "rebrowser" "$ab_path/node_modules/playwright-core/" 2>/dev/null | head -1 || true)
-            if [[ -n "$patched" ]]; then
-                ok "rebrowser-patches: applied to playwright-core"
+    if command -v npm >/dev/null 2>&1; then
+        local ab_path
+        ab_path="$(npm root -g 2>/dev/null)/agent-browser"
+        if [[ -d "$ab_path" ]]; then
+            if [[ -n "${REBROWSER_PATCHES_RUNTIME_FIX_MODE:-}" ]]; then
+                ok "rebrowser-patches: configured"
             else
-                warn "rebrowser-patches: NOT applied (CDP leak vulnerable)"
-                echo "  Fix: cd $ab_path && npx rebrowser-patches@latest patch"
+                local patched
+                patched=$(grep -r "rebrowser" "$ab_path/node_modules/playwright-core/" 2>/dev/null | head -1 || true)
+                if [[ -n "$patched" ]]; then
+                    ok "rebrowser-patches: applied to playwright-core"
+                else
+                    warn "rebrowser-patches: NOT applied (CDP leak vulnerable)"
+                    echo "  Fix: cd $ab_path && npx rebrowser-patches@latest patch"
+                fi
             fi
         fi
+    else
+        warn "npm not found; skipping rebrowser-patches detection"
     fi
 }
 

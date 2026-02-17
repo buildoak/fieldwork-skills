@@ -1,15 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Setup script for chatgpt-search
 # Builds the FTS5 index from conversations.json
 
 set -euo pipefail
 
-REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DEFAULT_EXPORT=""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DEFAULT_DB="$HOME/.chatgpt-search/index.db"
+
+usage() {
+    cat <<EOF
+Usage: $0 /path/to/conversations.json
+EOF
+}
 
 echo "chatgpt-search setup"
 echo "===================="
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    usage
+    exit 0
+fi
 
 # Check Python
 if ! command -v python3 &>/dev/null; then
@@ -19,20 +30,20 @@ fi
 
 # Install dependencies
 echo "Installing dependencies..."
-python3 -m pip install scikit-learn langdetect
+python3 -m pip install --user scikit-learn langdetect
 echo ""
 
 # Check that conversations.json exists
-EXPORT_PATH="${1:-$DEFAULT_EXPORT}"
+EXPORT_PATH="${1:-}"
 if [ -z "$EXPORT_PATH" ]; then
     echo "Error: You must provide a path to conversations.json"
-    echo "Usage: ./scripts/setup.sh /path/to/conversations.json"
+    usage
     exit 1
 fi
 
 if [ ! -f "$EXPORT_PATH" ]; then
     echo "Error: conversations.json not found at $EXPORT_PATH"
-    echo "Usage: ./scripts/setup.sh /path/to/conversations.json"
+    usage
     exit 1
 fi
 

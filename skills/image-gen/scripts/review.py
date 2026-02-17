@@ -110,6 +110,8 @@ def review_via_anthropic(image_path: str, original_prompt: str, api_key: str) ->
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8", errors="replace") if e.fp else ""
         return {"error": f"HTTP {e.code}: {e.reason}", "details": error_body[:300]}
+    except urllib.error.URLError as e:
+        return {"error": f"Network error: {e.reason}"}
     except Exception as e:
         return {"error": str(e)}
 
@@ -124,7 +126,11 @@ def review_via_anthropic(image_path: str, original_prompt: str, api_key: str) ->
     # Handle potential markdown code block wrapping
     if text.startswith("```"):
         lines = text.split("\n")
-        text = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+        if lines:
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
 
     try:
         review = json.loads(text)

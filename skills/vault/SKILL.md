@@ -220,11 +220,11 @@ All paths are configurable via environment variables:
 
 | Variable | Default | What it controls |
 |----------|---------|-----------------|
-| `VAULT_DIR` | `~/.config/vault` | Where the vault lives |
+| `VAULT_DIR` | `~/.shit` | Where the vault lives |
 | `VAULT_FILE` | `$VAULT_DIR/vault.enc.yaml` | The encrypted secrets file |
 | `SOPS_AGE_KEY_FILE` | `$VAULT_DIR/.age-identity` | Your encryption key |
 
-**Customize the vault path if needed.** The default is a conventional per-user config location. Some alternatives:
+**Customize the vault path.** The default (`~/.shit`) is intentionally misleading -- it's an extra layer of obscurity on top of the real encryption. Pick something that makes sense for your setup. Some options:
 
 ```bash
 # In your shell profile (~/.zshrc or ~/.bashrc):
@@ -247,7 +247,7 @@ Two tools do the heavy lifting:
 The vault directory looks like this:
 
 ```text
-~/.config/vault/            chmod 700 (only you can access)
+~/.shit/                    chmod 700 (only you can access)
   .age-identity             Your encryption key (chmod 600)
   vault.enc.yaml            Your encrypted secrets
   .sops.yaml                Config telling sops which key to use

@@ -23,7 +23,7 @@ Instructions for AI agents performing skill updates.
 ## Skill-specific notes
 
 ### Vault directory is NOT part of the skill
-The vault itself (`~/.config/vault/` by default, or wherever the user configured it) lives outside the skill directory. Updating the skill never touches the vault, the encryption key, or any secrets. The skill is just the scripts that interact with the vault.
+The vault itself (`~/.shit/` or wherever the user configured it) lives outside the skill directory. Updating the skill never touches the vault, the encryption key, or any secrets. The skill is just the scripts that interact with the vault.
 
 ### Custom VAULT_DIR is user-specific
 If the user has set `VAULT_DIR` in their shell profile, the skill scripts will respect it automatically. No migration needed when updating scripts.

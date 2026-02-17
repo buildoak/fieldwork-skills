@@ -13,19 +13,26 @@ Usage:
 
 import argparse
 import base64
+import binascii
 import json
 import os
 import sys
 import time
-import urllib.request
 import urllib.error
-from datetime import datetime
+import urllib.request
 from pathlib import Path
 
 # Import shared model registry from generate
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
-from generate import MODELS, resolve_model, load_image_as_base64, generate_filename, extract_images_from_response
+from generate import (
+    ASPECT_RATIOS,
+    IMAGE_SIZES,
+    extract_images_from_response,
+    generate_filename,
+    load_image_as_base64,
+    resolve_model,
+)
 
 
 # ── OpenRouter Chat-Based Editing ───────────────────────────────────────────
@@ -163,8 +170,17 @@ def edit_via_openai(args, api_key: str) -> dict:
 
     # Image file
     img_path = Path(args.input_image)
-    with open(img_path, "rb") as f:
-        img_data = f.read()
+    try:
+        with open(img_path, "rb") as f:
+            img_data = f.read()
+    except OSError as exc:
+        elapsed = int(time.time() * 1000 - start_ms)
+        return {
+            "error": f"Failed to read input image: {exc}",
+            "model": model,
+            "success": False,
+            "generation_time_ms": elapsed,
+        }
     parts.append(
         f'--{boundary}\r\n'
         f'Content-Disposition: form-data; name="image"; filename="{img_path.name}"\r\n'
@@ -175,8 +191,17 @@ def edit_via_openai(args, api_key: str) -> dict:
     mask_data = None
     if args.mask:
         mask_path = Path(args.mask)
-        with open(mask_path, "rb") as f:
-            mask_data = f.read()
+        try:
+            with open(mask_path, "rb") as f:
+                mask_data = f.read()
+        except OSError as exc:
+            elapsed = int(time.time() * 1000 - start_ms)
+            return {
+                "error": f"Failed to read mask image: {exc}",
+                "model": model,
+                "success": False,
+                "generation_time_ms": elapsed,
+            }
 
     # Assemble body
     body_parts = []
@@ -201,7 +226,7 @@ def edit_via_openai(args, api_key: str) -> dict:
 
     body = b"".join(body_parts)
 
-    base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com")
+    base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com").rstrip("/")
     url = f"{base_url}/v1/images/edits"
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -257,8 +282,10 @@ def main():
     parser.add_argument("--mask", default=None, help="Mask image path (openai mode only)")
     parser.add_argument("--model", default="gpt-5-image",
                         help="Model alias for openrouter mode (default: gpt-5-image)")
-    parser.add_argument("--aspect-ratio", default="1:1", help="Aspect ratio (openrouter mode)")
-    parser.add_argument("--size", default="2K", help="Image size (openrouter mode)")
+    parser.add_argument("--aspect-ratio", default="1:1",
+                        help=f"Aspect ratio (openrouter mode): {', '.join(ASPECT_RATIOS)}")
+    parser.add_argument("--size", default="2K",
+                        help=f"Image size (openrouter mode): {', '.join(IMAGE_SIZES)}")
     parser.add_argument("--seed", type=int, default=None, help="Random seed")
     parser.add_argument("--output-dir", default=None, help="Output directory")
     parser.add_argument("--output-file", default=None, help="Explicit output filename")
@@ -273,6 +300,15 @@ def main():
     # Verify input image exists
     if not Path(args.input_image).exists():
         print(json.dumps({"error": f"Input image not found: {args.input_image}", "success": False}))
+        sys.exit(1)
+    if args.aspect_ratio not in ASPECT_RATIOS:
+        print(json.dumps({"error": f"Invalid aspect ratio: {args.aspect_ratio}", "success": False}))
+        sys.exit(1)
+    if args.size not in IMAGE_SIZES:
+        print(json.dumps({"error": f"Invalid size: {args.size}", "success": False}))
+        sys.exit(1)
+    if args.mode == "openai" and args.mask and not Path(args.mask).exists():
+        print(json.dumps({"error": f"Mask image not found: {args.mask}", "success": False}))
         sys.exit(1)
 
     # Resolve output directory
@@ -289,6 +325,13 @@ def main():
         api_key = os.environ.get("OPENROUTER_API_KEY_IMAGES") or os.environ.get("OPENROUTER_API_KEY")
         if not api_key:
             print(json.dumps({"error": "Set OPENROUTER_API_KEY_IMAGES or OPENROUTER_API_KEY", "success": False}))
+            sys.exit(1)
+        model_cfg = resolve_model(args.model)
+        if not model_cfg.get("supports_image_input"):
+            print(json.dumps({
+                "error": f"Model '{args.model}' does not support image input for edits",
+                "success": False,
+            }))
             sys.exit(1)
         result = edit_via_openrouter(args, api_key)
     elif args.mode == "openai":
@@ -318,9 +361,14 @@ def main():
                 base = base.replace(".png", f"-{i+1}.png")
             output_path = base
 
-        img_bytes = base64.b64decode(img_b64)
-        with open(output_path, "wb") as f:
-            f.write(img_bytes)
+        try:
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            img_bytes = base64.b64decode(img_b64)
+            with open(output_path, "wb") as f:
+                f.write(img_bytes)
+        except (binascii.Error, OSError) as exc:
+            print(json.dumps({"error": f"Failed to save output image: {exc}", "success": False}))
+            sys.exit(1)
         paths.append(output_path)
 
     output = {

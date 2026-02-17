@@ -48,14 +48,23 @@ EOF
 
 do_setup() {
     echo "Setting up AgentMail venv at $VENV_DIR ..."
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "ERROR: python3 is required but was not found on PATH"
+        exit 1
+    fi
     if [ ! -d "$VENV_DIR" ]; then
         python3 -m venv "$VENV_DIR"
         echo "  Created venv"
     else
         echo "  Venv already exists"
     fi
+    if [ ! -f "$VENV_ACTIVATE" ]; then
+        echo "ERROR: venv activation script missing at $VENV_ACTIVATE"
+        exit 1
+    fi
     source "$VENV_ACTIVATE"
-    pip install -q -r "$REQUIREMENTS"
+    python -m pip install --quiet --upgrade pip
+    python -m pip install --quiet -r "$REQUIREMENTS"
     echo "  Dependencies installed"
     echo "Setup complete."
 }
@@ -84,16 +93,31 @@ case "${1:-}" in
     create)
         check_setup
         shift
-        run_mailbox create --username "${1:?Username required}"
+        if [ $# -lt 1 ]; then
+            echo "ERROR: Username required"
+            echo "Usage: $0 create <username>"
+            exit 1
+        fi
+        run_mailbox create --username "$1"
         ;;
     poll)
         check_setup
         shift
+        if [ $# -lt 1 ]; then
+            echo "ERROR: Inbox email required"
+            echo "Usage: $0 poll <email> [--timeout N]"
+            exit 1
+        fi
         run_mailbox poll "$@"
         ;;
     extract)
         check_setup
         shift
+        if [ $# -lt 2 ]; then
+            echo "ERROR: inbox_id and msg_id are required"
+            echo "Usage: $0 extract <inbox_id> <msg_id>"
+            exit 1
+        fi
         run_mailbox extract "$@"
         ;;
     status)

@@ -269,13 +269,13 @@ curl -X POST https://api.openai.com/v1/images/edits \
 ## Headers
 
 ### Required
-```text
+```http
 Authorization: Bearer $API_KEY
 Content-Type: application/json
 ```
 
 ### Optional (recommended)
-```text
+```http
 HTTP-Referer: https://your-app.com
 X-Title: Your App Name
 ```

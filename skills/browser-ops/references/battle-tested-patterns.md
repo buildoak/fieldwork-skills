@@ -93,7 +93,7 @@ browser_fill(ref="@eN", text="/path/to/file")  # input[type=file]
 
 This is the most complex validated pattern: real SaaS product, real anti-abuse measures, multi-step with email verification.
 
-```text
+```bash
 # Step 1: Create AgentMail inbox
 # (Use agentmail CLI -- see scripts/agentmail.sh)
 agentmail create browser-task-01

@@ -13,6 +13,7 @@ Usage:
 
 import argparse
 import base64
+import binascii
 import json
 import os
 import sys
@@ -111,7 +112,7 @@ def generate_filename(output_dir: str, model_alias: str) -> str:
     return str(Path(output_dir) / f"{ts}-{slug}.png")
 
 
-def estimate_cost(model_cfg: dict, aspect_ratio: str, size: str) -> str:
+def estimate_cost(model_cfg: dict, size: str) -> str:
     """Rough cost estimate based on model and output resolution."""
     # Megapixel estimates by size
     mp_map = {"1K": 1.0, "2K": 4.0, "4K": 8.3}
@@ -180,6 +181,18 @@ def main():
     parser.add_argument("--output-file", default=None,
                         help="Explicit output filename (overrides auto-naming)")
     args = parser.parse_args()
+    if args.aspect_ratio not in ASPECT_RATIOS:
+        print(json.dumps({
+            "error": f"Invalid --aspect-ratio '{args.aspect_ratio}'. Choose one of: {', '.join(ASPECT_RATIOS)}",
+            "success": False,
+        }))
+        sys.exit(1)
+    if args.size not in IMAGE_SIZES:
+        print(json.dumps({
+            "error": f"Invalid --size '{args.size}'. Choose one of: {', '.join(IMAGE_SIZES)}",
+            "success": False,
+        }))
+        sys.exit(1)
 
     # Resolve output directory
     if args.output_dir:
@@ -204,6 +217,12 @@ def main():
     # Resolve model
     model_cfg = resolve_model(args.model)
     model_id = model_cfg["id"]
+    if args.input_image and not model_cfg.get("supports_image_input", False):
+        print(json.dumps({
+            "error": f"Model '{args.model}' does not support --input-image editing",
+            "success": False,
+        }))
+        sys.exit(1)
 
     # Build message content
     if args.input_image:
@@ -322,9 +341,19 @@ def main():
                 base = base.replace(".png", f"-{i+1}.png")
             output_path = base
 
-        img_bytes = base64.b64decode(img_b64)
-        with open(output_path, "wb") as f:
-            f.write(img_bytes)
+        try:
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            img_bytes = base64.b64decode(img_b64)
+            with open(output_path, "wb") as f:
+                f.write(img_bytes)
+        except (binascii.Error, OSError) as exc:
+            print(json.dumps({
+                "error": f"Failed to save generated image: {exc}",
+                "success": False,
+                "model": model_id,
+                "generation_time_ms": elapsed,
+            }))
+            sys.exit(1)
 
         results.append(output_path)
 
@@ -354,7 +383,7 @@ def main():
         "prompt": args.prompt,
         "aspect_ratio": args.aspect_ratio,
         "size": args.size,
-        "cost_estimate": estimate_cost(model_cfg, args.aspect_ratio, args.size),
+        "cost_estimate": estimate_cost(model_cfg, args.size),
         "generation_time_ms": elapsed,
         "image_count": len(results),
     }

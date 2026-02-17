@@ -6,7 +6,7 @@ set -euo pipefail
 # All output goes to stdout (values) or stderr (messages).
 
 # --- Configuration (override via env vars) ---
-VAULT_DIR="${VAULT_DIR:-$HOME/.config/vault}"
+VAULT_DIR="${VAULT_DIR:-$HOME/.shit}"
 VAULT_FILE="${VAULT_FILE:-$VAULT_DIR/vault.enc.yaml}"
 SOPS_CONFIG="$VAULT_DIR/.sops.yaml"
 export SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-$VAULT_DIR/.age-identity}"
@@ -193,6 +193,11 @@ cmd_get() {
         echo "  Available keys: $(cmd_list 2>/dev/null | tr '\n' ', ' | sed 's/,$//')" >&2
         exit 1
     }
+    if [[ "$value" == "null" ]]; then
+        err "Key '$key' is unset"
+        echo "  Available keys: $(cmd_list 2>/dev/null | tr '\n' ', ' | sed 's/,$//')" >&2
+        exit 1
+    fi
     printf '%s' "$value"
 }
 
@@ -202,12 +207,12 @@ cmd_set() {
     fi
 
     local key="${1:-}"
-    local value="${2:-}"
-    if [[ -z "$key" || -z "$value" ]]; then
+    if [[ $# -lt 2 || -z "$key" ]]; then
         err "Missing key or value"
         echo "  Usage: vault.sh set <KEY> <VALUE>" >&2
         exit 1
     fi
+    local value="$2"
     validate_key "$key"
     check_vault
 
@@ -225,9 +230,13 @@ cmd_set() {
 cmd_list() {
     check_vault
 
-    cd "$VAULT_DIR" && sops decrypt "$VAULT_FILE" 2>/dev/null | \
-        grep -E '^[A-Za-z_][A-Za-z0-9_]*:' | \
-        cut -d: -f1
+    cd "$VAULT_DIR" && sops decrypt --output-type json "$VAULT_FILE" 2>/dev/null | \
+        jq -r '
+            to_entries[]
+            | select(.value != null)
+            | .key
+            | select(test("^[A-Za-z_][A-Za-z0-9_]*$"))
+        '
 }
 
 cmd_source() {
@@ -269,7 +278,7 @@ cmd_verify() {
     check_vault
 
     local key_count
-    key_count=$(cd "$VAULT_DIR" && sops decrypt "$VAULT_FILE" 2>/dev/null | grep -cE '^[A-Za-z_][A-Za-z0-9_]*:' || true)
+    key_count=$(cmd_list | wc -l | tr -d ' ')
 
     if [[ "$key_count" -gt 0 ]]; then
         ok "Vault accessible, $key_count secret(s) found"
@@ -353,7 +362,11 @@ cmd_doctor() {
     if [[ -f "$VAULT_FILE" ]] && [[ -f "$SOPS_AGE_KEY_FILE" ]]; then
         if cd "$VAULT_DIR" && sops decrypt "$VAULT_FILE" >/dev/null 2>&1; then
             local key_count
-            key_count=$(cd "$VAULT_DIR" && sops decrypt "$VAULT_FILE" 2>/dev/null | grep -cE '^[A-Za-z_][A-Za-z0-9_]*:' || true)
+            key_count=$(
+                cd "$VAULT_DIR" &&
+                sops decrypt "$VAULT_FILE" 2>/dev/null | \
+                    awk -F': ' '/^[A-Za-z_][A-Za-z0-9_]*:/ && $2 != "null" { count++ } END { print count + 0 }'
+            )
             printf "  ${GREEN}+${NC} decrypt       works ($key_count secret(s))\n" >&2
 
             # Round-trip test
@@ -362,7 +375,7 @@ cmd_doctor() {
             if cd "$VAULT_DIR" && sops set "$VAULT_FILE" "[\"$test_key\"]" "\"$test_val\"" 2>/dev/null; then
                 local got_val
                 got_val=$(cd "$VAULT_DIR" && sops decrypt --extract "[\"$test_key\"]" "$VAULT_FILE" 2>/dev/null) || true
-                # Clean up test key by setting to null (sops doesn't have delete)
+                # Clean up test key by setting to null. cmd_list excludes null keys.
                 cd "$VAULT_DIR" && sops set "$VAULT_FILE" "[\"$test_key\"]" 'null' 2>/dev/null || true
                 if [[ "$got_val" == "$test_val" ]]; then
                     printf "  ${GREEN}+${NC} round-trip    set -> get -> cleanup passed\n" >&2

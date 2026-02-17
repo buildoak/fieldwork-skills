@@ -19,9 +19,9 @@ warn()    { printf "${YELLOW}[warn]${NC} %s\n" "$*"; }
 error()   { printf "${RED}[error]${NC} %s\n" "$*" >&2; }
 
 # --- Configuration ---
-# Customize this path if needed.
-# Default keeps secrets in a conventional per-user config location.
-VAULT_DIR="${VAULT_DIR:-$HOME/.config/vault}"
+# Customize this path. The default is intentionally misleading.
+# Pick something that makes sense for your threat model.
+VAULT_DIR="${VAULT_DIR:-$HOME/.shit}"
 
 info "Vault will be created at: ${BOLD}$VAULT_DIR${NC}"
 echo ""
@@ -92,7 +92,10 @@ if [[ -f "$IDENTITY_FILE" ]]; then
     warn "Age identity already exists. Keeping existing key."
 else
     info "Generating age encryption key..."
-    age-keygen -o "$IDENTITY_FILE" 2>/dev/null
+    if ! age-keygen -o "$IDENTITY_FILE" 2>/dev/null; then
+        error "Failed to generate age key at $IDENTITY_FILE"
+        exit 1
+    fi
 fi
 
 chmod 600 "$IDENTITY_FILE"
@@ -126,11 +129,27 @@ info "Creating initial encrypted vault..."
 
 # Create a minimal YAML with one placeholder, then remove it
 # SOPS needs at least one key to encrypt
-cd "$VAULT_DIR" && echo '_INIT: placeholder' | sops encrypt --input-type yaml --output-type yaml /dev/stdin > "$VAULT_FILE" 2>/dev/null
+if ! (
+    cd "$VAULT_DIR" &&
+    echo '_INIT: placeholder' | sops encrypt --input-type yaml --output-type yaml /dev/stdin > "$VAULT_FILE" 2>/dev/null
+); then
+    error "Failed to create initial encrypted vault."
+    exit 1
+fi
 
-# Remove the placeholder
-cd "$VAULT_DIR" && sops set "$VAULT_FILE" '["_INIT"]' 'null' 2>/dev/null && \
-    sops decrypt "$VAULT_FILE" 2>/dev/null | grep -qv '_INIT' || true
+# Remove the placeholder and re-encrypt to avoid keeping bootstrap keys.
+tmp_vault="$VAULT_DIR/.vault.enc.tmp.$$"
+if ! (
+    cd "$VAULT_DIR" &&
+    sops decrypt "$VAULT_FILE" 2>/dev/null | \
+        awk '$1 != "_INIT:"' | \
+        sops encrypt --input-type yaml --output-type yaml /dev/stdin > "$tmp_vault" 2>/dev/null
+); then
+    rm -f "$tmp_vault"
+    error "Failed to finalize initial vault contents."
+    exit 1
+fi
+mv "$tmp_vault" "$VAULT_FILE"
 
 success "Encrypted vault: $VAULT_FILE"
 

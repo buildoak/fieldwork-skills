@@ -11,6 +11,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import time
@@ -26,11 +27,15 @@ def _load_api_key() -> str:
     for profile in ("~/.zshrc", "~/.bashrc", "~/.profile"):
         env_profile = os.path.expanduser(profile)
         if os.path.exists(env_profile):
+            # Run in a clean shell process to avoid mutating current process state.
+            source_cmd = f"source {shlex.quote(env_profile)} >/dev/null 2>&1; printf %s \"${{AGENTMAIL_API_KEY:-}}\""
             result = subprocess.run(
-                ["bash", "-c", f"source {env_profile} && echo $AGENTMAIL_API_KEY"],
+                ["bash", "-c", source_cmd],
                 capture_output=True,
                 text=True,
             )
+            if result.returncode != 0:
+                continue
             key = result.stdout.strip()
             if key:
                 return key
@@ -41,7 +46,14 @@ def _load_api_key() -> str:
 
 def _get_client():
     """Create and return an AgentMail client."""
-    from agentmail import AgentMail
+    try:
+        from agentmail import AgentMail
+    except ImportError as exc:
+        print(
+            "Error: agentmail package not installed. Run ./agentmail.sh setup first.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from exc
 
     api_key = _load_api_key()
     return AgentMail(api_key=api_key)
@@ -71,11 +83,19 @@ def create_inbox(username: str | None = None, display_name: str | None = None) -
 
 def poll_messages(inbox_id: str, timeout: int = 120, poll_interval: int = 5) -> dict | None:
     """Poll inbox for new messages. Returns first message or None on timeout."""
+    if timeout <= 0:
+        raise ValueError("timeout must be > 0")
+    if poll_interval <= 0:
+        raise ValueError("poll_interval must be > 0")
+
     client = _get_client()
     start = time.time()
 
     while time.time() - start < timeout:
-        messages = client.inboxes.messages.list(inbox_id=inbox_id, limit=1)
+        try:
+            messages = client.inboxes.messages.list(inbox_id=inbox_id, limit=1)
+        except Exception as exc:
+            raise RuntimeError(f"Failed to list messages for inbox '{inbox_id}': {exc}") from exc
         if messages.count and messages.count > 0:
             msg = messages.messages[0]
             return {
@@ -96,7 +116,12 @@ def poll_messages(inbox_id: str, timeout: int = 120, poll_interval: int = 5) -> 
 def get_message(inbox_id: str, message_id: str) -> dict:
     """Get full message content."""
     client = _get_client()
-    msg = client.inboxes.messages.get(inbox_id=inbox_id, message_id=message_id)
+    try:
+        msg = client.inboxes.messages.get(inbox_id=inbox_id, message_id=message_id)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Failed to fetch message '{message_id}' for inbox '{inbox_id}': {exc}"
+        ) from exc
     return {
         "message_id": msg.message_id,
         "subject": getattr(msg, "subject", None),
@@ -197,12 +222,16 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == "create":
-        _cmd_create(args)
-    elif args.command == "poll":
-        _cmd_poll(args)
-    elif args.command == "extract":
-        _cmd_extract(args)
+    try:
+        if args.command == "create":
+            _cmd_create(args)
+        elif args.command == "poll":
+            _cmd_poll(args)
+        elif args.command == "extract":
+            _cmd_extract(args)
+    except (ValueError, RuntimeError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

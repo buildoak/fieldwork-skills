@@ -35,8 +35,8 @@ What it does not do:
 ## Install
 
 ```bash
-git clone https://github.com/buildoak/chatgpt-search.git
-cd chatgpt-search
+git clone https://github.com/buildoak/fieldwork-skills.git
+cd fieldwork-skills/skills/chatgpt-search
 pip install -e .
 ```
 

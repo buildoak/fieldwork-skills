@@ -19,6 +19,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 
+# Temp
+.tmp/
+
 # IDE
 .idea/
 .vscode/

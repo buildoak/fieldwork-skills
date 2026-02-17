@@ -7,8 +7,8 @@ description: |
   Use when agent needs to search past ChatGPT conversations by topic,
   find specific discussions, browse conversation history,
   or find conversations by extracted keywords.
-  Do NOT use for pratchett-os knowledge — use pratchett-read instead.
-  Do NOT use for Apple Notes or Obsidian — use legacy-knowledge-search instead.
+  Do NOT use for non-ChatGPT knowledge bases — use a dedicated document search tool.
+  Do NOT use for Apple Notes or Obsidian — use a dedicated document search tool.
 ---
 
 # chatgpt-search
@@ -17,7 +17,7 @@ SQLite FTS5 search engine for ChatGPT conversation exports. BM25-ranked full-tex
 with title boosting, code separation, TF-IDF keyword extraction,
 and filtering by date, role, model, and language.
 
-**Repo:** `<repo-root>/chatgpt-search`
+**Repo:** `<skill-root>`
 **Data:** `<your-export-path>/conversations.json`
 **Default DB:** `~/.chatgpt-search/index.db`
 
@@ -40,15 +40,15 @@ Need to search past ChatGPT conversations?
   |
   +-- Want corpus overview? --> --stats
   |
-  +-- Need to search pratchett-os docs? --> Use pratchett-read (NOT this tool)
-  +-- Need to search Apple Notes/Obsidian? --> Use legacy-knowledge-search
+  +-- Need to search non-ChatGPT docs? --> Use your project's document search skill
+  +-- Need to search Apple Notes/Obsidian? --> Use a dedicated document search tool
   +-- Need web search? --> Use web-search skill
 ```
 
 ## Setup
 
 ```bash
-cd <repo-root>/chatgpt-search && ./scripts/setup.sh <your-export-path>/conversations.json
+cd <skill-root> && ./scripts/setup.sh <your-export-path>/conversations.json
 ```
 
 This installs dependencies (scikit-learn, langdetect) and builds the index
@@ -59,7 +59,7 @@ on the full corpus (1,514 conversations, 16,689 messages).
 
 ```bash
 # Set PYTHONPATH (or install the package)
-export PYTHONPATH=<repo-root>/chatgpt-search/src
+export PYTHONPATH=<skill-root>/src
 
 # --- Search ---
 
@@ -162,8 +162,8 @@ Tested on 149MB export (1,514 conversations, 16,689 messages):
 
 | Do NOT | Do instead |
 |--------|------------|
-| Use for searching pratchett-os docs | Use pratchett-read skill |
-| Use for Apple Notes or Obsidian | Use legacy-knowledge-search skill |
+| Use for non-ChatGPT document search | Use your project's document search skill |
+| Use for Apple Notes or Obsidian | Use a dedicated document search tool |
 | Expect semantic search | This is lexical BM25 -- use exact terms, expand synonyms manually |
 | Search single common words ("the", "is") | Use qualifying terms to narrow results |
 | Forget to rebuild after new export | Run --rebuild after importing new conversations.json |

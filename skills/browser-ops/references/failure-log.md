@@ -93,6 +93,19 @@ rebrowser-patches 1.0.19 (latest, May 2025) targets playwright-core 1.52. agent-
 
 **Do not attempt `npx rebrowser-patches@latest patch` — it will fail.**
 
+### Booking.com -- DATE PARAMETER STRIPPING
+
+- **URL pre-population completely blocked:** All `searchresults.html` URLs with query parameters are redirected to static city pages. Date, destination, and guest params are stripped server-side.
+- **First search from homepage → city page redirect:** Even manual form filling with correct calendar clicks gets redirected to a city landing page (`/city/my/sandakan.html`) that resets the date picker to blank.
+- **Recovery:** Re-enter dates on the city page's search bar and search again. Second search should preserve date context and yield date-locked pricing.
+- **Root cause:** Booking.com serves a "city template" for certain destination queries. This template is a static marketing page, not a search results page. It has its own search bar but ignores incoming date params.
+- **Layer 1 stealth:** Sufficient -- no CAPTCHA or block. The issue is UX/anti-bot redirect behavior, not detection.
+- **Working strategy:**
+  1. **Search by landmark** ("Sepilok Orangutan Rehabilitation Centre"), not city name ("Sandakan"). Landmark searches return lat/long-based results (204 properties) instead of triggering the city redirect.
+  2. **Get per-night pricing from individual hotel page calendars.** Search results page never shows date-locked prices -- but each hotel's availability calendar does (e.g., "14 $133").
+  3. **ArrowDown + Enter for autocomplete.** Booking.com's React autocomplete ignores click events on options -- use keyboard navigation.
+  4. **Watch for the "I'm flexible" tab trap.** After selecting dates, the calendar may open on the wrong tab. Explicitly click "Calendar" tab.
+
 ### Yandex Market -- WORKAROUND EXISTS
 
 - JSON-LD structured data available in page source
@@ -114,6 +127,7 @@ Based on benchmark (12/15 pass, 100% excluding external blockers):
 | automationexercise.com | 11-step flow | Full registration lifecycle |
 | quotes.toscrape.com | Pagination | Session persisted across 5 pages |
 | google.com/travel/flights | Search + filter | Real Google product, complex UI |
+| booking.com | Hotel search + pricing | Landmark search + hotel calendar pricing |
 | notion.so | SaaS signup + OTP | End-to-end with AgentMail |
 | dashboard.render.com | OAuth redirect | GitHub OAuth flow |
 | github.com | SPA extraction | Star count, forks, README headings |
@@ -190,4 +204,5 @@ Navigate to signup -> enter email -> poll AgentMail for OTP -> extract and submi
 | AgentMail integration into all benchmark tasks | Partial | Only Task 10 and 12 use email |
 | Session persistence (stay logged in) | Not implemented | Each task starts fresh |
 | Rate limiting for production use | Not implemented | Risk of triggering anti-bot on sustained use |
+| Layer 2 rebrowser-patches | Blocked (pw 1.52 vs 1.58) | Cannot bypass Turnstile; skip to Layer 3 when needed |
 | Layer 2 rebrowser-patches | Blocked (pw 1.52 vs 1.58) | Cannot bypass Turnstile; skip to Layer 3 when needed |

@@ -26,10 +26,10 @@ Prompts are one-shot. Skills encode judgment.
 
 | Skill | What it does | Setup |
 |-------|-------------|-------|
-| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification | `npm install` |
+| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification. 9 site-specific playbooks. | `npm install` |
 | [web-search](skills/web-search/) | Web search + content extraction, zero API keys | `pip install` |
 | [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | `brew install` + OAuth |
-| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video → clean text | `brew install` |
+| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | `brew install` |
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
 
@@ -54,6 +54,32 @@ cp -r fieldwork-skills/skills/web-search .claude/skills/web-search
 
 Your agent now has the skill.
 
+### Full install (step by step)
+
+If you're new to AI coding agents, here's the whole process:
+
+1. **Get an AI coding agent.** Install [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) or [Codex CLI](https://github.com/openai/codex).
+2. **Clone this repo.** `git clone https://github.com/buildoak/fieldwork-skills.git`
+3. **Pick a skill.** Open the skill's folder (e.g., `skills/browser-ops/`) and read the SKILL.md. It has detailed setup instructions with prerequisites, install commands, and troubleshooting.
+4. **Copy the skill folder** into your project's `.claude/skills/` directory (for Claude Code) or `.codex/skills/` (for Codex CLI).
+5. **Install runtime dependencies.** Each SKILL.md has a "Setup: Install dependencies" section. Follow it.
+6. **Use it.** Tell your agent to use the skill. It reads the SKILL.md and follows the runbook.
+
+Each skill's SKILL.md is self-contained -- it walks you through every step, including what to do when things go wrong.
+
+## Staying updated
+
+This repo gets regular updates -- new playbooks, new patterns, new failure findings. Each skill includes two files to make updates painless:
+
+- **`UPDATES.md`** -- A structured changelog designed for AI agents. Lists new files, changed files, breaking changes, and migration notes. Your agent reads this to know exactly what changed.
+- **`UPDATE-GUIDE.md`** -- Instructions your AI agent follows to apply updates safely. It knows not to overwrite your customizations, not to delete your config, and not to auto-apply breaking changes.
+
+To update a skill, tell your agent:
+
+> Read UPDATE-GUIDE.md in the browser-ops skill and apply the latest changes from UPDATES.md.
+
+The agent fetches the latest version, reads the changelog, and applies only what's new -- safely.
+
 ## What makes these different
 
 **From prompt libraries:** A prompt tells the agent what to do. A skill teaches it how to think about a class of problems -- decision trees, fallback chains, error recovery, accumulated failure knowledge from hundreds of hours of real testing.
@@ -69,13 +95,16 @@ Your agent now has the skill.
 - **Decision trees over instructions** -- teaches agents *when*, not just *how*
 - **Failure-aware** -- includes what doesn't work and why
 - **Zero-friction** -- sensible defaults, minimal setup, API keys only when unavoidable
+- **Update-safe** -- structured changelogs and agent-readable update guides
 
 ## Skill structure
 
 ```
 skill-name/
   SKILL.md              # Main runbook -- the agent reads this
-  references/           # Supporting docs, failure logs, patterns
+  UPDATES.md            # Structured changelog for AI agents
+  UPDATE-GUIDE.md       # How to apply updates safely
+  references/           # Supporting docs, failure logs, patterns, playbooks
   scripts/              # Health checks, setup, utilities
 ```
 
@@ -87,4 +116,4 @@ Apache 2.0
 
 ## Author
 
-Built by [Nick Oak](https://nickoak.com). More skills added as they mature in production.
+Built by [Nick Oak](https://nickoak.com). Skills are updated as they mature in production. Check UPDATES.md in each skill for the latest changes.

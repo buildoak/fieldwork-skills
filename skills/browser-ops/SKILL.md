@@ -148,6 +148,16 @@ Get your API key at [https://agentmail.to](https://agentmail.to) (free tier avai
 - **Linux:** Same steps. Install Node.js via your package manager (`sudo apt install -y nodejs npm` on Ubuntu/Debian, `sudo dnf install -y nodejs npm` on Fedora).
 - **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
+## Staying Updated
+
+This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the browser-ops skill for any new features or playbooks."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+---
+
 ## Quick Start
 
 The simplest possible browser flow: navigate, inspect, capture.
@@ -412,7 +422,7 @@ All tool names are prefixed with `browser_` (e.g., `browser_click`, `browser_sna
 
 ## Common Workflow Patterns
 
-See `./references/battle-tested-patterns.md` for 10 complete patterns with examples.
+See `./references/battle-tested-patterns.md` for 12 complete patterns with examples.
 
 | Pattern | Complexity | Key Technique |
 |---------|-----------|---------------|
@@ -463,6 +473,24 @@ For content-heavy pages (Wikipedia, documentation sites, long articles):
 
 ---
 
+## Playbooks
+
+Per-site recipes with validated approaches. Load the relevant playbook before starting a task against a tested site.
+
+| Playbook | Site | Status | Key Pattern |
+|----------|------|--------|-------------|
+| `references/playbooks/booking-com.md` | Booking.com | PASS (workaround) | Landmark search + hotel calendar pricing |
+| `references/playbooks/google-flights.md` | Google Flights | PASS | URL pre-population (`?q=`) bypasses autocomplete |
+| `references/playbooks/linear-signup.md` | Linear | PARTIAL | Blocked by Cloudflare Turnstile; requires Layer 3 |
+| `references/playbooks/notion-signup.md` | Notion | PASS | Full E2E signup with AgentMail OTP verification |
+| `references/playbooks/reddit-scraping.md` | Reddit | PASS | old.reddit.com + `?sort=hot` retry + evaluate extraction |
+| `references/playbooks/stripe-iframe.md` | Stripe (iframe) | PASS | Extract iframe `src`, navigate directly, fill normally |
+| `references/playbooks/cloudflare-sites.md` | Cloudflare (general) | Mixed | Decision tree: free tier (L1) vs Turnstile (L3) |
+| `references/playbooks/wikipedia-extraction.md` | Wikipedia | PASS | Evaluate-only mode, zero snapshots, CSS selectors |
+| `references/playbooks/headed-browser-setup.md` | (general) | Reference | Headed mode + persistent profile setup |
+
+---
+
 ## Anti-Patterns
 
 | Do NOT | Do instead |
@@ -502,13 +530,16 @@ Common browser automation errors and recovery strategies.
 
 | Path | What | When to load |
 |------|------|-------------|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
 | `./references/tool-inventory.md` | Full 25-tool API reference with params and examples | When you need exact tool syntax |
-| `./references/battle-tested-patterns.md` | 10 validated workflow patterns from benchmark | When building a new browser workflow |
+| `./references/battle-tested-patterns.md` | 12 validated workflow patterns from benchmark | When building a new browser workflow |
 | `./references/failure-log.md` | Benchmark results, anti-bot findings, AgentMail details | Before targeting a new site |
 | `./references/stealth-config.md` | Anti-detection layered configuration guide | When hitting bot detection |
 | `./references/test-results.md` | Full benchmark test cases (v1 + v2) with detailed logs | When reviewing what has been tested and what works |
 | `./references/anti-detection-guide.md` | 4-tier stealth escalation with decision tree | When planning stealth strategy for a new target |
-| `./references/headed-browser-playbook.md` | Profile setup, trust building, headed mode guide | When setting up headed browser for high-detection sites |
+| `./references/playbooks/` | Per-site recipes with validated approaches | Before automating a tested site |
+| `./references/playbooks/headed-browser-setup.md` | Profile setup, trust building, headed mode guide | When setting up headed browser for high-detection sites |
 | `./scripts/agentmail.sh` | AgentMail CLI wrapper (setup/create/poll/extract) | For email verification flows |
 | `./scripts/mailbox.py` | AgentMail Python SDK wrapper | Called by agentmail.sh (self-contained) |
 | `./scripts/requirements.txt` | Python dependencies for AgentMail | Used by agentmail.sh setup |

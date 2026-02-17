@@ -143,6 +143,16 @@ gog auth status
 - **Linux:** Homebrew may not be present by default. Either install [Linuxbrew](https://brew.sh) and follow the same steps, or build from source -- see the [gogcli repo](https://github.com/steipete/gogcli).
 - **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
+## Staying Updated
+
+This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the google-workspace-ops skill for any new features."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+---
+
 ## Decision Tree: When to Use gog
 
 ```
@@ -443,6 +453,8 @@ gog config set default_account work@company.com
 
 | Path | What | When to Load |
 |------|------|-------------|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
 | `./references/gog-commands.md` | Full command reference for all 15 services | Need exact command syntax and flags |
 | `./references/pipeline-patterns.md` | Composable patterns: `gog` + jq + multi-service workflows | Building complex automation |
 | `./references/auth-setup.md` | OAuth setup, credentials, token handling, multi-account | First-time setup or auth troubleshooting |

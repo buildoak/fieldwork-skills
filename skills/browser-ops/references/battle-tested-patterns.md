@@ -344,6 +344,86 @@ browser_close()
 
 ---
 
+## Pattern 11: Post-Search Verification & Recovery Loop
+
+**Proven on:** Booking.com -- homepage search redirects to city template that strips dates
+
+After submitting any search form, immediately snapshot the results page and verify:
+1. Date/filter fields still show selected values
+2. URL contains expected parameters
+3. Prices are date-specific, not generic "from $X"
+
+```
+# Submit search
+browser_click(ref="@eN")                       # search button
+browser_wait(target="2000")
+browser_snapshot()                              # VERIFY results page
+
+# Check: did the site strip our parameters?
+# Signs of param stripping:
+#   - Date picker shows "Check-in / Check-out" instead of selected dates
+#   - URL is a city template (e.g. /city/my/sandakan.html) not a search results page
+#   - Prices show "from $X" instead of per-night rates
+
+# If verification fails — RECOVERY:
+# Re-enter parameters using the RESULTS PAGE search bar (not homepage)
+browser_click(ref="@eM")                       # date field on results/city page
+browser_snapshot()                              # calendar widget
+# ... select dates again (Pattern 12) ...
+browser_click(ref="@eK")                       # search again from results page
+
+# Second search from results/city page typically preserves params
+browser_wait(target="2000")
+browser_snapshot()                              # verify date-locked pricing
+```
+
+**Key learnings:**
+- Server-side redirect only hits the first search from homepage -- second search from city/results page preserves params
+- Max 2 recovery attempts before logging as site-level anti-bot pattern
+- Always verify prices are date-specific (per-night) not generic ("from $X") before extracting data
+- This pattern applies to any travel/booking site, not just Booking.com
+
+---
+
+## Pattern 12: Calendar Widget Protocol
+
+**Proven on:** Booking.com -- calendar clicks worked perfectly, typing would have failed
+
+Never type dates into travel site date fields -- they are often read-only or get overwritten by the calendar widget.
+
+```
+# Step 1: Open the calendar
+browser_click(ref="@eN")                       # click date input field
+browser_snapshot()                              # see calendar widget with current month
+
+# Step 2: Navigate to target month
+# If target month is not visible, use arrow buttons
+browser_click(ref="@eM")                       # forward arrow (next month)
+browser_snapshot()                              # verify correct month is now displayed
+# Repeat until target month is visible
+
+# Step 3: Click the specific date
+browser_click(ref="@eK")                       # click date cell by accessible name
+                                                # e.g. "Sa 14 March 2026"
+
+# Step 4: Select end date (if date range)
+browser_snapshot()                              # calendar may auto-advance to end date selection
+browser_click(ref="@eJ")                       # click checkout/end date
+
+# Step 5: Verify before proceeding
+browser_snapshot()                              # date button text should show selected dates
+# Only proceed to Search after confirming date display is correct
+```
+
+**Key learnings:**
+- Travel site date fields are almost never standard text inputs -- they are read-only triggers for calendar widgets
+- Use accessible names from the a11y tree to identify specific date cells (e.g. "Sa 14 March 2026")
+- Always snapshot after date selection to verify the date button/display updated correctly
+- Some calendars auto-advance: after selecting check-in, the widget switches to check-out selection mode
+- Navigate month-by-month using arrow buttons -- do not try to type or jump to a month
+
+---
+
 ## Anti-Patterns from the Benchmark
 
 | Pattern | What Went Wrong | Fix |

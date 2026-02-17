@@ -141,6 +141,16 @@ bash ./scripts/search-check.sh
 
 ---
 
+## Staying Updated
+
+This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the web-search skill for any new features."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+---
+
 ## Decision Tree
 
 ```text
@@ -402,6 +412,8 @@ Verify: `./scripts/search-check.sh`
 
 | Path | What | When to load |
 |---|---|---|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
 | `./references/tool-comparison.md` | Side-by-side comparison: latency, cost, JS support, accuracy | When choosing between tools for a specific use case |
 | `./references/error-patterns.md` | Detailed failure modes and recovery per tool | When debugging a failed extraction or search |
 | `./scripts/search-check.sh` | Health check: verifies all tools are available | Before first web search task in a session |

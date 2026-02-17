@@ -130,6 +130,16 @@ Each tool below unlocks a specific capability. You do not need all of them -- in
 - **Linux:** Either install [Linuxbrew](https://brew.sh) and follow the same steps, or check the [summarize repo](https://github.com/steipete/summarize) for alternative install methods.
 - **Windows:** Use [WSL2](https://learn.microsoft.com/windows/wsl/install) and follow the Linux instructions inside your WSL terminal.
 
+## Staying Updated
+
+This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.
+
+After installing, tell your agent: "Check UPDATES.md in the summarize skill for any new features."
+
+When updating, tell your agent: "Read UPDATE-GUIDE.md and apply the latest changes from UPDATES.md."
+
+---
+
 ## Decision Tree: summarize vs Other Tools
 
 ```
@@ -420,4 +430,6 @@ Configure only what your workflow needs. If you use LLM Summarization Mode, add 
 
 | Path | What | When to Load |
 |------|------|-------------|
+| `./UPDATES.md` | Structured changelog for AI agents | When checking for new features or updates |
+| `./UPDATE-GUIDE.md` | Instructions for AI agents performing updates | When updating this skill |
 | `./references/commands.md` | Full CLI flag reference with all options | When you need exact flag syntax or env var names |

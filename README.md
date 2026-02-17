@@ -32,6 +32,17 @@ Prompts are one-shot. Skills encode judgment.
 | [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | `brew install` |
 | [chatgpt-search](skills/chatgpt-search/) | Search your ChatGPT exports -- FTS5, title boosting, 15 languages, TF-IDF keywords | `pip install` |
 | [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | `./setup.sh` |
+| [agent-mux](skills/agent-mux/) | Unified CLI for dispatching AI workers across Codex, Claude, and OpenCode. One command, one JSON contract. | External -- see [buildoak/agent-mux](https://github.com/buildoak/agent-mux) |
+| [gsd-coordinator](skills/gsd-coordinator/) | Multi-step task orchestration -- dispatch, verify, synthesize across engines. Requires agent-mux. | Copy skill folder |
+| [image-gen](skills/image-gen/) | Image generation and editing -- five models, prompt engineering, quality review loop. Zero deps beyond Python stdlib. | API key |
+
+## The compound play
+
+`agent-mux` is the execution layer -- one CLI command dispatches a worker to Claude, Codex, or OpenCode with the same JSON contract every time. `gsd-coordinator` is the orchestration brain -- it decides when to use which engine, which pattern fits the task (10x pipeline, triple-check, fan-out), and how to verify results before I trust them.
+
+Together, they form the 10x pipeline I keep reaching for: Claude architects, Codex executes, the coordinator verifies and synthesizes. Alone, each one is weaker -- `agent-mux` without the coordinator is just a clean CLI, and the coordinator without `agent-mux` can't reach Codex or OpenCode. This compound setup is the same multi-model pipeline that built this repo.
+
+When workers produce large outputs, `gsd-coordinator` writes artifacts to a configurable directory (defaults to `_workbench/` inside the skill). Deliverables go to their final destination.
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
 

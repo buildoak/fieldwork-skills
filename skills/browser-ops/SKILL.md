@@ -437,6 +437,9 @@ Common browser automation errors and recovery strategies.
 | `./references/battle-tested-patterns.md` | 10 validated workflow patterns from benchmark | When building a new browser workflow |
 | `./references/failure-log.md` | Benchmark results, anti-bot findings, AgentMail details | Before targeting a new site |
 | `./references/stealth-config.md` | Anti-detection layered configuration guide | When hitting bot detection |
+| `./references/test-results.md` | Full benchmark test cases (v1 + v2) with detailed logs | When reviewing what has been tested and what works |
+| `./references/anti-detection-guide.md` | 4-tier stealth escalation with decision tree | When planning stealth strategy for a new target |
+| `./references/headed-browser-playbook.md` | Profile setup, trust building, headed mode guide | When setting up headed browser for high-detection sites |
 | `./scripts/agentmail.sh` | AgentMail CLI wrapper (setup/create/poll/extract) | For email verification flows |
 | `./scripts/mailbox.py` | AgentMail Python SDK wrapper | Called by agentmail.sh (self-contained) |
 | `./scripts/requirements.txt` | Python dependencies for AgentMail | Used by agentmail.sh setup |

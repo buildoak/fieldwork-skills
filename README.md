@@ -30,6 +30,7 @@ Prompts are one-shot. Skills encode judgment.
 | [web-search](skills/web-search/) | Web search + content extraction, zero API keys | `pip install` |
 | [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | `brew install` + OAuth |
 | [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | `brew install` |
+| [chatgpt-search](skills/chatgpt-search/) | Search your ChatGPT exports -- FTS5, title boosting, 15 languages, TF-IDF keywords | `pip install` |
 | [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | `./setup.sh` |
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/build-with-claude/claude-code) and [Codex CLI](https://github.com/openai/codex). Adaptable to similar tools.
@@ -75,11 +76,11 @@ This repo gets regular updates -- new playbooks, new patterns, new failure findi
 - **`UPDATES.md`** -- A structured changelog designed for AI agents. Lists new files, changed files, breaking changes, and migration notes. Your agent reads this to know exactly what changed.
 - **`UPDATE-GUIDE.md`** -- Instructions your AI agent follows to apply updates safely. It knows not to overwrite your customizations, not to delete your config, and not to auto-apply breaking changes.
 
-To update a skill, tell your agent:
+To check for updates, tell your agent:
 
-> Read UPDATE-GUIDE.md in the browser-ops skill and apply the latest changes from UPDATES.md.
+> Check for updates to the browser-ops skill from https://github.com/buildoak/fieldwork-skills
 
-The agent fetches the latest version, reads the changelog, and applies only what's new -- safely.
+The agent fetches the latest UPDATES.md from the remote, compares it against your local version, tells you what's new, and lets you choose which changes to apply. No surprises -- you see the diff before anything changes.
 
 ## What makes these different
 

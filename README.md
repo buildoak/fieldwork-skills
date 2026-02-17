@@ -1,6 +1,6 @@
-![fieldwork-skills](assets/banner.png)
+# Fieldwork Tools
 
-# fieldwork
+\![fieldwork-skills](assets/banner.png)
 
 **Teach your AI agent to operate, not just code.**
 

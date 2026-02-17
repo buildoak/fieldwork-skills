@@ -2,19 +2,21 @@
 
 \![fieldwork-skills](assets/banner.png)
 
-**Teach your AI agent to operate, not just code.**
+**Teach your AI agent to operate 10x better.**
+
+A collection of self-contained skills — each one a battle-tested playbook with code, decision trees, and failure recovery baked in. Not prompts. Not links. Operational runbooks your agent reads and follows autonomously.
 
 > AI agents: read root `AGENTS.md` first. It has the canonical installation/update flow for both Codex CLI and Claude Code.
 
-So here's how this started. A friend of mine -- Head of Growth, not an engineer -- asked me to help him use Claude Code and Codex to actually do his job faster. LinkedIn automation, company research, email workflows. The usual growth ops grind.
+So here is the story. I have been building my ideal Claude Code setup, well, for a while. Burning it down and starting again something like 10 times. Until I made the full circle and returned to simple `CLAUDE.md` + skills + some spice (nested agents).
 
-I gave him access to some of my skills. The ones I'd been building for weeks, forging against real websites that fight back, real APIs that timeout, real anti-bot systems that make you question your life choices. Browser automation that survived 15-task benchmarks. Web search that doesn't need a single API key. Google Workspace ops for email and calendar and docs.
+Some time after, a friend of mine — Head of Growth, not an engineer — asked me to help him use Claude Code and Codex to actually do his job faster. LinkedIn automation, companies research, email workflows. The usual growth ops grind.
+
+I gave him access to some of my skills. The ones I'd been forging for weeks against real-world friction — APIs that timeout, anti-bot systems that make you question your life choices, OAuth flows that break between Tuesday and Wednesday for no reason. Operational playbooks that survived hundreds of hours of production use and came out sharper every time.
 
 And it worked. He went from "how do I make it click a button" to running autonomous research pipelines in a day.
 
-That's when it clicked -- these skills shouldn't live in my private setup. They should be a proper public collection. Battle-tested operational playbooks that give AI agents real-world capabilities, not just coding tricks.
-
-So here we are.
+That's when it clicked — these skills shouldn't live in my private setup. They should be a proper public collection. Not another awesome-list of links. Not a prompt library. Actual operational skills that encode judgment — when to use what, what breaks, how to recover, and what not to do.
 
 ---
 
@@ -28,17 +30,17 @@ Prompts are one-shot. Skills encode judgment.
 
 ## Skills
 
-| Skill | What it does | Setup |
-|-------|-------------|-------|
-| [browser-ops](skills/browser-ops/) | Browser automation -- forms, auth flows, scraping, email verification. 9 site-specific playbooks. | See SKILL.md |
-| [web-search](skills/web-search/) | Web search + content extraction, zero API keys | See SKILL.md |
-| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets | Multi-step -- see SKILL.md |
-| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video -> clean text | See SKILL.md |
-| [chatgpt-search](skills/chatgpt-search/) | Search your ChatGPT exports -- FTS5 (SQLite full-text search), title boosting, 15 languages, TF-IDF (term-frequency/inverse-document-frequency) keywords | See SKILL.md |
-| [vault](skills/vault/) | Encrypted secrets vault -- API keys, passwords, tokens. Never plaintext. | See SKILL.md |
-| [agent-mux](skills/agent-mux/) | Unified CLI for dispatching AI workers across Codex, Claude, and OpenCode. One command, one JSON contract. | See SKILL.md + [buildoak/agent-mux](https://github.com/buildoak/agent-mux) |
-| [gsd-coordinator](skills/gsd-coordinator/) | Multi-step task orchestration -- dispatch, verify, synthesize across engines. Requires agent-mux. | Copy skill folder |
-| [image-gen](skills/image-gen/) | Image generation and editing -- five models, prompt engineering, quality review loop. Zero deps beyond Python stdlib. | API key |
+| Skill | What it does |
+|-------|-------------|
+| [browser-ops](skills/browser-ops/) | Browser automation — forms, auth flows, scraping, email verification. 9 battle-tested site-specific playbooks. |
+| [web-search](skills/web-search/) | Web search and content extraction. Three-tier fallback chain, zero API keys required. |
+| [google-workspace-ops](skills/google-workspace-ops/) | Gmail, Calendar, Drive, Docs, Slides, Sheets — full Google Workspace automation. |
+| [summarize](skills/summarize/) | YouTube, podcasts, PDFs, images, audio/video → clean extracted text. |
+| [chatgpt-search](skills/chatgpt-search/) | Full-text search across your ChatGPT conversation exports. 15 languages, keyword analysis. |
+| [vault](skills/vault/) | Encrypted secrets vault — API keys, passwords, tokens. Never plaintext on disk. |
+| [agent-mux](skills/agent-mux/) | Unified CLI for dispatching AI workers across Codex, Claude, and OpenCode. One command, one JSON contract. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
+| [gsd-coordinator](skills/gsd-coordinator/) | Multi-step task orchestration — dispatch, verify, synthesize across engines. The brain on top of agent-mux. |
+| [image-gen](skills/image-gen/) | Image generation and editing — five models, SOTA prompt engineering, vision-based quality review loop. |
 
 ## The compound play
 

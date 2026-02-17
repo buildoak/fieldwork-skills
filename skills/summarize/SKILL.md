@@ -12,27 +12,50 @@ Use this skill when you need deterministic extraction for YouTube, podcast feeds
 ## How to install this skill
 
 ### Option 1: Point your agent at it (easiest)
-Just paste this into your Claude Code or Codex CLI chat:
 
-> Install the summarize skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize
+Tell your AI coding agent to install this skill by pasting this into your chat:
 
-Your agent will read the skill and know how to use it.
+> Install the summarize skill from [github.com/nikitadubovikov/fieldwork/skills/summarize](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/summarize)
+
+Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
 
 ### Option 2: Clone into your project
+
 ```bash
 # Clone the fieldwork repo (if you haven't already)
 git clone https://github.com/nikitadubovikov/fieldwork.git
 
-# Copy the skill into your project's skills folder
+# Go to your project directory
+cd /path/to/your-project
+
+# Create the skills directory if it doesn't exist
 # For Claude Code:
-cp -r fieldwork/skills/summarize your-project/.claude/skills/summarize
+mkdir -p .claude/skills
+cp -r /path/to/fieldwork/skills/summarize .claude/skills/summarize
 
 # For Codex CLI:
-cp -r fieldwork/skills/summarize your-project/.codex/skills/summarize
+mkdir -p .codex/skills
+cp -r /path/to/fieldwork/skills/summarize .codex/skills/summarize
 ```
 
 ### Option 3: Download just this skill
-Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/summarize` folder into your project's skills directory.
+
+```bash
+# Download and extract the fieldwork repo
+curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# Copy the skill into your project (Claude Code)
+mkdir -p /path/to/your-project/.claude/skills
+cp -r /tmp/fieldwork-main/skills/summarize /path/to/your-project/.claude/skills/
+
+# Or for Codex CLI:
+mkdir -p /path/to/your-project/.codex/skills
+cp -r /tmp/fieldwork-main/skills/summarize /path/to/your-project/.codex/skills/
+```
+
+> **Platform notes:**
+> The `summarize` CLI is installed via Homebrew (macOS). On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.) or check the [summarize repo](https://github.com/steipete/summarize) for alternative install methods. On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
@@ -42,7 +65,15 @@ Installing the skill (above) just copies the instruction files. You also need th
 
 ### What you'll need
 
-- **macOS with Homebrew** -- Homebrew is a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+- **Homebrew** -- a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+
+### Check prerequisites
+
+```bash
+# Check if Homebrew is installed (macOS package manager)
+# If this command fails, install Homebrew first: https://brew.sh
+brew --version
+```
 
 ### Install the summarize CLI
 
@@ -54,16 +85,23 @@ brew tap steipete/tap
 brew install summarize
 ```
 
+If `brew tap` or `brew install` fails, check your internet connection and run `brew doctor` for diagnostics.
+
 ### Verify it's working
 
 ```bash
-# You should see version info (e.g., "summarize 0.x.x")
+# Check the summarize CLI is installed
 summarize --version
+
+# Expected: output like "summarize 0.x.x"
+# If you see "command not found": Homebrew may not be on your PATH
+# Fix: run `eval "$(/opt/homebrew/bin/brew shellenv)"` and try again
+# Or restart your terminal
 ```
 
-If you see `command not found`, Homebrew may not be on your PATH. Restart your terminal and try again, or run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
-
 ### Optional dependencies (install only what you need)
+
+Each dependency below unlocks specific features. See the Dependency Matrix below for which features require which tools. You do not need all of them -- install only when you need that specific capability.
 
 ```bash
 # For YouTube video downloads and podcast audio
@@ -73,14 +111,18 @@ brew install yt-dlp
 brew install ffmpeg
 
 # For audio/video transcription (local, no API key needed)
-# Only install if you need to transcribe audio or video files
+# Heavy binary (~1.5GB) -- only install if you need to transcribe audio or video files
 # brew install whisper-cli
 
-# For PDF text extraction
-pip install markitdown
-```
+# For PDF text extraction (markitdown Python package)
+python3 -m pip install markitdown
 
-Each optional dependency unlocks specific features. See the Dependency Matrix below for which features require which tools. You do not need all of them -- install only when you need that specific capability.
+# For PDF extraction via uvx (alternative to markitdown)
+brew install uv
+
+# For image OCR (optical character recognition)
+brew install tesseract
+```
 
 ## Decision Tree: summarize vs Other Tools
 

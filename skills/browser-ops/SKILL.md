@@ -10,27 +10,50 @@ Browser automation via [agent-browser](https://github.com/anthropics/agent-brows
 ## How to install this skill
 
 ### Option 1: Point your agent at it (easiest)
-Just paste this into your Claude Code or Codex CLI chat:
 
-> Install the browser-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops
+Tell your AI coding agent to install this skill by pasting this into your chat:
 
-Your agent will read the skill and know how to use it.
+> Install the browser-ops skill from [github.com/nikitadubovikov/fieldwork/skills/browser-ops](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/browser-ops)
+
+Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
 
 ### Option 2: Clone into your project
+
 ```bash
 # Clone the fieldwork repo (if you haven't already)
 git clone https://github.com/nikitadubovikov/fieldwork.git
 
-# Copy the skill into your project's skills folder
+# Go to your project directory
+cd /path/to/your-project
+
+# Create the skills directory if it doesn't exist
 # For Claude Code:
-cp -r fieldwork/skills/browser-ops your-project/.claude/skills/browser-ops
+mkdir -p .claude/skills
+cp -r /path/to/fieldwork/skills/browser-ops .claude/skills/browser-ops
 
 # For Codex CLI:
-cp -r fieldwork/skills/browser-ops your-project/.codex/skills/browser-ops
+mkdir -p .codex/skills
+cp -r /path/to/fieldwork/skills/browser-ops .codex/skills/browser-ops
 ```
 
 ### Option 3: Download just this skill
-Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/browser-ops` folder into your project's skills directory.
+
+```bash
+# Download and extract the fieldwork repo
+curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# Copy the skill into your project (Claude Code)
+mkdir -p /path/to/your-project/.claude/skills
+cp -r /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.claude/skills/
+
+# Or for Codex CLI:
+mkdir -p /path/to/your-project/.codex/skills
+cp -r /tmp/fieldwork-main/skills/browser-ops /path/to/your-project/.codex/skills/
+```
+
+> **Platform notes:**
+> These instructions are for macOS and Linux. On Windows, use WSL2 (Windows Subsystem for Linux) and follow the same commands inside your WSL terminal.
 
 ---
 
@@ -43,6 +66,17 @@ Installing the skill (above) just copies the instruction files. You also need th
 - **Node.js 18+** -- JavaScript runtime, needed to run the browser automation server. Download from https://nodejs.org if you don't have it.
 - **npm** -- package manager for Node.js, comes bundled with Node.js.
 
+### Check prerequisites
+
+```bash
+# Check Node.js version (18 or newer required)
+# If this fails, install Node.js from https://nodejs.org
+node --version
+
+# Check npm is available (comes with Node.js)
+npm --version
+```
+
 ### Install agent-browser
 
 ```bash
@@ -50,7 +84,11 @@ Installing the skill (above) just copies the instruction files. You also need th
 npm install -g @anthropic-ai/agent-browser
 ```
 
-**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug.
+If you get a permission error, either:
+- Use `sudo npm install -g @anthropic-ai/agent-browser` (macOS/Linux)
+- Or fix npm permissions: https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+
+**Minimum version:** `agent-browser >= 0.10.0` required. v0.9.1 has a critical Playwright hang bug. Check with `agent-browser --version`.
 
 ### Start the daemon (must be running before your agent can use browsers)
 
@@ -59,14 +97,18 @@ npm install -g @anthropic-ai/agent-browser
 agent-browser start
 ```
 
+This launches a persistent background process. Keep it running while your agent uses browser tools.
+
 ### Verify it's working
 
 ```bash
-# You should see "agent-browser daemon running on port ..."
+# Check the daemon is running
 agent-browser status
-```
 
-If you see `command not found`, Node.js or npm is not installed or not on your PATH. Install Node.js from https://nodejs.org and try again.
+# Expected: output shows "running" and a port number
+# If you see "command not found": Node.js/npm is not installed or not on your PATH
+# If you see "not running": run `agent-browser start` first
+```
 
 ### Optional: AgentMail for email verification flows
 
@@ -74,7 +116,8 @@ If you need your agent to sign up for services that require email verification (
 
 ```bash
 # Install the AgentMail Python package
-pip install agentmail
+# Use python3 -m pip to ensure correct Python version
+python3 -m pip install agentmail
 
 # Get your API key at https://agentmail.to -- free tier available
 ```

@@ -10,27 +10,50 @@ Web search, scraping, and content extraction for AI coding agents. Zero API keys
 ## How to install this skill
 
 ### Option 1: Point your agent at it (easiest)
-Just paste this into your Claude Code or Codex CLI chat:
 
-> Install the web-search skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search
+Tell your AI coding agent to install this skill by pasting this into your chat:
 
-Your agent will read the skill and know how to use it.
+> Install the web-search skill from [github.com/nikitadubovikov/fieldwork/skills/web-search](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/web-search)
+
+Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
 
 ### Option 2: Clone into your project
+
 ```bash
 # Clone the fieldwork repo (if you haven't already)
 git clone https://github.com/nikitadubovikov/fieldwork.git
 
-# Copy the skill into your project's skills folder
+# Go to your project directory
+cd /path/to/your-project
+
+# Create the skills directory if it doesn't exist
 # For Claude Code:
-cp -r fieldwork/skills/web-search your-project/.claude/skills/web-search
+mkdir -p .claude/skills
+cp -r /path/to/fieldwork/skills/web-search .claude/skills/web-search
 
 # For Codex CLI:
-cp -r fieldwork/skills/web-search your-project/.codex/skills/web-search
+mkdir -p .codex/skills
+cp -r /path/to/fieldwork/skills/web-search .codex/skills/web-search
 ```
 
 ### Option 3: Download just this skill
-Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/web-search` folder into your project's skills directory.
+
+```bash
+# Download and extract the fieldwork repo
+curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# Copy the skill into your project (Claude Code)
+mkdir -p /path/to/your-project/.claude/skills
+cp -r /tmp/fieldwork-main/skills/web-search /path/to/your-project/.claude/skills/
+
+# Or for Codex CLI:
+mkdir -p /path/to/your-project/.codex/skills
+cp -r /tmp/fieldwork-main/skills/web-search /path/to/your-project/.codex/skills/
+```
+
+> **Platform notes:**
+> These instructions are for macOS and Linux. On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.). On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
@@ -40,36 +63,59 @@ Installing the skill (above) just copies the instruction files. You also need th
 
 ### What you'll need
 
-- **Python 3.10+** -- programming language runtime, needed for the web scraping libraries. Check with `python3 --version`. Download from https://python.org if needed.
+- **Python 3.10+** -- programming language runtime, needed for the web scraping libraries. Download from https://python.org if needed.
+
+### Check prerequisites
+
+```bash
+# Check Python version (3.10 or newer required)
+# If this command fails, install Python from https://python.org
+python3 --version
+```
 
 ### Install scraping tools
 
 ```bash
 # Install web scraping and search libraries
-pip install crawl4ai duckduckgo-search
+# Always use python3 -m pip to avoid Python 2/3 confusion
+python3 -m pip install crawl4ai duckduckgo-search
 
-# Set up browser engine for crawl4ai (needed for JS-heavy websites)
+# Set up browser engine for crawl4ai
+# This installs Playwright browser binaries so crawl4ai can render JS-heavy websites
+# It may take a minute to download ~150MB of browser files
 crawl4ai-setup
 ```
 
 ### Verify it's working
 
 ```bash
-# You should see "crawl4ai ready" with no errors
-python -c "import crawl4ai; print('crawl4ai ready')"
-```
+# Test that crawl4ai is importable
+python3 -c "import crawl4ai; print('crawl4ai ready')"
 
-If you see `ModuleNotFoundError`, the pip install did not work. Make sure you're using the right Python -- try `pip3 install` instead of `pip install`.
+# Test that the CLI is available
+crwl --help
+
+# Expected: "crawl4ai ready" and crwl help output
+# If you see ModuleNotFoundError: run `python3 -m pip install crawl4ai` again
+# If you see "crwl: command not found": run `crawl4ai-setup` again
+```
 
 ### No API keys needed
 
 Everything works out of the box. The built-in tools (WebSearch, WebFetch) require zero installation. Crawl4AI and duckduckgo-search are free and keyless.
 
-Optional: `JINA_API_KEY` (get from https://jina.ai) increases Jina rate limits, but is not required.
+Optional: Set `JINA_API_KEY` to increase Jina rate limits (get from https://jina.ai), but it is not required.
+
+```bash
+# Optional: add to your shell profile (~/.zshrc or ~/.bashrc) for persistence
+export JINA_API_KEY='jina_...'
+```
 
 ### Verify full setup
+
 ```bash
-./scripts/search-check.sh
+# Run from the skill directory
+bash ./scripts/search-check.sh
 ```
 
 ---

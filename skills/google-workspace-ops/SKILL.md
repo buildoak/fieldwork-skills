@@ -10,27 +10,50 @@ Automates Google Workspace work using the `gog` CLI with machine-parseable JSON 
 ## How to install this skill
 
 ### Option 1: Point your agent at it (easiest)
-Just paste this into your Claude Code or Codex CLI chat:
 
-> Install the google-workspace-ops skill from https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops
+Tell your AI coding agent to install this skill by pasting this into your chat:
 
-Your agent will read the skill and know how to use it.
+> Install the google-workspace-ops skill from [github.com/nikitadubovikov/fieldwork/skills/google-workspace-ops](https://github.com/nikitadubovikov/fieldwork/tree/main/skills/google-workspace-ops)
+
+Your agent will read the SKILL.md and follow the instructions. This is the recommended approach for most users.
 
 ### Option 2: Clone into your project
+
 ```bash
 # Clone the fieldwork repo (if you haven't already)
 git clone https://github.com/nikitadubovikov/fieldwork.git
 
-# Copy the skill into your project's skills folder
+# Go to your project directory
+cd /path/to/your-project
+
+# Create the skills directory if it doesn't exist
 # For Claude Code:
-cp -r fieldwork/skills/google-workspace-ops your-project/.claude/skills/google-workspace-ops
+mkdir -p .claude/skills
+cp -r /path/to/fieldwork/skills/google-workspace-ops .claude/skills/google-workspace-ops
 
 # For Codex CLI:
-cp -r fieldwork/skills/google-workspace-ops your-project/.codex/skills/google-workspace-ops
+mkdir -p .codex/skills
+cp -r /path/to/fieldwork/skills/google-workspace-ops .codex/skills/google-workspace-ops
 ```
 
 ### Option 3: Download just this skill
-Download the ZIP from GitHub at https://github.com/nikitadubovikov/fieldwork and extract the `skills/google-workspace-ops` folder into your project's skills directory.
+
+```bash
+# Download and extract the fieldwork repo
+curl -L -o /tmp/fieldwork.zip https://github.com/nikitadubovikov/fieldwork/archive/refs/heads/main.zip
+unzip -q /tmp/fieldwork.zip -d /tmp
+
+# Copy the skill into your project (Claude Code)
+mkdir -p /path/to/your-project/.claude/skills
+cp -r /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.claude/skills/
+
+# Or for Codex CLI:
+mkdir -p /path/to/your-project/.codex/skills
+cp -r /tmp/fieldwork-main/skills/google-workspace-ops /path/to/your-project/.codex/skills/
+```
+
+> **Platform notes:**
+> The `gog` CLI is installed via Homebrew (macOS). On Linux, replace `brew install` with your package manager (`apt`, `dnf`, etc.) or build from source -- see the [gogcli repo](https://github.com/steipete/gogcli). On Windows, use WSL2 (Windows Subsystem for Linux) and follow the Linux instructions.
 
 ---
 
@@ -40,7 +63,15 @@ Installing the skill (above) just copies the instruction files. You also need th
 
 ### What you'll need
 
-- **macOS with Homebrew** -- Homebrew is a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+- **Homebrew** -- a package manager for macOS. If you don't have it, visit https://brew.sh and follow the one-line install.
+
+### Check prerequisites
+
+```bash
+# Check if Homebrew is installed (macOS package manager)
+# If this command fails, install Homebrew first: https://brew.sh
+brew --version
+```
 
 ### Install gogcli
 
@@ -52,20 +83,40 @@ brew tap steipete/tap
 brew install gogcli
 ```
 
+If `brew tap` fails, check your internet connection and run `brew doctor` for diagnostics.
+
 ### Verify it's working
 
 ```bash
-# You should see version info (e.g., "gog version 0.x.x")
+# Check the gog CLI is installed and on your PATH
 gog version
-```
 
-If you see `command not found`, Homebrew may not be on your PATH. Restart your terminal and try again, or run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
+# Expected: output like "gog version 0.x.x"
+# If you see "command not found": Homebrew may not be on your PATH
+# Fix: run `eval "$(/opt/homebrew/bin/brew shellenv)"` and try again
+# Or restart your terminal
+```
 
 ### Connect your Google account (one-time setup)
 
-Before using this skill, you need to connect it to your Google account. This is a one-time OAuth setup where you'll create a Google Cloud project, enable the APIs you need (Gmail, Calendar, Drive, etc.), download a credentials file, and authorize `gog` to access your account. The process takes about 10-15 minutes and is fully documented with screenshots.
+Before using this skill, you need to connect it to your Google account. This is a one-time setup that takes about 10-15 minutes. Here is what you will do:
 
-See [references/auth-setup.md](references/auth-setup.md) for the step-by-step guide.
+1. Create a Google Cloud project (free, no billing required)
+2. Enable the Google APIs you need (Gmail, Calendar, Drive, etc.)
+3. Download a credentials JSON file from the Google Cloud Console
+4. Run `gog login` to authorize access to your account
+
+The full process is documented with screenshots in [references/auth-setup.md](references/auth-setup.md).
+
+After completing the setup, verify your auth is working:
+
+```bash
+# Check that your Google account is connected
+gog auth status
+
+# Expected: shows your email and enabled services
+# If you see "auth_required": run `gog login YOUR_EMAIL --services all`
+```
 
 ## Decision Tree: When to Use gog
 

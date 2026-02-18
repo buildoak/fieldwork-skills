@@ -24,8 +24,6 @@ And it worked. He went from "how do I make it click a button" to running autonom
 
 That's when it clicked — these skills shouldn't live in my private setup. They should be a proper public collection. Not another awesome-list of links. Not a prompt library. Actual operational skills that encode judgment — when to use what, what breaks, how to recover, and what not to do.
 
-But where this *really* started is further back. I wanted proper illustrations for Clifford Simak's *City* (1952) — talking dogs, dying cities, and a robot butler outliving humanity. That constraint rewired the whole build. You cannot throw "robot in snow" at a model and call it *City* — you need per-scene visual extraction and a style guide that tracks palette drift across 10,000 years of fictional history. That specificity bled into every other skill: the browser-ops playbooks that handle sites fighting back, the web-search fallback chains, the vault that encrypts secrets behind an intentionally misleading path. A specific book demanded precision, and precision became the standard.
-
 ---
 
 ## What's a skill?

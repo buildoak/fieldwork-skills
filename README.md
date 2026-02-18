@@ -12,7 +12,7 @@ A collection of self-contained skills — each one a battle-tested playbook with
 
 ## Backstory
 
-So here is the story. I have been building my ideal Claude Code setup, well, for a while. Burning it down and starting again something like 10 times. Until I made the full circle and returned to simple `CLAUDE.md` + skills + some spice (nested agents).
+So here is the story. I have been building my ideal Claude Code setup, [well, for a while](https://www.nickoak.com/posts/robots-v4/). Burning it down and starting again something like 10 times. Until I made the full circle and returned to simple `CLAUDE.md` + skills + some spice (nested agents).
 
 Some time after, a friend of mine — Head of Growth, not an engineer — asked me to help him use Claude Code and Codex to actually do his job faster. LinkedIn automation, companies research, email workflows. The usual growth ops grind.
 

@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/github/license/buildoak/fieldwork-skills)](LICENSE) [![Last Commit](https://img.shields.io/github/last-commit/buildoak/fieldwork-skills)](https://github.com/buildoak/fieldwork-skills/commits/main) [![GitHub Stars](https://img.shields.io/github/stars/buildoak/fieldwork-skills?style=social)](https://github.com/buildoak/fieldwork-skills)
+
 # Fieldwork Tools
 
 ![fieldwork-skills](assets/banner.png)

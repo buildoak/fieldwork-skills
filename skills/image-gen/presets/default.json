@@ -1,0 +1,11 @@
+{
+  "name": "default",
+  "description": "Sensible defaults for general-purpose image generation. Applied when no preset is specified. Quality-focused settings with no style constraints.",
+  "defaults": {
+    "model": "flux.2-pro",
+    "aspect_ratio": "1:1",
+    "size": "2K"
+  },
+  "style": {},
+  "system_message": null
+}

@@ -83,10 +83,10 @@ gog auth credentials set /path/to/downloaded/credentials.json
 
 # Option B: Use file-based keyring with explicit password
 gog auth keyring file
-export GOG_KEYRING_PASSWORD="your-password-here"
+export GOG_KEYRING_PASSWORD=$(vault.sh get GOG_KEYRING_PASSWORD)  # recommended — see Credential Management below
 ```
 
-If using Option B, add `export GOG_KEYRING_PASSWORD="your-password-here"` to your shell profile (`~/.zshrc` or `~/.bashrc`) so it persists across terminal sessions. You can also use a secret manager to avoid storing the password in plaintext.
+If using Option B, set `GOG_KEYRING_PASSWORD` in your shell profile so it persists across terminal sessions. See [Credential Management](#credential-management) below for all options (vault skill, custom secret manager, or plain export).
 
 **macOS vs Linux:**
 - **macOS:** System Keychain works out of the box with a GUI session. Use file-based keyring if you encounter Keychain access issues.
@@ -114,6 +114,50 @@ You should see your email address with active auth status, and a list of recent 
 
 ---
 
+## Credential Management
+
+`GOG_KEYRING_PASSWORD` is the password that protects the local keyring file where `gog` stores your OAuth tokens. When using the file-based keyring (required for headless/SSH, optional on desktop), every `gog` command needs this password to read and write tokens.
+
+You have three options for managing it, listed from most secure to least:
+
+### Tier 1: Vault Skill (Recommended)
+
+```bash
+export GOG_KEYRING_PASSWORD=$(vault.sh get GOG_KEYRING_PASSWORD)
+```
+
+The [vault skill](../vault/) encrypts secrets at rest using `age` + `sops`. Secrets never touch disk in plaintext. One-time setup, then all skills in your environment can share the same vault.
+
+To set it up:
+1. Install the vault skill and run its setup: `cd path/to/skills/vault && ./scripts/setup.sh`
+2. Store the password: `vault.sh set GOG_KEYRING_PASSWORD "your-password-here"`
+3. Retrieve it anywhere: `vault.sh get GOG_KEYRING_PASSWORD`
+
+See the [vault skill documentation](../vault/SKILL.md) for full details.
+
+### Tier 2: Your Own Secret Manager
+
+```bash
+export GOG_KEYRING_PASSWORD=$(your-secret-manager get GOG_KEYRING_PASSWORD)
+# Examples: 1Password CLI, Bitwarden CLI, pass, AWS Secrets Manager, etc.
+```
+
+If you already have a secret manager, use it. Same pattern, different backend.
+
+### Tier 3: Plain Export (Least Secure)
+
+```bash
+export GOG_KEYRING_PASSWORD="your-password-here"
+```
+
+Works but secrets live in shell history and dotfiles. Not recommended for shared machines or CI environments.
+
+---
+
+All three tiers work identically from `gog`'s perspective -- it only cares that the environment variable is set. Choose the tier that fits your security needs.
+
+---
+
 ## Headless / SSH Setup
 
 **Problem:** On headless servers or SSH sessions, there is no browser for the OAuth consent flow. Additionally, macOS Keychain silently drops tokens without a GUI session.
@@ -124,10 +168,10 @@ You should see your email address with active auth status, and a list of recent 
 
 ```bash
 gog auth keyring file
-export GOG_KEYRING_PASSWORD="your-password-here"
+export GOG_KEYRING_PASSWORD=$(vault.sh get GOG_KEYRING_PASSWORD)  # see Credential Management above for all options
 ```
 
-Add this export to your shell profile so it persists.
+Set `GOG_KEYRING_PASSWORD` in your shell profile so it persists. See [Credential Management](#credential-management) above for all options.
 
 ### 2. Pre-flight: Unlock Keychain (macOS only)
 
@@ -156,23 +200,18 @@ This prints an authorization URL. Copy it, open it in a browser on any device (p
 ### 4. Verify
 
 ```bash
-GOG_KEYRING_PASSWORD="your-password-here" gog auth list
-GOG_KEYRING_PASSWORD="your-password-here" gog gmail ls --max 3
+export GOG_KEYRING_PASSWORD=$(vault.sh get GOG_KEYRING_PASSWORD)  # or your preferred method
+gog auth list
+gog gmail ls --max 3
 ```
 
 ### Workers and Scripts
 
-Always set the keyring password when calling gog from scripts:
-
-```bash
-GOG_KEYRING_PASSWORD="your-password-here" gog gmail search "is:unread" --json
-```
-
-Or export it at the start of your script:
+Always set `GOG_KEYRING_PASSWORD` when calling `gog` from scripts. See [Credential Management](#credential-management) for all options.
 
 ```bash
 #!/bin/bash
-export GOG_KEYRING_PASSWORD="your-password-here"
+export GOG_KEYRING_PASSWORD=$(vault.sh get GOG_KEYRING_PASSWORD)  # recommended
 gog gmail search "is:unread" --json
 gog cal events --today --json
 ```
@@ -404,4 +443,4 @@ gog config keys
 | "State mismatch" errors during remote auth | Clear stale state files: `rm -f ~/Library/Application\ Support/gogcli/oauth-manual-state-*.json` and use `--manual` instead of `--remote --step 2` |
 | Keychain locked = silent auth failures | Run `security unlock-keychain ~/Library/Keychains/login.keychain-db` before auth flows on macOS |
 | OAuth fails with "app not verified" | Add yourself as a test user in Google Cloud Console -> APIs & Services -> OAuth consent screen |
-| `gog auth list` shows nothing after login | On headless/SSH: switch to file keyring (`gog auth keyring file`) + set `GOG_KEYRING_PASSWORD` |
+| `gog auth list` shows nothing after login | On headless/SSH: switch to file keyring (`gog auth keyring file`) + set `GOG_KEYRING_PASSWORD` (see [Credential Management](#credential-management)) |

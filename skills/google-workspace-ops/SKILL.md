@@ -33,6 +33,8 @@ gog login YOUR_EMAIL --services all
 
 For the full installation walkthrough (prerequisites, OAuth setup, verification, troubleshooting), see [references/installation-guide.md](references/installation-guide.md).
 
+**Credential management:** `GOG_KEYRING_PASSWORD` is required for all `gog` operations using the file-based keyring (headless/SSH environments, or desktop when opting out of system keychain). We strongly recommend managing it via the [vault skill](../vault/) -- see [references/auth-setup.md](references/auth-setup.md#credential-management) for all options including vault, custom secret managers, and plain export.
+
 ## Staying Updated
 
 This skill ships with an `UPDATES.md` changelog and `UPDATE-GUIDE.md` for your AI agent.

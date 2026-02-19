@@ -1,6 +1,14 @@
 ---
 name: google-workspace-ops
+version: 0.11.0
 description: Google Workspace CLI automation via gogcli. Gmail, Calendar, Drive, Docs, Slides, Sheets, and 9 more services. JSON-first output, composable pipelines.
+tools_required:
+  - gog (gogcli v0.11.0+)
+triggers:
+  - email, gmail, send email, read email, inbox
+  - calendar, events, schedule, meeting, create event
+  - drive, upload, download, search files, google docs, slides, sheets
+  - contacts, tasks, google workspace
 ---
 
 # Google Workspace Ops
@@ -358,6 +366,18 @@ gog config set default_account work@company.com
 | Use `--force` on delete without `--dry-run` | Always preview destructive operations |
 | Ignore exit codes | Handle them explicitly (see table above) |
 
+## Sandboxed / CI Environments
+
+`gog` makes HTTPS calls to Google APIs. In sandboxed or CI environments, ensure network access is available.
+
+| Operation Type | Sandbox Requirements |
+|---------------|---------------------|
+| Read-only (search, list, get) | Read-only sandbox + network access |
+| Write operations (send, create, modify) | Write sandbox + network access |
+| Complex pipelines with local file I/O | Full access (write + network) |
+
+If your sandbox blocks outbound HTTPS, `gog` commands will fail with network errors. Ensure your environment allows connections to `*.googleapis.com`.
+
 ## Bundled Resources Index
 
 | Path | What | When to Load |
@@ -367,5 +387,4 @@ gog config set default_account work@company.com
 | `./references/installation-guide.md` | Detailed install walkthrough for Claude Code and Codex CLI | First-time setup or environment repair |
 | `./references/gog-commands.md` | Full command reference for all 15 services | Need exact command syntax and flags |
 | `./references/pipeline-patterns.md` | Composable patterns: `gog` + jq + multi-service workflows | Building complex automation |
-| `./references/onboarding-headless.md` | Headless server OAuth setup via SSH tunneling | Setting up on a server without a display |
-| `./references/auth-setup.md` | OAuth setup, credentials, token handling, multi-account | First-time setup or auth troubleshooting |
+| `./references/auth-setup.md` | OAuth setup, credentials, token handling, multi-account, headed + headless auth | First-time setup or auth troubleshooting |

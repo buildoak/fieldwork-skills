@@ -9,37 +9,6 @@ Terminology:
 
 ---
 
-## Headless Mac Setup (Headless / SSH)
-
-**Problem:** macOS Keychain silently drops tokens on headless Mac or Linux server environments (no GUI session). `gog auth add` succeeds but `gog auth list` shows nothing — tokens are written but disappear.
-
-**Solution:**
-
-1. **Switch to file-based keyring:**
-   ```bash
-   gog auth keyring file
-   ```
-
-2. **Set keyring password as environment variable** (required for every gog invocation):
-   ```bash
-   export GOG_KEYRING_PASSWORD="your-password-here"
-   ```
-
-3. **Workers and scripts MUST include this env var** when calling gog:
-   ```bash
-   GOG_KEYRING_PASSWORD="your-password" gog gmail search "is:unread" --json
-   ```
-
-4. **Verify it works:**
-   ```bash
-   GOG_KEYRING_PASSWORD="your-password" gog auth list
-   # Should show your authenticated accounts
-   ```
-
-This is **required** for headless environments without a GUI session. The default macOS Keychain backend can silently fail without one.
-
----
-
 ## Prerequisites
 
 1. **Google Cloud Project** with OAuth 2.0 credentials
@@ -62,6 +31,151 @@ This is **required** for headless environments without a GUI session. The defaul
 | Classroom | Google Classroom API |
 | Apps Script | Apps Script API |
 | Groups | Cloud Identity API / Admin SDK |
+
+### OAuth Consent Screen
+
+**CRITICAL:** This step is easy to miss but required before any OAuth flow will work.
+
+1. Go to **APIs & Services** -> **OAuth consent screen** in Google Cloud Console
+2. Choose **External** (unless you have a Google Workspace org)
+3. Fill in:
+   - App name (e.g., "gogcli")
+   - User support email (your email)
+   - Developer contact email (your email)
+4. Click **Save and Continue**
+5. **Add yourself as a test user:**
+   - Click **Add Users**
+   - Enter your Gmail address
+   - Click **Save and Continue**
+
+Without adding yourself as a test user, OAuth will fail with "app not verified".
+
+---
+
+## Standard Setup (Laptop / Desktop with Browser)
+
+This is the simplest path. Use this if you have a browser available (the common case).
+
+### 1. Install gogcli
+
+```bash
+brew tap steipete/tap
+brew install gogcli
+```
+
+Verify: `gog version` should print the version number.
+
+### 2. Store OAuth Credentials
+
+Download your OAuth credentials JSON from Google Cloud Console (see Step 1 below), then:
+
+```bash
+gog auth credentials set /path/to/downloaded/credentials.json
+```
+
+### 3. Set a Keyring Password (optional but recommended)
+
+`gog` stores OAuth tokens in a secure keyring. You can use the system keychain (default on macOS) or set an explicit password for a file-based keyring:
+
+```bash
+# Option A: Use macOS Keychain (default, no action needed)
+# Tokens are stored in macOS Keychain automatically.
+
+# Option B: Use file-based keyring with explicit password
+gog auth keyring file
+export GOG_KEYRING_PASSWORD="your-password-here"
+```
+
+If using Option B, add `export GOG_KEYRING_PASSWORD="your-password-here"` to your shell profile (`~/.zshrc` or `~/.bashrc`) so it persists across terminal sessions. You can also use a secret manager to avoid storing the password in plaintext.
+
+**macOS vs Linux:**
+- **macOS:** System Keychain works out of the box with a GUI session. Use file-based keyring if you encounter Keychain access issues.
+- **Linux:** No system keychain by default. Use `gog auth keyring file` with `GOG_KEYRING_PASSWORD`.
+
+### 4. Authorize Your Account
+
+```bash
+gog login your-email@gmail.com --services all
+```
+
+A browser window opens automatically. Sign in with your Google account, review the requested permissions, and click **Allow**. The browser redirects back to localhost -- authorization is complete.
+
+### 5. Verify
+
+```bash
+# Check auth status
+gog auth status
+
+# Quick test: list recent emails (read-only, safe)
+gog gmail ls --max 3
+```
+
+You should see your email address with active auth status, and a list of recent emails.
+
+---
+
+## Headless / SSH Setup
+
+**Problem:** On headless servers or SSH sessions, there is no browser for the OAuth consent flow. Additionally, macOS Keychain silently drops tokens without a GUI session.
+
+**Solution:** Use `--manual` auth flow and file-based keyring.
+
+### 1. Switch to file-based keyring
+
+```bash
+gog auth keyring file
+export GOG_KEYRING_PASSWORD="your-password-here"
+```
+
+Add this export to your shell profile so it persists.
+
+### 2. Pre-flight: Unlock Keychain (macOS only)
+
+On macOS, always run this before any auth flow via SSH:
+
+```bash
+security unlock-keychain ~/Library/Keychains/login.keychain-db
+```
+
+Without this, token storage can silently fail and produce misleading errors.
+
+### 3. Authenticate with Manual Flow
+
+```bash
+gog auth add your-email@gmail.com --services all --manual --force-consent
+```
+
+This prints an authorization URL. Copy it, open it in a browser on any device (phone, laptop, etc.), sign in, approve permissions. The browser redirects to `http://localhost/...` -- the page won't load (expected). Copy the entire redirect URL from the browser address bar and paste it back into the terminal.
+
+> **WARNING (gog v0.11.0):** The `--remote --step 2` flow has a state mismatch bug.
+> Use the `--manual` pipe method instead:
+> ```bash
+> echo "PASTE_REDIRECT_URL_HERE" | gog auth add your-email@gmail.com --services all --manual --force-consent
+> ```
+
+### 4. Verify
+
+```bash
+GOG_KEYRING_PASSWORD="your-password-here" gog auth list
+GOG_KEYRING_PASSWORD="your-password-here" gog gmail ls --max 3
+```
+
+### Workers and Scripts
+
+Always set the keyring password when calling gog from scripts:
+
+```bash
+GOG_KEYRING_PASSWORD="your-password-here" gog gmail search "is:unread" --json
+```
+
+Or export it at the start of your script:
+
+```bash
+#!/bin/bash
+export GOG_KEYRING_PASSWORD="your-password-here"
+gog gmail search "is:unread" --json
+gog cal events --today --json
+```
 
 ---
 
@@ -128,18 +242,14 @@ gog login email@gmail.com --services drive --drive-scope file
 
 ### Browserless / Remote Auth
 
-For headless environments or SSH sessions:
+For headless environments or SSH sessions, see the [Headless / SSH Setup](#headless--ssh-setup) section above for the complete walkthrough. Quick reference:
 
 ```bash
-# Manual flow (paste redirect URL)
-gog login email@gmail.com --services all --manual
-
-# Remote flow (two-step)
-gog login email@gmail.com --services all --remote --step 1
-# Copy the printed URL, open in any browser, authorize
-# Then:
-gog login email@gmail.com --services all --remote --step 2 --auth-url "PASTE_REDIRECT_URL"
+# Manual flow (recommended for headless)
+echo "PASTE_REDIRECT_URL_HERE" | gog auth add email@gmail.com --services all --manual --force-consent
 ```
+
+> **WARNING (gog v0.11.0):** `--remote --step 2` has a state mismatch bug. Use the `--manual` pipe method shown above.
 
 ## Step 4: Verify
 
@@ -285,7 +395,13 @@ gog config keys
 | `OAuth client credentials missing` (exit 10) | Download credentials JSON from Google Cloud Console, run `gog auth credentials set FILE.json` |
 | `auth_required` (exit 4) | Run `gog login EMAIL --services all` |
 | `permission_denied` (exit 6) | Check API is enabled in Google Cloud Console. Re-login with correct `--services`. |
-| Browser doesn't open for OAuth | Use `--manual` or `--remote` flow |
+| Browser doesn't open for OAuth | Use `--manual` flow (see Headless / SSH Setup section) |
 | Token stored but commands fail | Token may have wrong scopes. Re-login with `--services all --force-consent` |
 | Rate limited (exit 7) | Wait 60s, retry. Reduce `--max` in queries. |
-| Keychain access denied | macOS security dialog -- allow access. Or switch to file backend. |
+| Keychain access denied | macOS security dialog -- allow access. Or switch to file backend with `gog auth keyring file`. |
+| Safari blocks OAuth consent screen | Safari rejects "Testing" mode OAuth apps. Use Chrome instead. |
+| Auth codes expire before pasting | Google OAuth codes last ~5 minutes. Re-run the auth step if too slow. |
+| "State mismatch" errors during remote auth | Clear stale state files: `rm -f ~/Library/Application\ Support/gogcli/oauth-manual-state-*.json` and use `--manual` instead of `--remote --step 2` |
+| Keychain locked = silent auth failures | Run `security unlock-keychain ~/Library/Keychains/login.keychain-db` before auth flows on macOS |
+| OAuth fails with "app not verified" | Add yourself as a test user in Google Cloud Console -> APIs & Services -> OAuth consent screen |
+| `gog auth list` shows nothing after login | On headless/SSH: switch to file keyring (`gog auth keyring file`) + set `GOG_KEYRING_PASSWORD` |

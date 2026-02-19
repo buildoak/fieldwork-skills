@@ -2,6 +2,32 @@
 
 Structured changelog for AI agents. Read this to determine what changed and whether updates are safe to apply.
 
+## 2026-02-19
+
+### new-files
+(none)
+
+### changed-files
+
+| File | What changed | Breaking? |
+|------|-------------|-----------|
+| `SKILL.md` | Added frontmatter fields (version, tools_required, triggers). Added "Sandboxed / CI Environments" section. Updated Bundled Resources Index (removed onboarding-headless.md entry, updated auth-setup.md description). | No |
+| `references/auth-setup.md` | Added "Standard Setup (Laptop / Desktop with Browser)" section for headed mode. Added "Headless / SSH Setup" section with keychain unlock pre-flight and `--manual` pipe method. Added OAuth Consent Screen setup instructions. Added 6 new troubleshooting entries (Safari, auth expiry, state mismatch, keychain lock, app not verified, headless keyring). Moved Prerequisites to top. | No |
+
+### removed-files
+
+| File | Replacement |
+|------|-------------|
+| `references/onboarding-headless.md` | Content merged into `references/auth-setup.md` (Standard Setup + Headless / SSH Setup sections) |
+
+### breaking-changes
+(none)
+
+### migration-notes
+- `references/onboarding-headless.md` is deleted. All its useful content (GCP setup, credentials JSON, headless keyring, remote auth, API enablement, gotchas) has been absorbed into `references/auth-setup.md`.
+- `references/auth-setup.md` now has two setup paths: "Standard Setup" (headed, browser available) and "Headless / SSH Setup" (no browser). The old "Headless Mac Setup" section at the top has been replaced.
+- If you have local edits to `onboarding-headless.md`, review `auth-setup.md` to confirm your changes are preserved before deleting.
+
 ## 2026-02-18
 
 ### new-files

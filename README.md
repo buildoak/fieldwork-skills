@@ -39,6 +39,7 @@ Prompts are one-shot. Skills encode judgment.
 | Skill | What you can do with it |
 |-------|------------------------|
 | [browser-ops](skills/browser-ops/) | Let your agent fill forms, log into websites, scrape data, verify emails — anything that needs a real browser. 9 ready-made playbooks for common use cases. |
+| [peekaboo](skills/peekaboo/) | Control native macOS apps from your agent — click buttons, fill forms, navigate menus, handle file pickers and system dialogs. AX-first with vision fallbacks, FSM-driven workflows. |
 | [web-search](skills/web-search/) | Ask your agent to research anything on the web. Three fallback engines, zero API keys needed — probably better than Exa + Firecrawl, and it just works. |
 | [google-workspace-ops](skills/google-workspace-ops/) | Have your agent send emails, manage your calendar, search Drive, edit Docs, Slides, and Sheets on your behalf. |
 | [summarize](skills/summarize/) | Drop a YouTube link, podcast, PDF, or audio file — get clean extracted text back. Works with images too. |

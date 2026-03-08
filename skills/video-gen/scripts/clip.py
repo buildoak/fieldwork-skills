@@ -410,9 +410,9 @@ def main() -> int:
 
     # Update state
     if not args.no_state_update:
-        update_state_script = script_dir / "update_state.py"
+        update_state_script = script_dir / "project_state.py"
         if not update_state_script.is_file():
-            eprint(f"ERROR: update_state.py not found: {update_state_script}")
+            eprint(f"ERROR: project_state.py not found: {update_state_script}")
             return 1
 
         update_cmd = [
@@ -430,7 +430,7 @@ def main() -> int:
         eprint("Updating state...")
         update_proc = subprocess.run(update_cmd, capture_output=True, text=True, check=False)
         if update_proc.returncode != 0:
-            eprint("ERROR: update_state.py failed")
+            eprint("ERROR: project_state.py failed")
             if update_proc.stderr.strip():
                 eprint(update_proc.stderr.strip())
             if update_proc.stdout.strip():

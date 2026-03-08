@@ -39,7 +39,7 @@ Prompts are one-shot. Skills encode judgment.
 | Skill | What you can do with it |
 |-------|------------------------|
 | [browser-ops](skills/browser-ops/) | Let your agent fill forms, log into websites, scrape data, verify emails — anything that needs a real browser. 9 ready-made playbooks for common use cases. |
-| [peekaboo](skills/peekaboo/) | Control native macOS apps from your agent — click buttons, fill forms, navigate menus, handle file pickers and system dialogs. AX-first with vision fallbacks, FSM-driven workflows. |
+| [peekaboo](skills/peekaboo/) | Control native macOS apps from your agent — click buttons, fill forms, navigate menus, handle file pickers and system dialogs. AX-first with vision fallbacks, FSM-driven workflows. Battle-tested against Booking.com, Reddit, X signup, Instagram, and other sites that actively fight automation. |
 | [web-search](skills/web-search/) | Ask your agent to research anything on the web. Three fallback engines, zero API keys needed — probably better than Exa + Firecrawl, and it just works. |
 | [google-workspace-ops](skills/google-workspace-ops/) | Have your agent send emails, manage your calendar, search Drive, edit Docs, Slides, and Sheets on your behalf. |
 | [summarize](skills/summarize/) | Drop a YouTube link, podcast, PDF, or audio file — get clean extracted text back. Works with images too. |
@@ -57,6 +57,8 @@ Each skill works on its own — but they get dramatically better together.
 **Research pipeline.** `web-search` finds pages, `browser-ops` logs into the ones behind auth walls, `summarize` extracts the content, `vault` supplies the API keys — your agent chains them without you wiring anything up.
 
 **Content production.** `web-search` gathers source material, `summarize` distills it, `image-gen` creates visuals, `video-gen` turns keyframes into clips and assembles multi-scene productions, `google-workspace-ops` drafts the final doc and emails it to your team.
+
+**Native + web full-stack automation.** `browser-ops` handles everything inside the browser. `peekaboo` handles everything outside it — native macOS apps, system dialogs, file pickers, cross-app transfers. Together they cover the entire desktop surface. Your agent can scrape data from a website, save a file through the OS dialog, open it in a native app, and extract the result — all in one workflow.
 
 **The 10x engine.** `agent-mux` + `gsd-coordinator` are the enablers that make everything else compound. `agent-mux` lets you run Claude inside Codex or Codex inside Claude — one command, one JSON contract, any engine. `gsd-coordinator` is the orchestration brain on top: it breaks complex tasks into steps, dispatches workers across engines in parallel, verifies results, and synthesizes the output. Together they form a multi-model pipeline where Claude architects, Codex executes, and the coordinator makes sure nothing slips through. This compound setup is the same pipeline that built and audited this repo.
 
@@ -124,6 +126,20 @@ The agent fetches the latest UPDATES.md from the remote, compares it against you
 **From MCP servers:** MCP (Model Context Protocol) servers give agents tools -- functions they can call. Skills give agents judgment -- when to use which tool, what to do when it fails, which approach to try first. They're complementary. browser-ops uses MCP tools under the hood.
 
 **From awesome-lists:** Those are link directories. These are the actual runbooks your agent reads and follows. Written and maintained by someone who uses them daily.
+
+## Peekaboo 10x plays
+
+Peekaboo deserves its own section because native macOS automation is where most agents completely break down. Browsers have Playwright. Native apps have nothing — until now.
+
+- **Booking.com search flow** — date pickers, guest selectors, result scraping. One of the hardest consumer UIs to automate, runs end-to-end.
+- **Reddit login + data extraction** — handles cookie walls, CAPTCHA detection, subreddit scraping. Two playbooks that chain together.
+- **X/Twitter signup** — multi-step form with anti-bot detection, email verification hooks, dynamic field validation.
+- **Instagram monitoring** — passive observation of profiles and feeds without triggering rate limits.
+- **Safari automation** — the browser that has no DevTools protocol. Peekaboo drives it through Accessibility APIs with workarounds for every Safari-specific quirk documented.
+- **File pickers and system dialogs** — the things that kill every other automation framework. Peekaboo handles Save/Open dialogs, permission popups, and OS-level alerts as first-class citizens.
+- **Cross-app data transfer** — copy from one native app, paste into another, verify the transfer. Clipboard-aware workflows that work across app boundaries.
+
+Every playbook includes the failure modes we hit and how to recover. Not "click button X" — more like "if the date picker renders as a custom widget instead of native, fall back to coordinate-based clicking with VLM verification."
 
 ## Design principles
 

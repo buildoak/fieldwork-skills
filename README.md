@@ -47,6 +47,7 @@ Prompts are one-shot. Skills encode judgment.
 | [agent-mux](skills/agent-mux/) | Run Claude inside Codex or Codex inside Claude — second opinions, best of both worlds, one unified contract. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
 | [gsd-coordinator](skills/gsd-coordinator/) | Give your agent complex multi-step tasks — it breaks them down, dispatches workers, verifies results, and synthesizes the output. |
 | [image-gen](skills/image-gen/) | Generate and edit images from text prompts. Five models, smart prompt engineering, quality review built in. |
+| [video-gen](skills/video-gen/) | Generate videos from text or images. 10+ models (Kling, Veo, Sora, LTX, Wan, Hailuo), two modes: quick one-off clips or structured multi-scene production with keyframes, state tracking, and assembly. |
 
 ## The compound play
 
@@ -54,7 +55,7 @@ Each skill works on its own — but they get dramatically better together.
 
 **Research pipeline.** `web-search` finds pages, `browser-ops` logs into the ones behind auth walls, `summarize` extracts the content, `vault` supplies the API keys — your agent chains them without you wiring anything up.
 
-**Content production.** `web-search` gathers source material, `summarize` distills it, `image-gen` creates visuals, `google-workspace-ops` drafts the final doc and emails it to your team.
+**Content production.** `web-search` gathers source material, `summarize` distills it, `image-gen` creates visuals, `video-gen` turns keyframes into clips and assembles multi-scene productions, `google-workspace-ops` drafts the final doc and emails it to your team.
 
 **The 10x engine.** `agent-mux` + `gsd-coordinator` are the enablers that make everything else compound. `agent-mux` lets you run Claude inside Codex or Codex inside Claude — one command, one JSON contract, any engine. `gsd-coordinator` is the orchestration brain on top: it breaks complex tasks into steps, dispatches workers across engines in parallel, verifies results, and synthesizes the output. Together they form a multi-model pipeline where Claude architects, Codex executes, and the coordinator makes sure nothing slips through. This compound setup is the same pipeline that built and audited this repo.
 

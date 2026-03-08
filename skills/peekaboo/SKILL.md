@@ -1,6 +1,19 @@
 ---
 name: peekaboo
-description: Native macOS GUI automation skill for AI coding agents. AX-first hybrid approach with FSM-based workflows, token-efficient discovery, and battle-tested failure recovery.
+description: |
+  Native macOS GUI automation via peekaboo 3.0+. AX-first hybrid with VLM fallback,
+  FSM-based workflows with bug-specific transitions. Safari web automation, native app
+  control, social media operations, system dialogs, cross-app workflows.
+triggers:
+  - native macOS app automation, system dialogs, file pickers
+  - Safari web automation, form filling, JavaScript injection
+  - cross-app workflows, menu navigation, clipboard operations
+  - web scraping via Safari, social media operations
+tools_required:
+  - peekaboo CLI (brew install)
+  - peekaboo-safe.sh wrapper (./scripts/)
+env_optional:
+  - PEEKABOO_RETINA_SCALE (default 2.0)
 ---
 
 # Peekaboo
@@ -172,11 +185,11 @@ else:
 | Spaces management | **validated** | 2026-02-22 | Full virtual desktop support |
 | Live capture | **validated** | 2026-02-22 | Recording and diff detection |
 | Chrome automation | **unsupported** | 2026-02-22 | Issue #67, use Safari |
-| Social media ops | **validated** | 2026-02-22 | Tested with Reddit, X, Booking -- build site-specific playbooks as needed |
+| Social media ops | **validated** | 2026-02-22 | Reddit shadow DOM login, Booking URL-first search, X signup, cookie extraction, CAPTCHA detection -- see playbooks |
 
 ## Playbook Index
 
-Each playbook is a self-contained field-tested recipe.
+Each playbook is a self-contained field-tested recipe. Status: validated = tested in production, experimental = untested or partially tested.
 
 | Playbook | Use Case | Status |
 |----------|----------|--------|
@@ -184,6 +197,14 @@ Each playbook is a self-contained field-tested recipe.
 | `safari-login.md` | Generic web authentication | **validated** |
 | `dialog-and-file-picker.md` | System dialogs, save/open | **validated** |
 | `cross-app-data-transfer.md` | Clipboard transfer between apps | **validated** |
+| `reddit-login.md` | Reddit auth (shadow DOM + React events) | **validated** |
+| `reddit-data-extraction.md` | Post Insights extraction (author-only analytics) | **validated** |
+| `booking-search.md` | Hotel search (URL-first, VLM extraction) | **validated** |
+| `x-signup.md` | X/Twitter account registration + email verification | **validated** |
+| `file-upload.md` | macOS file dialog from web apps (Cmd+Shift+G) | **validated** |
+| `captcha-solver.md` | CAPTCHA detection and handling | **experimental** |
+| `cookie-extractor.md` | Browser session cookie extraction | **experimental** |
+| `instagram-monitor.md` | Instagram content monitoring | **experimental** |
 
 ## Reference Index
 

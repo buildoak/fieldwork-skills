@@ -24,6 +24,7 @@ Current skills:
 - `gsd-coordinator`
 - `image-gen`
 - `summarize`
+- `trueskill-rank`
 - `vault`
 - `web-search`
 

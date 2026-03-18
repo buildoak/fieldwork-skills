@@ -48,6 +48,7 @@ Prompts are one-shot. Skills encode judgment.
 | [agent-mux](skills/agent-mux/) | Run Claude inside Codex or Codex inside Claude — second opinions, best of both worlds, one unified contract. See [buildoak/agent-mux](https://github.com/buildoak/agent-mux). |
 | [gsd-coordinator](skills/gsd-coordinator/) | Give your agent complex multi-step tasks — it breaks them down, dispatches workers, verifies results, and synthesizes the output. |
 | [image-gen](skills/image-gen/) | Generate and edit images from text prompts. Five models, smart prompt engineering, quality review built in. |
+| [trueskill-rank](skills/trueskill-rank) | Rank any text items via TrueSkill + LLM-as-judge. Batch ranking or pairwise. Swappable rubrics. |
 | [video-gen](skills/video-gen/) | Generate videos from text or images. 10+ models (Kling, Veo, Sora, LTX, Wan, Hailuo), two modes: quick one-off clips or structured multi-scene production with keyframes, state tracking, and assembly. |
 
 ## The compound play
